@@ -1,0 +1,4 @@
+[submodule "lib/starknet-dss"]
+	path = lib/starknet-dss
+	url = https://github.com/makerdao/starknet-dss.git
+	branch = domain
