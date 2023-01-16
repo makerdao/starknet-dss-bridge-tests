@@ -22,7 +22,7 @@ const config = {
   paths: {
     artifacts: "./artifacts",
     cache: "./cache",
-    sources: "./test",
+    sources: "./contracts",
     tests: "./test",
     starknetSources: "./src",
     starknetArtifacts: "./starknet-artifacts",
@@ -30,7 +30,7 @@ const config = {
   solidity: {
     compilers: [
       {
-        version: "0.8.14",
+        version: "0.8.15",
         settings: {
           metadata: {
             bytecodeHash: "none",
