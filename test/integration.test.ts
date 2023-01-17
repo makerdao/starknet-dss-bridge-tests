@@ -1,9 +1,7 @@
-// import hre from "hardhat";
+import { expect } from "earljs";
 
 describe("integration", () => {
-  it("test", function() {
-    this.integrationSetup.a
-    console.log("a", this.integrationSetup.a);
-    console.log("a", this.integrationSetup.b);
+  it("test", async function() {
+    expect(this.integrationSetup.l1TeleportJoin.address).toBeDefined()
   });
 });

@@ -14,7 +14,6 @@
     "format:fix": "prettier --write \"test/**/*.ts\"",
     "lint": "eslint --ext .ts src",
     "lint:fix": "yarn lint --fix",
-    "testa": "yarn hardhat test",
     "test": "mocha --exit --recursive 'test/**/*.test.ts'",
     "test:wait": "wget -q --retry-connrefused --delete-after http://0.0.0.0:5050/fork_status && yarn test",
     "test:ci": "concurrently -k 'yarn devnet' 'yarn test:wait; docker stop devnet'"

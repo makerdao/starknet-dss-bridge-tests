@@ -1,23 +1,24 @@
 import "@nomiclabs/hardhat-ethers";
 import "@shardlabs/starknet-hardhat-plugin";
+import { ethers } from "ethers";
+
+ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR)
 
 const config = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: "forkedEtherum",
   networks: {
-    goerli: {
+    forkedEtherum: {
+      // hardhat forked node
       url: "http://127.0.0.1:8545",
     },
-    mainnet: {
-      url: "http://127.0.0.1:8545",
-    },
-    devnet: {
-      //starknet devnet endpoint
+    forkedStarknet: {
+      //starknet forked devnet endpoint
       url: "http://127.0.0.1:5050",
     },
   },
   starknet: {
     dockerizedVersion: "0.10.3",
-    network: "devnet",
+    network: "forkedStarknet",
   },
   paths: {
     artifacts: "./artifacts",

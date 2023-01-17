@@ -1,5 +1,6 @@
 import hre from "hardhat";
 import { hostname } from "os";
+import { deployTeleportJoin } from "./dss-teleport/dssTeleportContracts";
 
 
 
@@ -21,8 +22,16 @@ export async function setup() {
   // 12. init domain dss/guest
   // 13. init guest
 
+  const l1TeleportJoin = await deployTeleportJoin(
+    hre,
+    (await hre.ethers.getSigners())[0],
+    "0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B", // vat
+    "0x9759A6Ac90977b93B58547b4A71c78317f391A28", // daiJoin
+    "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000",
+    "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000"
+  )
+
   return {
-    a: 1,
-    b: "abc",
+    l1TeleportJoin
   };
 }
