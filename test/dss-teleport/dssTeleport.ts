@@ -1,3 +1,102 @@
+import { Address, GetContractResult } from "@wagmi/core";
+import teleportJoinAbi from "./abi/teleportJoinAbi";
+import teleportRouterAbi from "./abi/teleportRouterAbi";
+import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
+import hre from "hardhat";
+import { Dai, Vat, DaiJoin } from "../dss/dss";
+import { expect } from "earljs";
+
+export type TeleportJoin = GetContractResult<typeof teleportJoinAbi>;
+export type TeleportRouter = GetContractResult<typeof teleportRouterAbi>;
+export type TeleportOracleAuth = GetContractResult<
+  typeof teleportOracleAuthAbi
+>;
+
+async function deployTeleportJoin(
+  vat: Address,
+  daiJoin: Address,
+  ilk: string,
+  domain: string
+): Promise<TeleportJoin> {
+  const contractFactory = await hre.ethers.getContractFactory("TeleportJoin");
+  const contract = await contractFactory.deploy(vat, daiJoin, ilk, domain);
+  await contract.deployed();
+
+  // TODO: code below does not work due to some obscure ts importing problems
+  // return getContract({
+  //   address: await contract.address,
+  //   abi: dssTeleportJoinAbi,
+  //   signerOrProvider: signerOrProvider,
+  // });
+
+  return contract as TeleportJoin;
+}
+
+async function deployTeleportRouter(
+  dai: Address,
+  domain: string,
+  parentDomain: string
+): Promise<TeleportRouter> {
+  const contractFactory = await hre.ethers.getContractFactory("TeleportRouter");
+  const contract = await contractFactory.deploy(dai, domain, parentDomain);
+  await contract.deployed();
+  return contract as TeleportRouter;
+}
+
+async function deployTeleportOracleAuth(
+  daiJoin: Address
+): Promise<TeleportOracleAuth> {
+  const contractFactory = await hre.ethers.getContractFactory(
+    "TeleportOracleAuth"
+  );
+  const contract = await contractFactory.deploy(daiJoin);
+  await contract.deployed();
+  return contract as TeleportOracleAuth;
+}
+
+interface TeleportInstance {
+  join: TeleportJoin;
+  router: TeleportRouter;
+  oracleAuth: TeleportOracleAuth;
+}
+
+export async function deploy(
+  deployer: Address,
+  owner: Address,
+  ilk: string,
+  domain: string,
+  parentDomain: string,
+  daiJoin: DaiJoin
+): Promise<TeleportInstance> {
+  const teleport: TeleportInstance = {
+    join: await deployTeleportJoin(
+      await daiJoin.vat(),
+      daiJoin.address,
+      ilk,
+      domain
+    ),
+    router: await deployTeleportRouter(
+      await daiJoin.dai(),
+      domain,
+      parentDomain
+    ),
+    oracleAuth: await deployTeleportOracleAuth(daiJoin.address),
+  };
+  expect(await teleport.join.wards(deployer)).toBeTruthy();
+  teleport.join.rely(owner);
+  teleport.join.deny(deployer);
+
+  expect(await teleport.router.wards(deployer)).toBeTruthy();
+  teleport.router.rely(owner);
+  teleport.router.deny(deployer);
+
+  expect(await teleport.oracleAuth.wards(deployer)).toBeTruthy();
+  teleport.oracleAuth.rely(owner);
+  teleport.oracleAuth.deny(deployer);
+
+  return teleport;
+}
+
 // struct TeleportInstance {
 //     TeleportJoin join;
 //     TeleportRouter router;

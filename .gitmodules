@@ -6,3 +6,7 @@
 	path = lib/dss-teleport
 	url = https://github.com/makerdao/dss-teleport
 	branch = V2
+[submodule "lib/dss"]
+	path = lib/dss
+	url = git@github.com:makerdao/dss.git
+	branch = v1.2

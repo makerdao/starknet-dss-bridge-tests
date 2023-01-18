@@ -32,17 +32,28 @@ const config = {
     compilers: [
       {
         version: "0.8.15",
-        settings: {
-          metadata: {
-            bytecodeHash: "none",
-          },
-          optimizer: {
-            enabled: true,
-            runs: 800,
-          },
-        },
-      },
+      }
     ],
+    overrides: {
+      "contracts/dss/dai.sol": {
+        version: "0.5.12"
+      },
+      "contracts/dss/join.sol": {
+        version: "0.5.12"
+      },
+      "contracts/dss/jug.sol": {
+        version: "0.5.12"
+      },
+      "contracts/dss/lib.sol": {
+        version: "0.5.12"
+      },
+      "contracts/dss/vat.sol": {
+        version: "0.5.12"
+      },
+      "contracts/dss/vow.sol": {
+        version: "0.5.12"
+      },
+    }
   },
 };
 
