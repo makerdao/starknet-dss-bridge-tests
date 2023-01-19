@@ -53,6 +53,9 @@ const config = {
       "contracts/dss/vow.sol": {
         version: "0.5.12"
       },
+      "contracts/dss/cure.sol": {
+        version: "0.6.12"
+      },
     }
   },
 };

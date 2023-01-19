@@ -20,6 +20,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
     "@shardlabs/starknet-hardhat-plugin": "^0.7.1",
     "@types/lodash": "^4.14.191",
@@ -27,6 +28,7 @@
     "@types/node": "^18.11.13",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
+    "@wagmi/core": "^0.8.15",
     "chai": "^4.3.7",
     "concurrently": "^7.6.0",
     "earljs": "^0.2.3",
