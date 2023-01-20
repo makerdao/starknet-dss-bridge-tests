@@ -37,7 +37,8 @@ export async function setup() {
     params: [
       {
         forking: {
-          jsonRpcUrl: "https://mainnet.infura.io/v3/56387818e18e404a9a6d2391af0e9085",
+          jsonRpcUrl:
+            "https://mainnet.infura.io/v3/56387818e18e404a9a6d2391af0e9085",
           // blockNumber: 14390000,
         },
       },
@@ -50,7 +51,7 @@ export async function setup() {
   );
 
   // fund admin account
-  setBalance(admin.address, 10n**18n);
+  setBalance(admin.address, 10n ** 18n);
 
   const deployer = signers[0];
 

@@ -2,6 +2,12 @@ import "@nomiclabs/hardhat-ethers";
 import "@shardlabs/starknet-hardhat-plugin";
 import { ethers } from "ethers";
 
+declare module 'abitype' {
+  export interface Config {
+    BigIntType: bigint
+  }
+}
+
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR)
 
 const config = {

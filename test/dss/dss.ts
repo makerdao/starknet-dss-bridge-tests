@@ -24,7 +24,10 @@ export async function getDaiJoin(address: Address): Promise<DaiJoin> {
 }
 
 export async function getDai(address: Address): Promise<Dai> {
-  const dai = (await hre.ethers.getContractAt(daiJoinAbi as any, address)) as Dai;
+  const dai = (await hre.ethers.getContractAt(
+    daiJoinAbi as any,
+    address
+  )) as Dai;
   return prank(dai);
 }
 
@@ -39,7 +42,10 @@ export async function getJug(address: Address): Promise<Jug> {
 }
 
 export async function getCure(address: Address): Promise<Cure> {
-  const cure = (await hre.ethers.getContractAt(cureAbi as any, address)) as Cure;
+  const cure = (await hre.ethers.getContractAt(
+    cureAbi as any,
+    address
+  )) as Cure;
   return prank(cure);
 }
 
