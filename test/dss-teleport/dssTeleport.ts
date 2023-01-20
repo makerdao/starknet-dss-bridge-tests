@@ -2,6 +2,8 @@ import { Address, GetContractResult } from "@wagmi/core";
 import teleportJoinAbi from "./abi/teleportJoinAbi";
 import teleportRouterAbi from "./abi/teleportRouterAbi";
 import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
+import teleportFeesAbi from "./abi/teleportFeesAbi";
+import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
 import hre from "hardhat";
 import { Dai, Vat, DaiJoin, Jug, Cure, Vow } from "../dss/dss";
 import { expect } from "earljs";
@@ -12,6 +14,10 @@ export type TeleportJoin = GetContractResult<typeof teleportJoinAbi>;
 export type TeleportRouter = GetContractResult<typeof teleportRouterAbi>;
 export type TeleportOracleAuth = GetContractResult<
   typeof teleportOracleAuthAbi
+>;
+export type TeleportFees = GetContractResult<typeof teleportFeesAbi>;
+export type TeleportLinearFeeAbi = GetContractResult<
+  typeof teleportLinearFeeAbi
 >;
 
 // Based on:
@@ -111,6 +117,18 @@ export async function deploy(
   await (await teleport.oracleAuth.deny(deployer)).wait();
 
   return teleport;
+}
+
+export async function deployLinearFee(
+  fee: bigint,
+  ttl: bigint
+): Promise<TeleportFees> {
+  const contractFactory = await hre.ethers.getContractFactory(
+    "TeleportLinearFee"
+  );
+  const contract = (await contractFactory.deploy(fee, ttl)) as TeleportFees;
+  await contract.deployed();
+  return prank(contract);
 }
 
 export interface DssTeleportConfig {

@@ -2,7 +2,11 @@ import hre from "hardhat";
 import { Address } from "@wagmi/core";
 import * as dssTeleport from "./dss-teleport/dssTeleport";
 import { getDaiJoin, getVat, getJug, getCure, getVow } from "./dss/dss";
-import { DssInstance, DssTeleportConfig } from "./dss-teleport/dssTeleport";
+import {
+  DssInstance,
+  DssTeleportConfig,
+  TeleportFees,
+} from "./dss-teleport/dssTeleport";
 import { startPrank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
 
@@ -39,7 +43,6 @@ export async function setup() {
         forking: {
           jsonRpcUrl:
             "https://mainnet.infura.io/v3/56387818e18e404a9a6d2391af0e9085",
-          // blockNumber: 14390000,
         },
       },
     ],
@@ -57,8 +60,6 @@ export async function setup() {
 
   // https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/script/input/1/config.json
 
-  // const admin = getAdmin("0xBE8E3e3618f7474F8cB1d074A26afFef007E98FB");
-
   const daiJoin = await getDaiJoin(
     "0x9759A6Ac90977b93B58547b4A71c78317f391A28"
   );
@@ -70,6 +71,14 @@ export async function setup() {
     "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000", // domain
     "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000", // hostDomain
     daiJoin
+  );
+
+  const WAD = 10n ** 18n;
+  const _8_DAYS = 8n * 24n * 60n * 60n;
+
+  const fees: TeleportFees = await dssTeleport.deployLinearFee(
+    WAD / 10000n,
+    _8_DAYS
   );
 
   const dss: DssInstance = {
@@ -91,5 +100,6 @@ export async function setup() {
 
   return {
     teleport,
+    fees,
   };
 }
