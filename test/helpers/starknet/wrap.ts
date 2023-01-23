@@ -59,6 +59,11 @@ export function wrap(hre: any, contract: StarknetContract) {
     {
       get(_, _callName) {
         const callName = _callName.toString();
+
+        if (callName === 'then') {
+          return undefined
+        }
+
         if (callName === "address") {
           return contract.address;
         }

@@ -9,6 +9,8 @@ import {
 } from "./dss-teleport/dssTeleport";
 import { startPrank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
+import {Account} from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import {deploySNVat} from "./starknet-dss/starknetDss";
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
@@ -35,7 +37,7 @@ export async function setup() {
   // 12. init domain dss/guest
   // 13. init guest
 
-  // TODO: how to reset properly?
+  // TODO: how to reset properly? jsonRpcUrl should be outside ts code
   await hre.network.provider.request({
     method: "hardhat_reset",
     params: [
@@ -47,6 +49,21 @@ export async function setup() {
       },
     ],
   });
+
+  const snPredeployedAccounts: Account[] = [];
+  for (const {
+    address,
+    private_key,
+  } of (await hre.starknet.devnet.getPredeployedAccounts()).slice(0,2)) {
+    const account =
+      await hre.starknet.OpenZeppelinAccount.getAccountFromAddress(
+        address,
+        private_key
+      );
+    snPredeployedAccounts.push(account);
+  }
+
+  const snVat = await deploySNVat(snPredeployedAccounts[0], snPredeployedAccounts[1].address)
 
   const signers = await hre.ethers.getSigners();
   const admin = await hre.ethers.getImpersonatedSigner(
@@ -101,5 +118,6 @@ export async function setup() {
   return {
     teleport,
     fees,
+    snVat
   };
 }

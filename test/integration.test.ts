@@ -6,5 +6,6 @@ describe("integration", () => {
     expect(this.integrationSetup.teleport.oracleAuth.address).toBeDefined();
     expect(this.integrationSetup.teleport.router.address).toBeDefined();
     expect(this.integrationSetup.fees.address).toBeDefined();
+    expect(this.integrationSetup.snVat.address).toBeDefined();
   });
 });
