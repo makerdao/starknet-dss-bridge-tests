@@ -31,7 +31,7 @@ const config = {
     cache: "./cache",
     sources: "./contracts",
     tests: "./test",
-    starknetSources: "./src",
+    starknetSources: "./contracts/starknet/starknet-dss",
     starknetArtifacts: "./starknet-artifacts",
   },
   solidity: {
