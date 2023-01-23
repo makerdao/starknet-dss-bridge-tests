@@ -105,16 +105,16 @@ export async function deploy(
     oracleAuth: await deployTeleportOracleAuth(daiJoin.address),
   };
   expect(await teleport.join.wards(deployer)).toBeTruthy();
-  await (await teleport.join.rely(owner)).wait();
-  await (await teleport.join.deny(deployer)).wait();
+  await teleport.join.rely(owner);
+  await teleport.join.deny(deployer);
 
   expect(await teleport.router.wards(deployer)).toBeTruthy();
-  await (await teleport.router.rely(owner)).wait();
-  await (await teleport.router.deny(deployer)).wait();
+  await teleport.router.rely(owner);
+  await teleport.router.deny(deployer);
 
   expect(await teleport.oracleAuth.wards(deployer)).toBeTruthy();
-  await (await teleport.oracleAuth.rely(owner)).wait();
-  await (await teleport.oracleAuth.deny(deployer)).wait();
+  await teleport.oracleAuth.rely(owner);
+  await teleport.oracleAuth.deny(deployer);
 
   return teleport;
 }
@@ -158,34 +158,28 @@ export async function init(
   cfg: DssTeleportConfig
 ) {
   const ilk = await teleport.join.ilk();
-  await (await dss.vat.init(ilk)).wait();
-  await (await dss.jug.init(ilk)).wait();
-  await (
-    await dss.vat["file(bytes32,bytes32,uint256)"](ilk, LINE, cfg.debtCeiling)
-  ).wait();
+  await dss.vat.init(ilk);
+  await dss.jug.init(ilk);
+  await dss.vat["file(bytes32,bytes32,uint256)"](ilk, LINE, cfg.debtCeiling);
+
   // dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
-  await (
-    await dss.vat["file(bytes32,bytes32,uint256)"](ilk, SPOT, 10n ** 27n)
-  ).wait();
-  await (await dss.cure.lift(teleport.join.address)).wait();
-  await (await dss.vat.rely(teleport.join.address)).wait();
-  await (await teleport.join.rely(teleport.oracleAuth.address)).wait();
-  await (await teleport.join.rely(teleport.router.address)).wait();
+  await dss.vat["file(bytes32,bytes32,uint256)"](ilk, SPOT, 10n ** 27n);
+  await dss.cure.lift(teleport.join.address);
+  await dss.vat.rely(teleport.join.address);
+  await teleport.join.rely(teleport.oracleAuth.address);
+  await teleport.join.rely(teleport.router.address);
   // teleport.join.rely(esm);
-  await (
-    await teleport.join["file(bytes32,address)"](VOW, dss.vow.address)
-  ).wait();
+  await teleport.join["file(bytes32,address)"](VOW, dss.vow.address);
+
   // teleport.oracleAuth.rely(esm);
-  await (await teleport.oracleAuth.file(THRESHOLD, cfg.oracleThreshold)).wait();
-  await (await teleport.oracleAuth.addSigners(cfg.oracleSigners)).wait();
+  await teleport.oracleAuth.file(THRESHOLD, cfg.oracleThreshold);
+  await teleport.oracleAuth.addSigners(cfg.oracleSigners);
   // teleport.router.rely(esm);
-  await (
-    await teleport.router["file(bytes32,bytes32,address)"](
-      GATEWAY,
-      await teleport.join.domain(),
-      teleport.join.address
-    )
-  ).wait();
+  await teleport.router["file(bytes32,bytes32,address)"](
+    GATEWAY,
+    await teleport.join.domain(),
+    teleport.join.address
+  );
 }
 
 interface DssTeleportDomainConfig {
@@ -202,25 +196,20 @@ export async function initDomain(
   teleport: TeleportInstance,
   cfg: DssTeleportDomainConfig
 ) {
-  await (
-    await teleport.join["file(bytes32,bytes32,address)"](
-      FEES,
-      cfg.domain,
-      cfg.fees
-    )
-  ).wait();
-  await (
-    await teleport.join["file(bytes32,bytes32,uint256)"](
-      LINE,
-      cfg.domain,
-      cfg.debtCeiling
-    )
-  ).wait();
-  await (
-    await teleport.router["file(bytes32,bytes32,address)"](
-      GATEWAY,
-      cfg.domain,
-      cfg.gateway
-    )
-  ).wait();
+  await teleport.join["file(bytes32,bytes32,address)"](
+    FEES,
+    cfg.domain,
+    cfg.fees
+  );
+  await teleport.join["file(bytes32,bytes32,uint256)"](
+    LINE,
+    cfg.domain,
+    cfg.debtCeiling
+  );
+
+  await teleport.router["file(bytes32,bytes32,address)"](
+    GATEWAY,
+    cfg.domain,
+    cfg.gateway
+  );
 }
