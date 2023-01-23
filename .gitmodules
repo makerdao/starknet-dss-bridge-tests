@@ -13,3 +13,7 @@
 [submodule "lib/dss-master"]
 	path = lib/dss-master
 	url = git@github.com:makerdao/dss.git
+[submodule "lib/dss-bridge"]
+	path = lib/dss-bridge
+	url = git@github.com:maciejka/dss-bridge.git
+    branch = starknet-domain-host2
