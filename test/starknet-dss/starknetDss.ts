@@ -13,3 +13,7 @@ export async function deploySNVat(deployer: Account, ward: Felt): Promise<SNVat>
   const vat = await deployer.deploy(factory, { ward })
   return wrapTyped(hre, vat);
 }
+
+// TODO: add more contracts
+// TODO: add init script
+// Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
