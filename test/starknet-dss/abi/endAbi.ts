@@ -1,4 +1,4 @@
-export const daiAbi = [
+export const endAbi = [
 	{
 		members: [
 			{
@@ -19,7 +19,7 @@ export const daiAbi = [
 	{
 		data: [
 			{
-				name: "user",
+				name: "usr",
 				type: "felt",
 			},
 		],
@@ -30,7 +30,7 @@ export const daiAbi = [
 	{
 		data: [
 			{
-				name: "user",
+				name: "usr",
 				type: "felt",
 			},
 		],
@@ -41,126 +41,142 @@ export const daiAbi = [
 	{
 		data: [
 			{
-				name: "sender",
+				name: "what",
 				type: "felt",
 			},
 			{
-				name: "recipient",
+				name: "data",
 				type: "felt",
-			},
-			{
-				name: "value",
-				type: "Uint256",
 			},
 		],
 		keys: [],
-		name: "Transfer",
+		name: "File",
+		type: "event",
+	},
+	{
+		data: [],
+		keys: [],
+		name: "Cage",
 		type: "event",
 	},
 	{
 		data: [
 			{
-				name: "owner",
+				name: "ilk",
+				type: "felt",
+			},
+		],
+		keys: [],
+		name: "Cage_ilk",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "ilk",
 				type: "felt",
 			},
 			{
-				name: "spender",
+				name: "urn",
 				type: "felt",
 			},
 			{
-				name: "value",
+				name: "wad",
+				type: "Uint256",
+			},
+			{
+				name: "art",
 				type: "Uint256",
 			},
 		],
 		keys: [],
-		name: "Approval",
+		name: "Skim",
 		type: "event",
 	},
 	{
-		inputs: [],
-		name: "decimals",
-		outputs: [
+		data: [
 			{
-				name: "res",
+				name: "ilk",
 				type: "felt",
 			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "name",
-		outputs: [
 			{
-				name: "res",
+				name: "usr",
 				type: "felt",
 			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "symbol",
-		outputs: [
 			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "totalSupply",
-		outputs: [
-			{
-				name: "res",
+				name: "ink",
 				type: "Uint256",
 			},
 		],
-		stateMutability: "view",
-		type: "function",
+		keys: [],
+		name: "Free",
+		type: "event",
+	},
+	{
+		data: [],
+		keys: [],
+		name: "Thaw",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "ilk",
+				type: "felt",
+			},
+		],
+		keys: [],
+		name: "Flow",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "usr",
+				type: "felt",
+			},
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		keys: [],
+		name: "Pack",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "ilk",
+				type: "felt",
+			},
+			{
+				name: "usr",
+				type: "felt",
+			},
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		keys: [],
+		name: "Cash",
+		type: "event",
 	},
 	{
 		inputs: [
 			{
-				name: "user",
-				type: "felt",
-			},
-		],
-		name: "balanceOf",
-		outputs: [
-			{
-				name: "res",
-				type: "Uint256",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "owner",
+				name: "ward",
 				type: "felt",
 			},
 			{
-				name: "spender",
+				name: "vat",
 				type: "felt",
 			},
 		],
-		name: "allowance",
-		outputs: [
-			{
-				name: "res",
-				type: "Uint256",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
+		name: "constructor",
+		outputs: [],
+		type: "constructor",
 	},
 	{
 		inputs: [
@@ -180,44 +196,99 @@ export const daiAbi = [
 		type: "function",
 	},
 	{
-		inputs: [
+		inputs: [],
+		name: "live",
+		outputs: [
 			{
-				name: "ward",
+				name: "res",
 				type: "felt",
 			},
 		],
-		name: "constructor",
-		outputs: [],
-		type: "constructor",
-	},
-	{
-		inputs: [
-			{
-				name: "account",
-				type: "felt",
-			},
-			{
-				name: "amount",
-				type: "Uint256",
-			},
-		],
-		name: "mint",
-		outputs: [],
+		stateMutability: "view",
 		type: "function",
 	},
 	{
 		inputs: [
 			{
-				name: "account",
+				name: "ilk",
 				type: "felt",
 			},
+		],
+		name: "fix",
+		outputs: [
 			{
-				name: "amount",
+				name: "res",
 				type: "Uint256",
 			},
 		],
-		name: "burn",
-		outputs: [],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "ilk",
+				type: "felt",
+			},
+			{
+				name: "user",
+				type: "felt",
+			},
+		],
+		name: "out",
+		outputs: [
+			{
+				name: "res",
+				type: "Uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "ilk",
+				type: "felt",
+			},
+		],
+		name: "gap",
+		outputs: [
+			{
+				name: "res",
+				type: "Uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "ilk",
+				type: "felt",
+			},
+		],
+		name: "Art",
+		outputs: [
+			{
+				name: "res",
+				type: "Uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "vat",
+		outputs: [
+			{
+				name: "res",
+				type: "felt",
+			},
+		],
+		stateMutability: "view",
 		type: "function",
 	},
 	{
@@ -245,105 +316,102 @@ export const daiAbi = [
 	{
 		inputs: [
 			{
-				name: "recipient",
+				name: "what",
 				type: "felt",
 			},
 			{
-				name: "amount",
-				type: "Uint256",
-			},
-		],
-		name: "transfer",
-		outputs: [
-			{
-				name: "res",
+				name: "data",
 				type: "felt",
 			},
 		],
+		name: "file",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "cage",
+		outputs: [],
 		type: "function",
 	},
 	{
 		inputs: [
 			{
-				name: "sender",
-				type: "felt",
-			},
-			{
-				name: "recipient",
-				type: "felt",
-			},
-			{
-				name: "amount",
-				type: "Uint256",
-			},
-		],
-		name: "transferFrom",
-		outputs: [
-			{
-				name: "res",
+				name: "ilk",
 				type: "felt",
 			},
 		],
+		name: "cage_ilk",
+		outputs: [],
 		type: "function",
 	},
 	{
 		inputs: [
 			{
-				name: "spender",
+				name: "ilk",
 				type: "felt",
 			},
 			{
-				name: "amount",
-				type: "Uint256",
-			},
-		],
-		name: "approve",
-		outputs: [
-			{
-				name: "res",
+				name: "urn",
 				type: "felt",
 			},
 		],
+		name: "skim",
+		outputs: [],
 		type: "function",
 	},
 	{
 		inputs: [
 			{
-				name: "spender",
-				type: "felt",
-			},
-			{
-				name: "amount",
-				type: "Uint256",
-			},
-		],
-		name: "increaseAllowance",
-		outputs: [
-			{
-				name: "res",
+				name: "ilk",
 				type: "felt",
 			},
 		],
+		name: "free",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "thaw",
+		outputs: [],
 		type: "function",
 	},
 	{
 		inputs: [
 			{
-				name: "spender",
+				name: "ilk",
 				type: "felt",
 			},
+		],
+		name: "flow",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [
 			{
-				name: "amount",
+				name: "wad",
 				type: "Uint256",
 			},
 		],
-		name: "decreaseAllowance",
-		outputs: [
+		name: "pack",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [
 			{
-				name: "res",
+				name: "ilk",
 				type: "felt",
 			},
+			{
+				name: "wad",
+				type: "Uint256",
+			},
 		],
+		name: "cash",
+		outputs: [],
 		type: "function",
 	},
 ] as const;

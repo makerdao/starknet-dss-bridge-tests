@@ -1,4 +1,4 @@
-export const jugAbi = [
+export const spotterAbi = [
 	{
 		members: [
 			{
@@ -17,26 +17,21 @@ export const jugAbi = [
 		type: "struct",
 	},
 	{
-		members: [
+		inputs: [],
+		name: "live",
+		outputs: [
 			{
-				name: "duty",
-				offset: 0,
-				type: "Uint256",
-			},
-			{
-				name: "rho",
-				offset: 2,
+				name: "res",
 				type: "felt",
 			},
 		],
-		name: "Ilk",
-		size: 3,
-		type: "struct",
+		stateMutability: "view",
+		type: "function",
 	},
 	{
 		data: [
 			{
-				name: "usr",
+				name: "user",
 				type: "felt",
 			},
 		],
@@ -47,7 +42,7 @@ export const jugAbi = [
 	{
 		data: [
 			{
-				name: "usr",
+				name: "user",
 				type: "felt",
 			},
 		],
@@ -61,9 +56,32 @@ export const jugAbi = [
 				name: "ilk",
 				type: "felt",
 			},
+			{
+				name: "what",
+				type: "felt",
+			},
+			{
+				name: "data",
+				type: "felt",
+			},
 		],
 		keys: [],
-		name: "Init",
+		name: "File_pip",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "what",
+				type: "felt",
+			},
+			{
+				name: "data",
+				type: "Uint256",
+			},
+		],
+		keys: [],
+		name: "File_par",
 		type: "event",
 	},
 	{
@@ -82,37 +100,13 @@ export const jugAbi = [
 			},
 		],
 		keys: [],
-		name: "File_duty",
+		name: "File_mat",
 		type: "event",
 	},
 	{
-		data: [
-			{
-				name: "what",
-				type: "felt",
-			},
-			{
-				name: "data",
-				type: "Uint256",
-			},
-		],
+		data: [],
 		keys: [],
-		name: "File_base",
-		type: "event",
-	},
-	{
-		data: [
-			{
-				name: "what",
-				type: "felt",
-			},
-			{
-				name: "data",
-				type: "felt",
-			},
-		],
-		keys: [],
-		name: "File",
+		name: "Cage",
 		type: "event",
 	},
 	{
@@ -121,95 +115,39 @@ export const jugAbi = [
 				name: "ilk",
 				type: "felt",
 			},
+			{
+				name: "val",
+				type: "Uint256",
+			},
+			{
+				name: "spot",
+				type: "Uint256",
+			},
 		],
 		keys: [],
-		name: "Drip",
+		name: "Poke",
 		type: "event",
 	},
 	{
 		inputs: [
 			{
-				name: "i",
-				type: "felt",
-			},
-		],
-		name: "ilks",
-		outputs: [
-			{
-				name: "ilk",
-				type: "Ilk",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "user",
-				type: "felt",
-			},
-		],
-		name: "wards",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "vat",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "vow",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "base",
-		outputs: [
-			{
-				name: "res",
-				type: "Uint256",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "vat_",
+				name: "vat",
 				type: "felt",
 			},
 			{
-				name: "ward_",
+				name: "ward",
 				type: "felt",
 			},
 		],
 		name: "constructor",
 		outputs: [],
 		type: "constructor",
+	},
+	{
+		inputs: [],
+		name: "cage",
+		outputs: [],
+		type: "function",
 	},
 	{
 		inputs: [
@@ -239,8 +177,31 @@ export const jugAbi = [
 				name: "ilk",
 				type: "felt",
 			},
+			{
+				name: "what",
+				type: "felt",
+			},
+			{
+				name: "data",
+				type: "felt",
+			},
 		],
-		name: "init",
+		name: "file_pip",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "what",
+				type: "felt",
+			},
+			{
+				name: "data",
+				type: "Uint256",
+			},
+		],
+		name: "file_par",
 		outputs: [],
 		type: "function",
 	},
@@ -259,37 +220,7 @@ export const jugAbi = [
 				type: "Uint256",
 			},
 		],
-		name: "file_duty",
-		outputs: [],
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "what",
-				type: "felt",
-			},
-			{
-				name: "data",
-				type: "Uint256",
-			},
-		],
-		name: "file_base",
-		outputs: [],
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "what",
-				type: "felt",
-			},
-			{
-				name: "data",
-				type: "felt",
-			},
-		],
-		name: "file",
+		name: "file_mat",
 		outputs: [],
 		type: "function",
 	},
@@ -300,13 +231,8 @@ export const jugAbi = [
 				type: "felt",
 			},
 		],
-		name: "drip",
-		outputs: [
-			{
-				name: "rate",
-				type: "Uint256",
-			},
-		],
+		name: "poke",
+		outputs: [],
 		type: "function",
 	},
 ] as const;
