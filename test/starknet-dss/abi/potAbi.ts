@@ -1,4 +1,4 @@
-export const cureAbi = [
+export const potAbi = [
 	{
 		members: [
 			{
@@ -46,7 +46,7 @@ export const cureAbi = [
 			},
 			{
 				name: "data",
-				type: "felt",
+				type: "Uint256",
 			},
 		],
 		keys: [],
@@ -56,34 +56,16 @@ export const cureAbi = [
 	{
 		data: [
 			{
-				name: "src",
+				name: "what",
 				type: "felt",
 			},
-		],
-		keys: [],
-		name: "Lift",
-		type: "event",
-	},
-	{
-		data: [
 			{
-				name: "src",
+				name: "data",
 				type: "felt",
 			},
 		],
 		keys: [],
-		name: "Drop",
-		type: "event",
-	},
-	{
-		data: [
-			{
-				name: "src",
-				type: "felt",
-			},
-		],
-		keys: [],
-		name: "Load",
+		name: "File_vow",
 		type: "event",
 	},
 	{
@@ -93,15 +75,64 @@ export const cureAbi = [
 		type: "event",
 	},
 	{
-		inputs: [
+		data: [],
+		keys: [],
+		name: "Drip",
+		type: "event",
+	},
+	{
+		data: [
 			{
-				name: "ward",
+				name: "usr",
+				type: "felt",
+			},
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		keys: [],
+		name: "Join",
+		type: "event",
+	},
+	{
+		data: [
+			{
+				name: "usr",
+				type: "felt",
+			},
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		keys: [],
+		name: "Exit",
+		type: "event",
+	},
+	{
+		inputs: [],
+		name: "live",
+		outputs: [
+			{
+				name: "res",
 				type: "felt",
 			},
 		],
-		name: "constructor",
-		outputs: [],
-		type: "constructor",
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "vat",
+		outputs: [
+			{
+				name: "res",
+				type: "felt",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
 	},
 	{
 		inputs: [
@@ -122,77 +153,7 @@ export const cureAbi = [
 	},
 	{
 		inputs: [],
-		name: "tCount",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "lCount",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "index",
-				type: "felt",
-			},
-		],
-		name: "srcs",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
-				name: "src",
-				type: "felt",
-			},
-		],
-		name: "pos",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "live",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "say",
+		name: "dsr",
 		outputs: [
 			{
 				name: "res",
@@ -204,35 +165,7 @@ export const cureAbi = [
 	},
 	{
 		inputs: [],
-		name: "wait",
-		outputs: [
-			{
-				name: "res",
-				type: "felt",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "list",
-		outputs: [
-			{
-				name: "arr_len",
-				type: "felt",
-			},
-			{
-				name: "arr",
-				type: "felt*",
-			},
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [],
-		name: "tell",
+		name: "chi",
 		outputs: [
 			{
 				name: "res",
@@ -241,6 +174,62 @@ export const cureAbi = [
 		],
 		stateMutability: "view",
 		type: "function",
+	},
+	{
+		inputs: [],
+		name: "rho",
+		outputs: [
+			{
+				name: "res",
+				type: "felt",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "Pie",
+		outputs: [
+			{
+				name: "res",
+				type: "Uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "u",
+				type: "felt",
+			},
+		],
+		name: "pie",
+		outputs: [
+			{
+				name: "res",
+				type: "Uint256",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "vat",
+				type: "felt",
+			},
+			{
+				name: "ward",
+				type: "felt",
+			},
+		],
+		name: "constructor",
+		outputs: [],
+		type: "constructor",
 	},
 	{
 		inputs: [
@@ -272,7 +261,7 @@ export const cureAbi = [
 			},
 			{
 				name: "data",
-				type: "felt",
+				type: "Uint256",
 			},
 		],
 		name: "file",
@@ -282,22 +271,15 @@ export const cureAbi = [
 	{
 		inputs: [
 			{
-				name: "src",
+				name: "what",
 				type: "felt",
 			},
-		],
-		name: "lift",
-		outputs: [],
-		type: "function",
-	},
-	{
-		inputs: [
 			{
-				name: "src",
+				name: "data",
 				type: "felt",
 			},
 		],
-		name: "drop",
+		name: "file_vow",
 		outputs: [],
 		type: "function",
 	},
@@ -308,13 +290,35 @@ export const cureAbi = [
 		type: "function",
 	},
 	{
-		inputs: [
+		inputs: [],
+		name: "drip",
+		outputs: [
 			{
-				name: "src",
-				type: "felt",
+				name: "tmp",
+				type: "Uint256",
 			},
 		],
-		name: "load",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		name: "join",
+		outputs: [],
+		type: "function",
+	},
+	{
+		inputs: [
+			{
+				name: "wad",
+				type: "Uint256",
+			},
+		],
+		name: "exit",
 		outputs: [],
 		type: "function",
 	},

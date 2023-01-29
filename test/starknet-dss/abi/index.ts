@@ -5,3 +5,4 @@ export { endAbi } from "./endAbi";
 export { cureAbi } from "./cureAbi";
 export { jugAbi } from "./jugAbi";
 export { spotterAbi } from "./spotterAbi";
+export { potAbi } from "./potAbi";

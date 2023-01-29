@@ -116,17 +116,18 @@ export async function setup() {
 		vow: await getVow("0xA950524441892A31ebddF91d3cEEFa04Bf454466"),
 	};
 
-	const sn_dss: SNDssInstance = {
-		vat: await getSNVat(""),
-		jug: await getSNJug(""),
-		cure: await getSNCure(""),
-	};
+	// Sets `snPredeployedAccounts[1]` as the global active account
+	const sn_dss: SNDssInstance = await starknetDss.deployAll(
+		snPredeployedAccounts[0],
+		snPredeployedAccounts[1],
+		"0x03e85bfbb8e2a42b7bead9e88e9a1b19dbccf661471061807292120462396ec9" // DAI Address
+	);
 
 	// TODO: deploy claim token
 
 	const sn_dssConfig: starknetDss.XDomainDssConfig = {
 		claimToken: "0x0000000000000000000000000000000000000000",
-		endWait: uint(3600n), // 1 hour
+		endWait: 3600n, // 1 hour
 	};
 
 	const teleportConfig: DssTeleportConfig = {
@@ -138,8 +139,6 @@ export async function setup() {
 	startPrank(admin);
 
 	await dssTeleport.init(dss, teleport, teleportConfig);
-
-	startStarknetPrank(snPredeployedAccounts[1]);
 
 	await starknetDss.init(sn_dss, sn_dssConfig);
 
