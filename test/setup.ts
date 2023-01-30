@@ -11,15 +11,7 @@ import {
 import { startPrank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import {
-	deploySNVat,
-	getSNCure,
-	getSNJug,
-	getSNVat,
-	SNDssInstance,
-} from "./starknet-dss/starknetDss";
-import { startStarknetPrank } from "./helpers/starknet/prank";
-import { uint } from "../lib/starknet-dss/test/utils";
+import { deploySNVat } from "./starknet-dss/starknetDss";
 
 export async function getAdmin(address: Address) {
 	await hre.network.provider.request({
@@ -116,17 +108,20 @@ export async function setup() {
 		vow: await getVow("0xA950524441892A31ebddF91d3cEEFa04Bf454466"),
 	};
 
-	// Sets `snPredeployedAccounts[1]` as the global active account
-	const sn_dss: SNDssInstance = await starknetDss.deployAll(
+	// This Sets `snPredeployedAccounts[1]` as the global active account
+	const sn_dss: starknetDss.SNDssInstance = await starknetDss.deploy(
 		snPredeployedAccounts[0],
 		snPredeployedAccounts[1],
 		"0x03e85bfbb8e2a42b7bead9e88e9a1b19dbccf661471061807292120462396ec9" // DAI Address
 	);
 
-	// TODO: deploy claim token
+	const sn_claimToken: starknetDss.SNToken = await starknetDss.deploySNToken(
+		snPredeployedAccounts[0],
+		snPredeployedAccounts[1].address
+	);
 
 	const sn_dssConfig: starknetDss.XDomainDssConfig = {
-		claimToken: "0x0000000000000000000000000000000000000000",
+		claimToken: sn_claimToken.address,
 		endWait: 3600n, // 1 hour
 	};
 

@@ -18,11 +18,11 @@
 		"test:wait": "wget -q --retry-connrefused --delete-after http://0.0.0.0:5050/fork_status && yarn test",
 		"test:ci": "concurrently -k 'yarn devnet' 'yarn test:wait; docker stop devnet'"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-network-helpers": "^1.0.7",
 		"@nomiclabs/hardhat-ethers": "^2.2.1",
 		"@shardlabs/starknet-hardhat-plugin": "^0.7.1",
+		"@types/chai": "^4.3.4",
 		"@types/lodash": "^4.14.191",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "^18.11.13",

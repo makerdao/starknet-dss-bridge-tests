@@ -1,12 +1,7 @@
-import {
-	wrap,
-	WrappedStarknetContract,
-	wrapTyped,
-} from "../helpers/starknet/wrap";
+import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import hre from "hardhat";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import { starknetPrank, startStarknetPrank } from "../helpers/starknet/prank";
-import { l2String, SplitUintType } from "../../lib/starknet-dss/test/utils";
 import {
 	vatAbi,
 	daiAbi,
@@ -16,9 +11,10 @@ import {
 	jugAbi,
 	spotterAbi,
 	potAbi,
+	tokenAbi,
 } from "./abi";
 
-import { getL2ContractAt } from "../helpers/starknet/utils";
+import { getL2ContractAt, l2String } from "../helpers/starknet/utils";
 
 export type SNVat = WrappedStarknetContract<typeof vatAbi>;
 export type SNDai = WrappedStarknetContract<typeof daiAbi>;
@@ -28,6 +24,7 @@ export type SNDaiJoin = WrappedStarknetContract<typeof daiJoinAbi>;
 export type SNJug = WrappedStarknetContract<typeof jugAbi>;
 export type SNSpotter = WrappedStarknetContract<typeof spotterAbi>;
 export type SNPot = WrappedStarknetContract<typeof potAbi>;
+export type SNToken = WrappedStarknetContract<typeof tokenAbi>;
 
 export type Felt = bigint | string; // TODO: what it should be exactly
 
@@ -51,12 +48,22 @@ export async function deploySNDai(
 	return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
 }
 
+export async function deploySNToken(
+	deployer: Account,
+	ward: Felt
+): Promise<SNToken> {
+	const factory = await hre.starknet.getContractFactory("tests/mock_token");
+	await deployer.declare(factory);
+	const token = await deployer.deploy(factory, { ward });
+	return starknetPrank<typeof tokenAbi>(wrapTyped(hre, token));
+}
+
 export async function deploySNDaiJoin(
 	deployer: Account,
-	vat: string,
-	dai: string
+	vat: Felt,
+	dai: Felt
 ): Promise<SNDaiJoin> {
-	const factory = await hre.starknet.getContractFactory("daiJoin");
+	const factory = await hre.starknet.getContractFactory("dai_join");
 	await deployer.declare(factory);
 	const daiJoin = await deployer.deploy(factory, { vat, dai });
 	return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
@@ -64,7 +71,7 @@ export async function deploySNDaiJoin(
 
 export async function deploySNSpotter(
 	deployer: Account,
-	vat: string,
+	vat: Felt,
 	ward: Felt
 ): Promise<SNSpotter> {
 	const factory = await hre.starknet.getContractFactory("spotter");
@@ -76,7 +83,7 @@ export async function deploySNSpotter(
 // TODO: change jug constructor params' names
 export async function deploySNJug(
 	deployer: Account,
-	vat: string,
+	vat: Felt,
 	ward: Felt
 ): Promise<SNJug> {
 	const factory = await hre.starknet.getContractFactory("jug");
@@ -87,7 +94,7 @@ export async function deploySNJug(
 
 export async function deploySNPot(
 	deployer: Account,
-	vat: string,
+	vat: Felt,
 	ward: Felt
 ): Promise<SNPot> {
 	const factory = await hre.starknet.getContractFactory("pot");
@@ -108,11 +115,12 @@ export async function deploySNCure(
 
 export async function deploySNEnd(
 	deployer: Account,
+	vat: string,
 	ward: Felt
 ): Promise<SNEnd> {
 	const factory = await hre.starknet.getContractFactory("end");
 	await deployer.declare(factory);
-	const end = await deployer.deploy(factory, { ward });
+	const end = await deployer.deploy(factory, { ward, vat });
 	return starknetPrank<typeof endAbi>(wrapTyped(hre, end));
 }
 
@@ -127,7 +135,7 @@ export interface SNDssInstance {
 	pot: SNPot;
 }
 
-export async function deployAll(
+export async function deploy(
 	deployer: Account,
 	owner: Account,
 	dai: string
@@ -150,7 +158,7 @@ export async function deployAll(
 	// dss.cure = CureAbstract(address(new Cure()));
 	let cure = await deploySNCure(deployer, owner.address);
 	// dss.end = EndAbstract(address(new End(address(dss.vat))));
-	let end = await deploySNEnd(deployer, owner.address);
+	let end = await deploySNEnd(deployer, vat.address, owner.address);
 
 	// switchOwner(address(dss.vat), deployer, owner);
 	// switchOwner(address(dss.spotter), deployer, owner);
@@ -159,6 +167,7 @@ export async function deployAll(
 	// switchOwner(address(dss.cure), deployer, owner);
 	// switchOwner(address(dss.end), deployer, owner);
 	startStarknetPrank(owner);
+
 	return {
 		vat,
 		jug,
@@ -174,27 +183,31 @@ export async function deployAll(
 // TODO: add init script
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
 export async function getSNDaiJoin(address: string): Promise<SNDaiJoin> {
-	const daiJoin = await getL2ContractAt(hre, "./abi/daiJoinAbi.ts", address);
+	const daiJoin = await getL2ContractAt(
+		hre,
+		"dai_join.cairo/dai_join_abi.json",
+		address
+	);
 	return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
 }
 
 export async function getSNDai(address: string): Promise<SNDai> {
-	const dai = await getL2ContractAt(hre, "./abi/daiAbi.ts", address);
+	const dai = await getL2ContractAt(hre, "dai.cairo/dai_abi.json", address);
 	return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
 }
 
 export async function getSNVat(address: string): Promise<SNVat> {
-	const vat = await getL2ContractAt(hre, "./abi/vatAbi.ts", address);
+	const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
 	return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
 }
 
 export async function getSNJug(address: string): Promise<SNJug> {
-	const jug = await getL2ContractAt(hre, "./abi/jugAbi.ts", address);
+	const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
 	return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }
 
 export async function getSNCure(address: string): Promise<SNCure> {
-	const cure = await getL2ContractAt(hre, "./abi/cureAbi.ts", address);
+	const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
 	return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
 }
 
