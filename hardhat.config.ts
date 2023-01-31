@@ -31,7 +31,7 @@ const config = {
     cache: "./cache",
     sources: "./contracts",
     tests: "./test",
-    // starknetSources: "",
+    starknetSources: "contracts/starknet",
     starknetArtifacts: "./starknet-artifacts",
     cairoPaths: [
       `${process.env.PWD}/contracts/starknet/starknet-dss`,
