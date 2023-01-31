@@ -9,8 +9,8 @@ import {
 } from "./dss-teleport/dssTeleport";
 import { startPrank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
-import {Account} from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import {deploySNVat} from "./starknet-dss/starknetDss";
+import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import { deploySNVat } from "./starknet-dss/starknetDss";
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
@@ -51,10 +51,9 @@ export async function setup() {
   });
 
   const snPredeployedAccounts: Account[] = [];
-  for (const {
-    address,
-    private_key,
-  } of (await hre.starknet.devnet.getPredeployedAccounts()).slice(0,2)) {
+  for (const { address, private_key } of (
+    await hre.starknet.devnet.getPredeployedAccounts()
+  ).slice(0, 2)) {
     const account =
       await hre.starknet.OpenZeppelinAccount.getAccountFromAddress(
         address,
@@ -63,7 +62,10 @@ export async function setup() {
     snPredeployedAccounts.push(account);
   }
 
-  const snVat = await deploySNVat(snPredeployedAccounts[0], snPredeployedAccounts[1].address)
+  const snVat = await deploySNVat(
+    snPredeployedAccounts[0],
+    snPredeployedAccounts[1].address
+  );
 
   const signers = await hre.ethers.getSigners();
   const admin = await hre.ethers.getImpersonatedSigner(
@@ -118,6 +120,6 @@ export async function setup() {
   return {
     teleport,
     fees,
-    snVat
+    snVat,
   };
 }

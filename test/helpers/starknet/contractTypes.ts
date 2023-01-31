@@ -55,4 +55,3 @@ export type Contract<C extends Abi> = {
       ) => Promise<FlattenIfSingle<MapOutputParams<F["outputs"]>>>
     : (...args: MapInputParams<F["inputs"]>) => Promise<TransactionReceipt>;
 };
-

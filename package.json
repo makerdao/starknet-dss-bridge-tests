@@ -7,6 +7,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "tsc",
+    "compile:l2": "yarn hardhat starknet-compile contracts/starknet/starknet-dss-teleport/* contracts/starknet/starknet-dss/*",
     "chain:l1": "./scripts/node.sh",
     "chain:l2": "./scripts/devnet.sh",
     "chain": "./scripts/both.sh",

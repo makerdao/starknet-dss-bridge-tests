@@ -1,962 +1,962 @@
 export default [
   {
-    "members": [
+    members: [
       {
-        "name": "Art",
-        "offset": 0,
-        "type": "Uint256"
+        name: "Art",
+        offset: 0,
+        type: "Uint256",
       },
       {
-        "name": "rate",
-        "offset": 2,
-        "type": "Uint256"
+        name: "rate",
+        offset: 2,
+        type: "Uint256",
       },
       {
-        "name": "spot",
-        "offset": 4,
-        "type": "Uint256"
+        name: "spot",
+        offset: 4,
+        type: "Uint256",
       },
       {
-        "name": "line",
-        "offset": 6,
-        "type": "Uint256"
+        name: "line",
+        offset: 6,
+        type: "Uint256",
       },
       {
-        "name": "dust",
-        "offset": 8,
-        "type": "Uint256"
-      }
+        name: "dust",
+        offset: 8,
+        type: "Uint256",
+      },
     ],
-    "name": "Ilk",
-    "size": 10,
-    "type": "struct"
+    name: "Ilk",
+    size: 10,
+    type: "struct",
   },
   {
-    "members": [
+    members: [
       {
-        "name": "low",
-        "offset": 0,
-        "type": "felt"
+        name: "low",
+        offset: 0,
+        type: "felt",
       },
       {
-        "name": "high",
-        "offset": 1,
-        "type": "felt"
-      }
+        name: "high",
+        offset: 1,
+        type: "felt",
+      },
     ],
-    "name": "Uint256",
-    "size": 2,
-    "type": "struct"
+    name: "Uint256",
+    size: 2,
+    type: "struct",
   },
   {
-    "members": [
+    members: [
       {
-        "name": "ink",
-        "offset": 0,
-        "type": "Uint256"
+        name: "ink",
+        offset: 0,
+        type: "Uint256",
       },
       {
-        "name": "art",
-        "offset": 2,
-        "type": "Uint256"
-      }
+        name: "art",
+        offset: 2,
+        type: "Uint256",
+      },
     ],
-    "name": "Urn",
-    "size": 4,
-    "type": "struct"
+    name: "Urn",
+    size: 4,
+    type: "struct",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "name": "wards",
-    "outputs": [
+    name: "wards",
+    outputs: [
       {
-        "name": "res",
-        "type": "felt"
-      }
+        name: "res",
+        type: "felt",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "b",
-        "type": "felt"
+        name: "b",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "can",
-    "outputs": [
+    name: "can",
+    outputs: [
       {
-        "name": "res",
-        "type": "felt"
-      }
+        name: "res",
+        type: "felt",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
-      }
+        name: "i",
+        type: "felt",
+      },
     ],
-    "name": "ilks",
-    "outputs": [
+    name: "ilks",
+    outputs: [
       {
-        "name": "ilk",
-        "type": "Ilk"
-      }
+        name: "ilk",
+        type: "Ilk",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "urns",
-    "outputs": [
+    name: "urns",
+    outputs: [
       {
-        "name": "urn",
-        "type": "Urn"
-      }
+        name: "urn",
+        type: "Urn",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "dai",
-    "outputs": [
+    name: "dai",
+    outputs: [
       {
-        "name": "res",
-        "type": "Uint256"
-      }
+        name: "res",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "gem",
-    "outputs": [
+    name: "gem",
+    outputs: [
       {
-        "name": "gem",
-        "type": "Uint256"
-      }
+        name: "gem",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "sin",
-    "outputs": [
+    name: "sin",
+    outputs: [
       {
-        "name": "sin",
-        "type": "Uint256"
-      }
+        name: "sin",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "debt",
-    "outputs": [
+    inputs: [],
+    name: "debt",
+    outputs: [
       {
-        "name": "debt",
-        "type": "Uint256"
-      }
+        name: "debt",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "surf",
-    "outputs": [
+    inputs: [],
+    name: "surf",
+    outputs: [
       {
-        "name": "surf",
-        "type": "Uint256"
-      }
+        name: "surf",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "vice",
-    "outputs": [
+    inputs: [],
+    name: "vice",
+    outputs: [
       {
-        "name": "vice",
-        "type": "Uint256"
-      }
+        name: "vice",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "Line",
-    "outputs": [
+    inputs: [],
+    name: "Line",
+    outputs: [
       {
-        "name": "Line",
-        "type": "Uint256"
-      }
+        name: "Line",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "live",
-    "outputs": [
+    inputs: [],
+    name: "live",
+    outputs: [
       {
-        "name": "live",
-        "type": "felt"
-      }
+        name: "live",
+        type: "felt",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "keys": [],
-    "name": "Rely",
-    "type": "event"
+    keys: [],
+    name: "Rely",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "keys": [],
-    "name": "Deny",
-    "type": "event"
+    keys: [],
+    name: "Deny",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "ilk",
-        "type": "felt"
-      }
+        name: "ilk",
+        type: "felt",
+      },
     ],
-    "keys": [],
-    "name": "Init",
-    "type": "event"
+    keys: [],
+    name: "Init",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "what",
-        "type": "felt"
+        name: "what",
+        type: "felt",
       },
       {
-        "name": "data",
-        "type": "Uint256"
-      }
+        name: "data",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "File",
-    "type": "event"
+    keys: [],
+    name: "File",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "what",
-        "type": "felt"
+        name: "what",
+        type: "felt",
       },
       {
-        "name": "data",
-        "type": "Uint256"
-      }
+        name: "data",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "File_ilk",
-    "type": "event"
+    keys: [],
+    name: "File_ilk",
+    type: "event",
   },
   {
-    "data": [],
-    "keys": [],
-    "name": "Cage",
-    "type": "event"
+    data: [],
+    keys: [],
+    name: "Cage",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "from_",
-        "type": "felt"
+        name: "from_",
+        type: "felt",
       },
       {
-        "name": "to",
-        "type": "felt"
-      }
+        name: "to",
+        type: "felt",
+      },
     ],
-    "keys": [],
-    "name": "Hope",
-    "type": "event"
+    keys: [],
+    name: "Hope",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "from_",
-        "type": "felt"
+        name: "from_",
+        type: "felt",
       },
       {
-        "name": "to",
-        "type": "felt"
-      }
+        name: "to",
+        type: "felt",
+      },
     ],
-    "keys": [],
-    "name": "Nope",
-    "type": "event"
+    keys: [],
+    name: "Nope",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "user",
-        "type": "felt"
+        name: "user",
+        type: "felt",
       },
       {
-        "name": "wad",
-        "type": "Uint256"
-      }
+        name: "wad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Slip",
-    "type": "event"
+    keys: [],
+    name: "Slip",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "wad",
-        "type": "Uint256"
-      }
+        name: "wad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Flux",
-    "type": "event"
+    keys: [],
+    name: "Flux",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Move",
-    "type": "event"
+    keys: [],
+    name: "Move",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "w",
-        "type": "felt"
+        name: "w",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Frob",
-    "type": "event"
+    keys: [],
+    name: "Frob",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Fork",
-    "type": "event"
+    keys: [],
+    name: "Fork",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "w",
-        "type": "felt"
+        name: "w",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Grab",
-    "type": "event"
+    keys: [],
+    name: "Grab",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Heal",
-    "type": "event"
+    keys: [],
+    name: "Heal",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Suck",
-    "type": "event"
+    keys: [],
+    name: "Suck",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Swell",
-    "type": "event"
+    keys: [],
+    name: "Swell",
+    type: "event",
   },
   {
-    "data": [
+    data: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "rate",
-        "type": "Uint256"
-      }
+        name: "rate",
+        type: "Uint256",
+      },
     ],
-    "keys": [],
-    "name": "Fold",
-    "type": "event"
+    keys: [],
+    name: "Fold",
+    type: "event",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "bit",
-        "type": "felt"
+        name: "bit",
+        type: "felt",
       },
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "name": "wish",
-    "outputs": [
+    name: "wish",
+    outputs: [
       {
-        "name": "res",
-        "type": "felt"
-      }
+        name: "res",
+        type: "felt",
+      },
     ],
-    "type": "function"
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ward",
-        "type": "felt"
-      }
+        name: "ward",
+        type: "felt",
+      },
     ],
-    "name": "constructor",
-    "outputs": [],
-    "type": "constructor"
+    name: "constructor",
+    outputs: [],
+    type: "constructor",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "usr",
-        "type": "felt"
-      }
+        name: "usr",
+        type: "felt",
+      },
     ],
-    "name": "rely",
-    "outputs": [],
-    "type": "function"
+    name: "rely",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "usr",
-        "type": "felt"
-      }
+        name: "usr",
+        type: "felt",
+      },
     ],
-    "name": "deny",
-    "outputs": [],
-    "type": "function"
+    name: "deny",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ilk",
-        "type": "felt"
-      }
+        name: "ilk",
+        type: "felt",
+      },
     ],
-    "name": "init",
-    "outputs": [],
-    "type": "function"
+    name: "init",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "what",
-        "type": "felt"
+        name: "what",
+        type: "felt",
       },
       {
-        "name": "data",
-        "type": "Uint256"
-      }
+        name: "data",
+        type: "Uint256",
+      },
     ],
-    "name": "file",
-    "outputs": [],
-    "type": "function"
+    name: "file",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "what",
-        "type": "felt"
+        name: "what",
+        type: "felt",
       },
       {
-        "name": "data",
-        "type": "Uint256"
-      }
+        name: "data",
+        type: "Uint256",
+      },
     ],
-    "name": "file_ilk",
-    "outputs": [],
-    "type": "function"
+    name: "file_ilk",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "cage",
-    "outputs": [],
-    "type": "function"
+    inputs: [],
+    name: "cage",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "ink",
-    "outputs": [
+    name: "ink",
+    outputs: [
       {
-        "name": "res",
-        "type": "Uint256"
-      }
+        name: "res",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
-      }
+        name: "u",
+        type: "felt",
+      },
     ],
-    "name": "art",
-    "outputs": [
+    name: "art",
+    outputs: [
       {
-        "name": "res",
-        "type": "Uint256"
-      }
+        name: "res",
+        type: "Uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "name": "hope",
-    "outputs": [],
-    "type": "function"
+    name: "hope",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "user",
-        "type": "felt"
-      }
+        name: "user",
+        type: "felt",
+      },
     ],
-    "name": "nope",
-    "outputs": [],
-    "type": "function"
+    name: "nope",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "usr",
-        "type": "felt"
+        name: "usr",
+        type: "felt",
       },
       {
-        "name": "wad",
-        "type": "Uint256"
-      }
+        name: "wad",
+        type: "Uint256",
+      },
     ],
-    "name": "slip",
-    "outputs": [],
-    "type": "function"
+    name: "slip",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "wad",
-        "type": "Uint256"
-      }
+        name: "wad",
+        type: "Uint256",
+      },
     ],
-    "name": "flux",
-    "outputs": [],
-    "type": "function"
+    name: "flux",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "name": "move",
-    "outputs": [],
-    "type": "function"
+    name: "move",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "w",
-        "type": "felt"
+        name: "w",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "name": "frob",
-    "outputs": [],
-    "type": "function"
+    name: "frob",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "ilk",
-        "type": "felt"
+        name: "ilk",
+        type: "felt",
       },
       {
-        "name": "src",
-        "type": "felt"
+        name: "src",
+        type: "felt",
       },
       {
-        "name": "dst",
-        "type": "felt"
+        name: "dst",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "name": "fork",
-    "outputs": [],
-    "type": "function"
+    name: "fork",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "w",
-        "type": "felt"
+        name: "w",
+        type: "felt",
       },
       {
-        "name": "dink",
-        "type": "Uint256"
+        name: "dink",
+        type: "Uint256",
       },
       {
-        "name": "dart",
-        "type": "Uint256"
-      }
+        name: "dart",
+        type: "Uint256",
+      },
     ],
-    "name": "grab",
-    "outputs": [],
-    "type": "function"
+    name: "grab",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "name": "heal",
-    "outputs": [],
-    "type": "function"
+    name: "heal",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "v",
-        "type": "felt"
+        name: "v",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "name": "suck",
-    "outputs": [],
-    "type": "function"
+    name: "suck",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "rad",
-        "type": "Uint256"
-      }
+        name: "rad",
+        type: "Uint256",
+      },
     ],
-    "name": "swell",
-    "outputs": [],
-    "type": "function"
+    name: "swell",
+    outputs: [],
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "name": "i",
-        "type": "felt"
+        name: "i",
+        type: "felt",
       },
       {
-        "name": "u",
-        "type": "felt"
+        name: "u",
+        type: "felt",
       },
       {
-        "name": "rate",
-        "type": "Uint256"
-      }
+        name: "rate",
+        type: "Uint256",
+      },
     ],
-    "name": "fold",
-    "outputs": [],
-    "type": "function"
-  }
+    name: "fold",
+    outputs: [],
+    type: "function",
+  },
 ] as const;

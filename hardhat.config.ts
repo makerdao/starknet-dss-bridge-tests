@@ -31,8 +31,12 @@ const config = {
     cache: "./cache",
     sources: "./contracts",
     tests: "./test",
-    starknetSources: "./contracts/starknet/starknet-dss",
+    // starknetSources: "",
     starknetArtifacts: "./starknet-artifacts",
+    cairoPaths: [
+      `${process.env.PWD}/contracts/starknet/starknet-dss`,
+      `${process.env.PWD}/contracts/starknet/starknet-dss-teleport`
+    ]
   },
   solidity: {
     compilers: [
