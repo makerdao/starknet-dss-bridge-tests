@@ -6,9 +6,9 @@ import {
 import vatAbi from "./abi/vatAbi";
 import hre from "hardhat";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import { Felt } from "../helpers/starknet/types";
 
 type SNVat = WrappedStarknetContract<typeof vatAbi>;
-type Felt = bigint | string; // TODO: what it should be exactly
 
 // TODO: there should be global "active account" ala prank somewhere
 export async function deploySNVat(
