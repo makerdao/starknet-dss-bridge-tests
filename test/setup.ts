@@ -109,19 +109,19 @@ export async function setup() {
 	};
 
 	// This Sets `snPredeployedAccounts[1]` as the global active account
-	const sn_dss: starknetDss.SNDssInstance = await starknetDss.deploy(
+	const SNDss: starknetDss.SNDssInstance = await starknetDss.deploy(
 		snPredeployedAccounts[0],
 		snPredeployedAccounts[1],
 		"0x03e85bfbb8e2a42b7bead9e88e9a1b19dbccf661471061807292120462396ec9" // DAI Address
 	);
 
-	const sn_claimToken: starknetDss.SNToken = await starknetDss.deploySNToken(
+	const SNClaimToken: starknetDss.SNToken = await starknetDss.deploySNToken(
 		snPredeployedAccounts[0],
 		snPredeployedAccounts[1].address
 	);
 
 	const sn_dssConfig: starknetDss.XDomainDssConfig = {
-		claimToken: sn_claimToken.address,
+		claimToken: SNClaimToken.address,
 		endWait: 3600n, // 1 hour
 	};
 
@@ -135,7 +135,7 @@ export async function setup() {
 
 	await dssTeleport.init(dss, teleport, teleportConfig);
 
-	await starknetDss.init(sn_dss, sn_dssConfig);
+	await starknetDss.init(SNDss, sn_dssConfig);
 
 	return {
 		teleport,
