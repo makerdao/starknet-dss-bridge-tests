@@ -4,7 +4,7 @@ import { Abi } from "abitype";
 
 let prankster: Signer;
 
-export function startPrank(signer: Signer) {
+export function startL1Prank(signer: Signer) {
   prankster = signer;
 }
 

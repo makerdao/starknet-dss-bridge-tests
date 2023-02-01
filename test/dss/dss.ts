@@ -7,6 +7,7 @@ import vowAbi from "./abi/vowAbi";
 import { Address, GetContractResult } from "@wagmi/core";
 import hre from "hardhat";
 import { prank } from "../helpers/prank";
+import { DssInstance } from "../dss-teleport/dssTeleport";
 
 export type Dai = GetContractResult<typeof daiAbi>;
 export type Vat = GetContractResult<typeof vatAbi>;
@@ -52,4 +53,33 @@ export async function getCure(address: Address): Promise<Cure> {
 export async function getVow(address: Address): Promise<Vow> {
   const vow = (await hre.ethers.getContractAt(vowAbi as any, address)) as Vow;
   return prank(vow);
+}
+
+interface DssConfig {
+  vat: Address;
+  jug: Address;
+  cure: Address;
+  vow: Address;
+  daiJoin: Address;
+  dai: Address;
+}
+
+export interface DssInstance {
+  vat: Vat;
+  jug: Jug;
+  cure: Cure;
+  vow: Vow;
+  daiJoin: DaiJoin;
+  dai: Dai;
+}
+
+export async function getDss(config: DssConfig): Promise<DssInstance> {
+  return {
+    vat: await getVat(config.vat),
+    jug: await getJug(config.jug),
+    cure: await getCure(config.cure),
+    vow: await getVow(config.vow),
+    daiJoin: await getDaiJoin(config.daiJoin),
+    dai: await getDai(config.dai),
+  };
 }

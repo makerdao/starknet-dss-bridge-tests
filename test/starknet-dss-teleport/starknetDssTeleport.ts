@@ -6,9 +6,9 @@ import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import hre from "hardhat";
 import { Felt, Uint256 } from "../helpers/starknet/types";
-import {Address} from "@wagmi/core";
-import {expect} from "earljs";
-import {SNDaiJoin} from "../starknet-dss/starknetDss";
+import { Address } from "@wagmi/core";
+import { expect } from "earljs";
+import { SNDaiJoin } from "../starknet-dss/starknetDss";
 
 type SNTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
 type SNTeleportOracleAuth = WrappedStarknetContract<
@@ -45,7 +45,10 @@ async function deploySNTeleportOracleAuth(
 ): Promise<SNTeleportOracleAuth> {
   const factory = await hre.starknet.getContractFactory("teleport_oracle_auth");
   await deployer.declare(factory);
-  const contract = await deployer.deploy(factory, { ward: deployer.address, teleport_join });
+  const contract = await deployer.deploy(factory, {
+    ward: deployer.address,
+    teleport_join,
+  });
   return wrapTyped(hre, contract);
 }
 
@@ -112,7 +115,7 @@ export async function deploy(
   expect(await teleport.join.wards(deployer.address)).toBeTruthy();
   await teleport.join.rely(owner);
   await teleport.join.deny(deployer.address);
-  
+
   expect(await teleport.router.wards(deployer.address)).toBeTruthy();
   await teleport.router.rely(owner);
   await teleport.router.deny(deployer.address);
@@ -123,8 +126,6 @@ export async function deploy(
 
   return teleport;
 }
-
-
 
 // function deploy(
 //   address deployer,
@@ -151,7 +152,6 @@ export async function deploy(
 //   switchOwner(address(teleport.router), deployer, owner);
 //   switchOwner(address(teleport.oracleAuth), deployer, owner);
 // }
-
 
 //
 // function deployLinearFee(

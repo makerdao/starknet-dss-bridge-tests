@@ -137,13 +137,6 @@ export interface DssTeleportConfig {
   oracleSigners: Address[];
 }
 
-export interface DssInstance {
-  vat: Vat;
-  jug: Jug;
-  cure: Cure;
-  vow: Vow;
-}
-
 // TODO which wagmi type should be used here?
 const SPOT = formatBytes32String("spot") as Address;
 const VOW = formatBytes32String("vow") as Address;
