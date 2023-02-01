@@ -14,7 +14,7 @@ import {
 	tokenAbi,
 } from "./abi";
 
-import {getL2ContractAt, l2String} from "../helpers/starknet/utils";
+import {getL2ContractAt, l2String} from "../helpers/utils";
 
 export type SNVat = WrappedStarknetContract<typeof vatAbi>;
 export type SNDai = WrappedStarknetContract<typeof daiAbi>;
@@ -211,12 +211,12 @@ export async function getSNCure(address: string): Promise<SNCure> {
 	return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
 }
 
-export interface XDomainDssConfig {
+export interface SNDssConfig {
 	claimToken: string;
 	endWait: bigint;
 }
 
-export async function init(dss: SNDssInstance, cfg: XDomainDssConfig) {
+export async function init(dss: SNDssInstance, cfg: SNDssConfig) {
 	await dss.vat.rely(dss.jug.address);
 	//dss.vat.rely(dss.dog));
 	await dss.vat.rely(dss.pot.address);
