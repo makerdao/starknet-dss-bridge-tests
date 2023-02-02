@@ -21,3 +21,7 @@
 	path = lib/starknet-dss-teleport
 	url = git@github.com:makerdao/starknet-dss-teleport.git
 	branch = develop
+[submodule "lib/starknet-dss-bridge"]
+	path = lib/starknet-dss-bridge
+	url = git@github.com:makerdao/starknet-dss-bridge.git
+	branch = develop
