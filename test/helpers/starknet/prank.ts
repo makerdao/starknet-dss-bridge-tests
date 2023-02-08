@@ -1,8 +1,32 @@
 import type { Abi } from "./abi";
 import { WrappedStarknetContract } from "./wrap";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import hre from "hardhat";
 
 let prankster: Account;
+
+let predeployedAccounts: Account[] = [];
+
+export function snPredeployedAccounts(): Account[] {
+  return predeployedAccounts;
+}
+
+export async function initSnPredeployedAccounts(n: number) {
+  for (const { address, private_key } of (
+    await hre.starknet.devnet.getPredeployedAccounts()
+  ).slice(0, n)) {
+    const account =
+      await hre.starknet.OpenZeppelinAccount.getAccountFromAddress(
+        address,
+        private_key
+      );
+    predeployedAccounts.push(account);
+  }
+}
+
+export function currentSnAccount(): Account {
+  return prankster || predeployedAccounts[0];
+}
 
 export function startSnPrank(signer: Account) {
   prankster = signer;
@@ -18,13 +42,8 @@ export function starknetPrank<TAbi extends Abi>(
         const callName = _callName.toString();
         if (typeof (contract as any)[callName] === "function") {
           return (...args: any[]) => {
-            if (prankster !== undefined) {
-              // console.log(`calling ${contract.address} with prank`, _callName, args)
-              return (contract.connect(prankster) as any)[callName](...args);
-            } else {
-              // console.log(`calling ${contract.address}`, _callName, args)
-              return (contract as any)[callName](...args);
-            }
+            contract.connect(currentSnAccount())
+            return (contract as any)[callName](...args);
           };
         }
         // console.log('getting', _callName)

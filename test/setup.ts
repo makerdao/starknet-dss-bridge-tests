@@ -4,18 +4,15 @@ import * as dssTeleport from "./dss-teleport/dssTeleport";
 import { DssTeleportConfig } from "./dss-teleport/dssTeleport";
 import * as starknetDss from "./starknet-dss/starknetDss";
 import { SNDssConfig } from "./starknet-dss/starknetDss";
-import { getDaiJoin, getDss } from "./dss/dss";
+import { getDss } from "./dss/dss";
 import { startL1Prank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
-import {
-  _1_HOUR,
-  _8_DAYS,
-  l1String,
-  reset,
-  snPredeployedAccounts,
-  WAD,
-} from "./helpers/utils";
+import { _1_HOUR, _8_DAYS, l1String, reset, WAD } from "./helpers/utils";
 import config from "./config";
+import {
+  initSnPredeployedAccounts,
+  snPredeployedAccounts, startSnPrank,
+} from "./helpers/starknet/prank";
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
@@ -44,11 +41,13 @@ export async function setup() {
 
   await reset();
 
+  await initSnPredeployedAccounts(2);
+
   const {
     domains: { root: rootCfg, starknet: snCfg },
   } = config;
 
-  const [snDeployer, snOwner] = await snPredeployedAccounts(2);
+  const [_, snOwner] = snPredeployedAccounts();
 
   const deployer = (await hre.ethers.getSigners())[0];
   const admin = await hre.ethers.getImpersonatedSigner(rootCfg.admin);
@@ -61,7 +60,7 @@ export async function setup() {
   const teleport = await dssTeleport.deploy(
     deployer.address as Address,
     admin.address as Address,
-    rootCfg.teleportIlk,
+    l1String(rootCfg.teleportIlk),
     l1String(snCfg.domain),
     l1String(rootCfg.domain),
     dss.daiJoin
@@ -69,12 +68,9 @@ export async function setup() {
 
   const fees = await dssTeleport.deployLinearFee(WAD / 10000n, _8_DAYS);
 
-  const snDss = await starknetDss.deploy(snDeployer, snOwner, snCfg.dai);
+  const snDss = await starknetDss.deploy(snOwner, snCfg.dai);
 
-  const snClaimToken = await starknetDss.deploySNToken(
-    snDeployer,
-    snOwner.address
-  );
+  const snClaimToken = await starknetDss.deploySNToken(snOwner.address);
 
   startL1Prank(admin);
 
@@ -89,6 +85,8 @@ export async function setup() {
     claimToken: snClaimToken.address,
     endWait: _1_HOUR,
   };
+
+  startSnPrank(snOwner);
   await starknetDss.init(snDss, snDssCfg);
 
   return {

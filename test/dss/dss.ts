@@ -7,7 +7,6 @@ import vowAbi from "./abi/vowAbi";
 import { Address, GetContractResult } from "@wagmi/core";
 import hre from "hardhat";
 import { prank } from "../helpers/prank";
-import { DssInstance } from "../dss-teleport/dssTeleport";
 
 export type Dai = GetContractResult<typeof daiAbi>;
 export type Vat = GetContractResult<typeof vatAbi>;

@@ -43,20 +43,6 @@ export async function reset() {
     ],
   });
 }
-export async function snPredeployedAccounts(n: number): Promise<Account[]> {
-  const result: Account[] = [];
-  for (const { address, private_key } of (
-    await hre.starknet.devnet.getPredeployedAccounts()
-  ).slice(0, n)) {
-    const account =
-      await hre.starknet.OpenZeppelinAccount.getAccountFromAddress(
-        address,
-        private_key
-      );
-    result.push(account);
-  }
-  return result;
-}
 
 export const WAD = 10n ** 18n;
 export const _8_DAYS = 8n * 24n * 60n * 60n;

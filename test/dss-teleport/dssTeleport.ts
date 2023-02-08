@@ -5,7 +5,7 @@ import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
 import teleportFeesAbi from "./abi/teleportFeesAbi";
 import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
 import hre from "hardhat";
-import { Dai, Vat, DaiJoin, Jug, Cure, Vow } from "../dss/dss";
+import { DaiJoin, DssInstance } from "../dss/dss";
 import { expect } from "earljs";
 import { formatBytes32String } from "ethers/lib/utils.js";
 import { prank } from "../helpers/prank";

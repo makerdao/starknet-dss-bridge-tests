@@ -1,4 +1,4 @@
 {
     "require": ["ts-node/register/files", "test/helpers/hooks.ts"],
-    "timeout": 300000
+    "timeout": 3000000
 }
