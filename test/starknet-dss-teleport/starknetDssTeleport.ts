@@ -1,14 +1,15 @@
+import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import { Address } from "@wagmi/core";
+import { expect } from "earljs";
+import hre from "hardhat";
+
+import { Felt, Uint256 } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
+import { SNDaiJoin } from "../starknet-dss/starknetDss";
+import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
 import teleportOracleAuthAbi from "./abi/starknetTeleportOracleAuthAbi";
 import teleportRouterAbi from "./abi/starknetTeleportRouterAbi";
-import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
-import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import hre from "hardhat";
-import { Felt, Uint256 } from "../helpers/starknet/types";
-import { Address } from "@wagmi/core";
-import { expect } from "earljs";
-import { SNDaiJoin } from "../starknet-dss/starknetDss";
 
 type SNTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
 type SNTeleportOracleAuth = WrappedStarknetContract<
@@ -69,7 +70,7 @@ async function deploySNTeleportRouter(
   return wrapTyped(hre, contract);
 }
 
-async function deploySNTeleportConstantFee(
+export async function deploySNTeleportConstantFee(
   deployer: Account,
   fee: Uint256,
   ttl: Felt

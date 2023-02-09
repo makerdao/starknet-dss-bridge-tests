@@ -1,27 +1,23 @@
-import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
-import hre from "hardhat";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+import { Address } from "@wagmi/core";
+import hre from "hardhat";
+
+import { currentSnAccount, starknetPrank } from "../helpers/starknet/prank";
+import { Felt } from "../helpers/starknet/types";
+import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
+import { getL2ContractAt, l2String } from "../helpers/utils";
 import {
-  currentSnAccount,
-  starknetPrank,
-  startSnPrank,
-} from "../helpers/starknet/prank";
-import {
-  vatAbi,
+  cureAbi,
   daiAbi,
   daiJoinAbi,
-  cureAbi,
   endAbi,
   jugAbi,
-  spotterAbi,
   potAbi,
+  spotterAbi,
   tokenAbi,
+  vatAbi,
 } from "./abi";
-
-import { getL2ContractAt, l2String } from "../helpers/utils";
-import { Felt } from "../helpers/starknet/types";
 import { breakIntoDai } from "./breakIntoDai";
-import { Address } from "@wagmi/core";
 
 export type SNVat = WrappedStarknetContract<typeof vatAbi>;
 export type SNDai = WrappedStarknetContract<typeof daiAbi>;
@@ -38,13 +34,6 @@ async function deploySNVat(ward: Felt): Promise<SNVat> {
   await currentSnAccount().declare(factory);
   const vat = await currentSnAccount().deploy(factory, { ward });
   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
-}
-
-async function deploySNDai(ward: Felt): Promise<SNDai> {
-  const factory = await hre.starknet.getContractFactory("dai");
-  await currentSnAccount().declare(factory);
-  const dai = await currentSnAccount().deploy(factory, { ward });
-  return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
 }
 
 export async function deploySNToken(ward: Felt): Promise<SNToken> {
@@ -115,15 +104,15 @@ export async function deploy(
   owner: Account,
   dai: string
 ): Promise<SNDssInstance> {
-  let vat = await deploySNVat(owner.address);
-  let dai_ = await getSNDai(dai);
-  let daiJoin = await deploySNDaiJoin(vat.address, dai_.address);
+  const vat = await deploySNVat(owner.address);
+  const dai_ = await getSNDai(dai);
+  const daiJoin = await deploySNDaiJoin(vat.address, dai_.address);
   // //dss.dog = DaiAbstract(address(new Dog()));  // Needs merge in xdomain-dss
-  let spotter = await deploySNSpotter(vat.address, owner.address);
-  let pot = await deploySNPot(vat.address, owner.address);
-  let jug = await deploySNJug(vat.address, owner.address);
-  let cure = await deploySNCure(owner.address);
-  let end = await deploySNEnd(vat.address, owner.address);
+  const spotter = await deploySNSpotter(vat.address, owner.address);
+  const pot = await deploySNPot(vat.address, owner.address);
+  const jug = await deploySNJug(vat.address, owner.address);
+  const cure = await deploySNCure(owner.address);
+  const end = await deploySNEnd(vat.address, owner.address);
 
   return {
     vat,
@@ -213,7 +202,7 @@ export async function init(
   // WardsAbstract(cfg.claimToken).rely(address(dss.end));
 
   // daiJoin needs a vat.dai balance to match the existing dai supply
-  let totalSupply = await dss.dai.totalSupply();
+  const totalSupply = await dss.dai.totalSupply();
   // Vat(address(dss.vat)).swell(address(dss.daiJoin), int256(totalSupply) * 10 ** 27);
   await dss.vat.swell(dss.daiJoin.address, totalSupply * 10n ** 27n);
 }

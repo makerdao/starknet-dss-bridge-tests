@@ -12,7 +12,7 @@
 		"chain": "./scripts/both.sh",
 		"format": "prettier --check \"test/**/*.ts\"",
 		"format:fix": "prettier --write \"test/**/*.ts\"",
-		"lint": "eslint --ext .ts src",
+		"lint": "eslint --ext .ts test",
 		"lint:fix": "yarn lint --fix",
 		"test": "mocha --exit --recursive 'test/**/*.test.ts'",
 		"test:wait": "wait-on tcp:5050 && wait-on tcp:8545 && yarn test",

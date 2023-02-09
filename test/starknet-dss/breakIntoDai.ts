@@ -1,10 +1,11 @@
-import hre from "hardhat";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import { expect } from "earljs";
-import { SNDai } from "./starknetDss";
-import fs from "fs";
 import { Address } from "@wagmi/core";
+import { expect } from "earljs";
+import fs from "fs";
+import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+
+import { SNDai } from "./starknetDss";
 
 interface SendMessageToL2Params {
   l2_contract_address: string;

@@ -1,5 +1,3 @@
-import { getCure, getJug, getVat, getVow } from "./dss/dss";
-
 export default {
   domains: {
     root: {

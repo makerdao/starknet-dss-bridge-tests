@@ -1,8 +1,8 @@
-import { Signer } from "ethers";
 import { GetContractResult } from "@wagmi/core";
 import { Abi } from "abitype";
+import { Signer } from "ethers";
 
-let prankster: Signer;
+let prankster: Signer | undefined;
 
 export function startL1Prank(signer: Signer) {
   prankster = signer;

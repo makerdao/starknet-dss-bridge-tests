@@ -1,5 +1,6 @@
-import { setup } from "../setup";
 import { Context } from "mocha";
+
+import { setup } from "../setup";
 
 export type IntegrationContext = Context & Awaited<ReturnType<typeof setup>>;
 

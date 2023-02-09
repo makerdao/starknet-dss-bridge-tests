@@ -1,11 +1,12 @@
-import type { Abi } from "./abi";
-import { WrappedStarknetContract } from "./wrap";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import hre from "hardhat";
 
-let prankster: Account;
+import type { Abi } from "./abi";
+import { WrappedStarknetContract } from "./wrap";
 
-let predeployedAccounts: Account[] = [];
+let prankster: Account | undefined;
+
+const predeployedAccounts: Account[] = [];
 
 export function snPredeployedAccounts(): Account[] {
   return predeployedAccounts;
@@ -30,6 +31,10 @@ export function currentSnAccount(): Account {
 
 export function startSnPrank(signer: Account) {
   prankster = signer;
+}
+
+export function stopSnPrank() {
+  prankster = undefined;
 }
 
 export function starknetPrank<TAbi extends Abi>(

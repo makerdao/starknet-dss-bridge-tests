@@ -1,8 +1,7 @@
 import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
+import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
-import hre from "hardhat";
-import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 
 export async function getL2ContractAt(
   hre: HardhatRuntimeEnvironment,
