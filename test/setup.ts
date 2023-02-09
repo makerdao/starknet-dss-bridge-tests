@@ -3,7 +3,7 @@ import { Address } from "@wagmi/core";
 import * as dssTeleport from "./dss-teleport/dssTeleport";
 import { DssTeleportConfig } from "./dss-teleport/dssTeleport";
 import * as starknetDss from "./starknet-dss/starknetDss";
-import {getSNDai, SNDssConfig} from "./starknet-dss/starknetDss";
+import { getSNDai, SNDssConfig } from "./starknet-dss/starknetDss";
 import { getDss } from "./dss/dss";
 import { startL1Prank } from "./helpers/prank";
 import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
@@ -15,7 +15,7 @@ import {
   snPredeployedAccounts,
   startSnPrank,
 } from "./helpers/starknet/prank";
-import {breakIntoDai} from "./starknet-dss/breakIntoDai";
+import { breakIntoDai } from "./starknet-dss/breakIntoDai";
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
@@ -98,7 +98,6 @@ export async function setup() {
     snVat: snDss.vat,
   };
 
-
   // const snClaimToken = await starknetDss.deploySNToken(snOwner.address);
   // const snDssCfg: SNDssConfig = {
   //   claimToken: snClaimToken.address,
@@ -111,6 +110,4 @@ export async function setup() {
 
   // const dai = await getSNDai(snCfg.dai);
   // await breakIntoDai(currentSnAccount(), dai, rootCfg.govRelay, snCfg.govRelay)
-
-
 }

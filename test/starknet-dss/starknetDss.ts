@@ -20,8 +20,8 @@ import {
 
 import { getL2ContractAt, l2String } from "../helpers/utils";
 import { Felt } from "../helpers/starknet/types";
-import {breakIntoDai} from "./breakIntoDai";
-import {Address} from "@wagmi/core";
+import { breakIntoDai } from "./breakIntoDai";
+import { Address } from "@wagmi/core";
 
 export type SNVat = WrappedStarknetContract<typeof vatAbi>;
 export type SNDai = WrappedStarknetContract<typeof daiAbi>;
@@ -173,8 +173,12 @@ export interface SNDssConfig {
   endWait: bigint;
 }
 
-export async function init(dss: SNDssInstance, cfg: SNDssConfig, l1GovRelayAddress: Address,
-                           l2GovRelayAddress: string) {
+export async function init(
+  dss: SNDssInstance,
+  cfg: SNDssConfig,
+  l1GovRelayAddress: Address,
+  l2GovRelayAddress: string
+) {
   await dss.vat.rely(dss.jug.address);
   //dss.vat.rely(dss.dog));
   await dss.vat.rely(dss.pot.address);
@@ -182,8 +186,12 @@ export async function init(dss: SNDssInstance, cfg: SNDssConfig, l1GovRelayAddre
   await dss.vat.rely(dss.spotter.address);
   await dss.vat.rely(dss.end.address);
 
-  // TODO: take control over starkent dai
-  await breakIntoDai(currentSnAccount(), dss.dai, l1GovRelayAddress, l2GovRelayAddress)
+  await breakIntoDai(
+    currentSnAccount(),
+    dss.dai,
+    l1GovRelayAddress,
+    l2GovRelayAddress
+  );
   await dss.dai.rely(dss.daiJoin.address);
 
   //dss.dog.file("vow", (dss.vow));
