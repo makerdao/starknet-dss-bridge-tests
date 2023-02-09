@@ -42,7 +42,7 @@ export function starknetPrank<TAbi extends Abi>(
         const callName = _callName.toString();
         if (typeof (contract as any)[callName] === "function") {
           return (...args: any[]) => {
-            contract.connect(currentSnAccount())
+            contract.connect(currentSnAccount());
             return (contract as any)[callName](...args);
           };
         }

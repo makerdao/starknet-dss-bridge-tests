@@ -17,6 +17,7 @@ export default {
       cure: "0x0085c9feAb2335447E1F4DC9bf3593a8e28bdfc7",
       vow: "0xA950524441892A31ebddF91d3cEEFa04Bf454466",
       dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      govRelay: "0x2385C60D2756Ed8CA001817fC37FDa216d7466c0"
     },
     starknet: {
       type: "starknet",
@@ -27,6 +28,7 @@ export default {
       domain: "STA-MAIN-A",
       escrow: "0x0437465dfb5B79726e35F08559B0cBea55bb585C",
       dai: "0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3",
+      govRelay: "0x05f4d9b039f82e9a90125fb119ace0531f4936ff2a9a54a8598d49a4cd4bd6db"
     },
   },
 } as const;
