@@ -24,8 +24,8 @@ async function sendMessageToL2(
   params: SendMessageToL2Params
 ) {
   return (
+    // @ts-ignore
     (
-      // @ts-ignore
       await hre.starknet.devnet.requestHandler(
         "/postman/send_message_to_l2",
         "POST",
