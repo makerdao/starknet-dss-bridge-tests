@@ -6,6 +6,7 @@ import cureAbi from "./abi/cureAbi";
 import daiAbi from "./abi/daiAbi";
 import daiJoinAbi from "./abi/daiJoinAbi";
 import jugAbi from "./abi/jugAbi";
+import spotterAbi from "./abi/spotterAbi";
 import vatAbi from "./abi/vatAbi";
 import vowAbi from "./abi/vowAbi";
 
@@ -15,6 +16,7 @@ export type DaiJoin = GetContractResult<typeof daiJoinAbi>;
 export type Jug = GetContractResult<typeof jugAbi>;
 export type Cure = GetContractResult<typeof cureAbi>;
 export type Vow = GetContractResult<typeof vowAbi>;
+export type Spotter = GetContractResult<typeof spotterAbi>;
 
 export async function getDaiJoin(address: Address): Promise<DaiJoin> {
   const daiJoin = (await hre.ethers.getContractAt(
@@ -55,6 +57,14 @@ export async function getVow(address: Address): Promise<Vow> {
   return prank(vow);
 }
 
+export async function getSpotter(address: Address): Promise<Spotter> {
+  const spotter = (await hre.ethers.getContractAt(
+    spotterAbi as any,
+    address
+  )) as Spotter;
+  return prank(spotter);
+}
+
 interface DssConfig {
   vat: Address;
   jug: Address;
@@ -62,6 +72,7 @@ interface DssConfig {
   vow: Address;
   daiJoin: Address;
   dai: Address;
+  spotter: Address;
 }
 
 export interface DssInstance {
@@ -71,6 +82,7 @@ export interface DssInstance {
   vow: Vow;
   daiJoin: DaiJoin;
   dai: Dai;
+  spotter: Spotter;
 }
 
 export async function getDss(config: DssConfig): Promise<DssInstance> {
@@ -81,5 +93,6 @@ export async function getDss(config: DssConfig): Promise<DssInstance> {
     vow: await getVow(config.vow),
     daiJoin: await getDaiJoin(config.daiJoin),
     dai: await getDai(config.dai),
+    spotter: await getSpotter(config.spotter),
   };
 }

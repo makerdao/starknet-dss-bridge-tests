@@ -57,13 +57,12 @@ async function deploySNSpotter(vat: Felt, ward: Felt): Promise<SNSpotter> {
   return starknetPrank<typeof spotterAbi>(wrapTyped(hre, spotter));
 }
 
-// TODO: change jug constructor params' names
 async function deploySNJug(vat: Felt, ward: Felt): Promise<SNJug> {
   const factory = await hre.starknet.getContractFactory("jug");
   await currentSnAccount().declare(factory);
   const jug = await currentSnAccount().deploy(factory, {
-    vat_: vat,
-    ward_: ward,
+    vat: vat,
+    ward: ward,
   });
   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }
@@ -126,7 +125,6 @@ export async function deploy(
   };
 }
 
-// TODO: add init script
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
 export async function getSNDaiJoin(address: string): Promise<SNDaiJoin> {
   const daiJoin = await getL2ContractAt(
