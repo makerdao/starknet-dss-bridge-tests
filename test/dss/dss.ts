@@ -1,10 +1,3 @@
-import daiJoinAbi from "./abi/daiJoinAbi";
-import daiAbi from "./abi/daiAbi";
-import vatAbi from "./abi/vatAbi";
-import jugAbi from "./abi/jugAbi";
-import cureAbi from "./abi/cureAbi";
-import vowAbi from "./abi/vowAbi";
-import spotterAbi from "./abi/spotterAbi";
 import { Address, GetContractResult } from "@wagmi/core";
 import hre from "hardhat";
 
@@ -13,6 +6,7 @@ import cureAbi from "./abi/cureAbi";
 import daiAbi from "./abi/daiAbi";
 import daiJoinAbi from "./abi/daiJoinAbi";
 import jugAbi from "./abi/jugAbi";
+import spotterAbi from "./abi/spotterAbi";
 import vatAbi from "./abi/vatAbi";
 import vowAbi from "./abi/vowAbi";
 
@@ -63,6 +57,14 @@ export async function getVow(address: Address): Promise<Vow> {
   return prank(vow);
 }
 
+export async function getSpotter(address: Address): Promise<Spotter> {
+  const spotter = (await hre.ethers.getContractAt(
+    spotterAbi as any,
+    address
+  )) as Spotter;
+  return prank(spotter);
+}
+
 interface DssConfig {
   vat: Address;
   jug: Address;
@@ -70,6 +72,7 @@ interface DssConfig {
   vow: Address;
   daiJoin: Address;
   dai: Address;
+  spotter: Address;
 }
 
 export interface DssInstance {
@@ -90,5 +93,6 @@ export async function getDss(config: DssConfig): Promise<DssInstance> {
     vow: await getVow(config.vow),
     daiJoin: await getDaiJoin(config.daiJoin),
     dai: await getDai(config.dai),
+    spotter: await getSpotter(config.spotter),
   };
 }

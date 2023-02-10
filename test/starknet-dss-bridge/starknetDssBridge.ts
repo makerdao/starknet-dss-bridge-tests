@@ -1,20 +1,20 @@
-import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import hre from "hardhat";
-import { Felt, Uint256 } from "../helpers/starknet/types";
-import { expect } from "earljs";
-import domainGuestAbi from "./abi/domainGuestAbi";
-import { getEscrow, StarknetDomainHost } from "../dss-bridge/dssBridge";
-import { SNDssInstance } from "../starknet-dss/starknetDss";
-import { l2String } from "../helpers/utils";
-import { DssInstance } from "../dss/dss";
 import { Address } from "@wagmi/core";
-import { formatBytes32String } from "ethers/lib/utils.js";
 import { ethers } from "ethers";
+import { formatBytes32String } from "ethers/lib/utils.js";
+import hre from "hardhat";
+
+import { DssInstance } from "../dss/dss";
+import { getEscrow, StarknetDomainHost } from "../dss-bridge/dssBridge";
+import { Felt } from "../helpers/starknet/types";
+import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
+import { l2String } from "../helpers/utils";
+import { SNDssInstance } from "../starknet-dss/starknetDss";
+import domainGuestAbi from "./abi/domainGuestAbi";
 
 type SNDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
 
-async function deploySNDomainGuest(
+export async function deploySNDomainGuest(
   deployer: Account,
   daiJoin: Felt,
   claimToken: Felt,
