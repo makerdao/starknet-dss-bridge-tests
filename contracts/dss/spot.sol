@@ -1,1 +1,1 @@
-./lib/dss/src/spot.sol
+../../lib/dss/src/spot.sol
