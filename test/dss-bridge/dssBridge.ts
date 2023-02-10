@@ -1,5 +1,6 @@
 import { Address, GetContractResult } from "@wagmi/core";
 import hre from "hardhat";
+
 import { prank } from "../helpers/prank";
 import escrowLikeAbi from "./escrowLikeAbi";
 import starknetDomainHostAbi from "./starknetDomainHostAbi";
@@ -9,14 +10,14 @@ export type StarknetDomainHost = GetContractResult<
 >;
 export type Escrow = GetContractResult<typeof escrowLikeAbi>;
 
-async function deployStarknetDomainHost(
-	ilk: Address,
-	daiJoin: Address,
-	escrow: Address,
-	router: Address,
-	starknet: Address,
-	guest: bigint,
-	l2dai: bigint
+export async function deployStarknetDomainHost(
+  ilk: Address,
+  daiJoin: Address,
+  escrow: Address,
+  router: Address,
+  starknet: Address,
+  guest: bigint,
+  l2dai: bigint
 ): Promise<StarknetDomainHost> {
 	const contractFactory = await hre.ethers.getContractFactory(
 		"StarknetDomainHost"

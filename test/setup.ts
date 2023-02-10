@@ -1,21 +1,20 @@
-import hre from "hardhat";
+import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
 import { Address } from "@wagmi/core";
+import hre from "hardhat";
+
+import config from "./config";
+import { getDss } from "./dss/dss";
 import * as dssTeleport from "./dss-teleport/dssTeleport";
 import { DssTeleportConfig } from "./dss-teleport/dssTeleport";
+import { startL1Prank } from "./helpers/prank";
+import {
+  initSnPredeployedAccounts,
+  snPredeployedAccounts,
+  startSnPrank,
+} from "./helpers/starknet/prank";
+import { _1_HOUR, _8_DAYS, l1String, reset, WAD } from "./helpers/utils";
 import * as starknetDss from "./starknet-dss/starknetDss";
 import { SNDssConfig } from "./starknet-dss/starknetDss";
-import { getDaiJoin, getDss } from "./dss/dss";
-import { startL1Prank } from "./helpers/prank";
-import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
-import {
-  _1_HOUR,
-  _8_DAYS,
-  l1String,
-  reset,
-  snPredeployedAccounts,
-  WAD,
-} from "./helpers/utils";
-import config from "./config";
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
@@ -44,24 +43,26 @@ export async function setup() {
 
   await reset();
 
+  await initSnPredeployedAccounts(2);
+
   const {
     domains: { root: rootCfg, starknet: snCfg },
   } = config;
 
-  const [snDeployer, snOwner] = await snPredeployedAccounts(2);
+  const [_, snOwner] = snPredeployedAccounts();
 
   const deployer = (await hre.ethers.getSigners())[0];
   const admin = await hre.ethers.getImpersonatedSigner(rootCfg.admin);
 
   // fund admin account
-  setBalance(admin.address, 10n ** 18n);
+  await setBalance(admin.address, 10n ** 18n);
 
   const dss = await getDss(rootCfg);
 
   const teleport = await dssTeleport.deploy(
     deployer.address as Address,
     admin.address as Address,
-    rootCfg.teleportIlk,
+    l1String(rootCfg.teleportIlk),
     l1String(snCfg.domain),
     l1String(rootCfg.domain),
     dss.daiJoin
@@ -69,12 +70,9 @@ export async function setup() {
 
   const fees = await dssTeleport.deployLinearFee(WAD / 10000n, _8_DAYS);
 
-  const snDss = await starknetDss.deploy(snDeployer, snOwner, snCfg.dai);
+  const snDss = await starknetDss.deploy(snOwner, snCfg.dai);
 
-  const snClaimToken = await starknetDss.deploySNToken(
-    snDeployer,
-    snOwner.address
-  );
+  const snClaimToken = await starknetDss.deploySNToken(snOwner.address);
 
   startL1Prank(admin);
 
@@ -89,11 +87,26 @@ export async function setup() {
     claimToken: snClaimToken.address,
     endWait: _1_HOUR,
   };
-  await starknetDss.init(snDss, snDssCfg);
+
+  startSnPrank(snOwner);
+  await starknetDss.init(snDss, snDssCfg, rootCfg.govRelay, snCfg.govRelay);
 
   return {
     teleport,
     fees,
     snVat: snDss.vat,
   };
+
+  // const snClaimToken = await starknetDss.deploySNToken(snOwner.address);
+  // const snDssCfg: SNDssConfig = {
+  //   claimToken: snClaimToken.address,
+  //   endWait: _1_HOUR,
+  // };
+  //
+  // const snDss = await starknetDss.deploy(snOwner, snCfg.dai);
+  // startSnPrank(snOwner);
+  // await starknetDss.init(snDss, snDssCfg, rootCfg.govRelay, snCfg.govRelay);
+
+  // const dai = await getSNDai(snCfg.dai);
+  // await breakIntoDai(currentSnAccount(), dai, rootCfg.govRelay, snCfg.govRelay)
 }

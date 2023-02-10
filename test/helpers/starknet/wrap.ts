@@ -1,3 +1,4 @@
+import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import {
   AbiEntry,
   Argument,
@@ -8,7 +9,7 @@ import {
   StarknetContract,
 } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
 import { zip } from "lodash";
-import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+
 import { Abi } from "./abi";
 import { Contract } from "./contractTypes";
 
@@ -81,7 +82,7 @@ export function wrap(hre: any, contract: StarknetContract) {
             `Can't evaluate: ${callName} in contract ${contract.address}`
           );
         }
-        if (abiEntry.type != "function") {
+        if (abiEntry.type !== "function") {
           throw new Error(
             `Can't evaluate a non function: ${callName} in contract ${contract.address}`
           );

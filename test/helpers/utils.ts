@@ -1,8 +1,7 @@
 import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
+import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
-import hre from "hardhat";
-import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 
 export async function getL2ContractAt(
   hre: HardhatRuntimeEnvironment,
@@ -42,20 +41,6 @@ export async function reset() {
       },
     ],
   });
-}
-export async function snPredeployedAccounts(n: number): Promise<Account[]> {
-  const result: Account[] = [];
-  for (const { address, private_key } of (
-    await hre.starknet.devnet.getPredeployedAccounts()
-  ).slice(0, n)) {
-    const account =
-      await hre.starknet.OpenZeppelinAccount.getAccountFromAddress(
-        address,
-        private_key
-      );
-    result.push(account);
-  }
-  return result;
 }
 
 export const WAD = 10n ** 18n;

@@ -7,7 +7,14 @@ import vowAbi from "./abi/vowAbi";
 import spotterAbi from "./abi/spotterAbi";
 import { Address, GetContractResult } from "@wagmi/core";
 import hre from "hardhat";
+
 import { prank } from "../helpers/prank";
+import cureAbi from "./abi/cureAbi";
+import daiAbi from "./abi/daiAbi";
+import daiJoinAbi from "./abi/daiJoinAbi";
+import jugAbi from "./abi/jugAbi";
+import vatAbi from "./abi/vatAbi";
+import vowAbi from "./abi/vowAbi";
 
 export type Dai = GetContractResult<typeof daiAbi>;
 export type Vat = GetContractResult<typeof vatAbi>;

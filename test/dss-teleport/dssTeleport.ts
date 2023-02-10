@@ -8,7 +8,15 @@ import hre from "hardhat";
 import { Dai, Vat, DaiJoin, Jug, Cure, Vow, DssInstance } from "../dss/dss";
 import { expect } from "earljs";
 import { formatBytes32String } from "ethers/lib/utils.js";
+import hre from "hardhat";
+
+import { DaiJoin, DssInstance } from "../dss/dss";
 import { prank } from "../helpers/prank";
+import teleportFeesAbi from "./abi/teleportFeesAbi";
+import teleportJoinAbi from "./abi/teleportJoinAbi";
+import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
+import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
+import teleportRouterAbi from "./abi/teleportRouterAbi";
 
 export type TeleportJoin = GetContractResult<typeof teleportJoinAbi>;
 export type TeleportRouter = GetContractResult<typeof teleportRouterAbi>;

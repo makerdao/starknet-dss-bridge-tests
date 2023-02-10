@@ -1,6 +1,7 @@
 // import daiAbi from "../abis/dai_abi_simple";
-import { Abi } from "./abi";
 import { TransactionReceipt } from "hardhat/types/runtime";
+
+import { Abi } from "./abi";
 
 type Functions<C extends Abi> = Extract<C[number], { type: "function" }>;
 
