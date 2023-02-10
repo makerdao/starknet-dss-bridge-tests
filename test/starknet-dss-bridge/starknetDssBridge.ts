@@ -4,6 +4,9 @@ import hre from "hardhat";
 import { Felt, Uint256 } from "../helpers/starknet/types";
 import { expect } from "earljs";
 import domainGuestAbi from "./abi/domainGuestAbi";
+import { StarknetDomainHost } from "../dss-bridge/dssBridge";
+import { SNDssInstance } from "../starknet-dss/starknetDss";
+import { l2String } from "../helpers/utils";
 
 type SNDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
 
@@ -26,10 +29,20 @@ async function deploySNDomainGuest(
 	return wrapTyped(hre, contract);
 }
 
-export interface SNDssBridgeInstance {
+export interface BridgeInstance {
 	guest: SNDomainGuest;
+	host: StarknetDomainHost;
 }
 
-export async function init(dssBridge: SNDssBridgeInstance) {
-	const { guest } = dssBridge;
+export async function init(dss: SNDssInstance, bridge: BridgeInstance) {
+	// dss.end.file("vow", address(bridge.guest));
+	await dss.end.file(l2String("vow"), bridge.guest.address);
+	// bridge.guest.file("end", address(dss.end));
+	await bridge.guest.file(l2String("end"), dss.end.address);
+	// bridge.guest.rely(address(dss.end));
+	await bridge.guest.rely(dss.end.address);
+	// dss.vat.rely(address(bridge.guest));
+	await dss.vat.rely(bridge.guest.address);
+	// dss.end.rely(address(bridge.guest));
+	await dss.end.rely(bridge.guest.address);
 }
