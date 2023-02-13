@@ -43,6 +43,11 @@ export async function setup() {
 
   await reset();
 
+  const mockStarknetMessaging =
+    await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!);
+
+  console.log(mockStarknetMessaging);
+
   await initSnPredeployedAccounts(2);
 
   const {

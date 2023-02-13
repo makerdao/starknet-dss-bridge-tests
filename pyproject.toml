@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "starknet-dss-bridge-tests"
+version = "0.0.0"
+authors = ["MakerDAO"]
+description = "Starknet Dss Bridge Tests"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.10"
+starknet-devnet = "0.4.3"

@@ -16,6 +16,7 @@ export default {
       vow: "0xA950524441892A31ebddF91d3cEEFa04Bf454466",
       dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       govRelay: "0x2385C60D2756Ed8CA001817fC37FDa216d7466c0",
+      spotter: "0x65C79fcB50Ca1594B025960e539eD7A9a6D434A3",
     },
     starknet: {
       type: "starknet",
