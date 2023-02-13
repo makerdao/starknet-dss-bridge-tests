@@ -1,4 +1,6 @@
 import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
+import { Address } from "@wagmi/core";
+import { getContractAddress } from "ethers/lib/utils";
 import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
@@ -20,12 +22,12 @@ export async function getL2ContractAt(
   return factory.getContractAt(address);
 }
 
-export function l2String(str: string): string {
-  return `0x${Buffer.from(str, "utf8").toString("hex")}`;
+export function l2String(str: string): Address {
+  return `0x${Buffer.from(str, "utf8").toString("hex")}` as Address;
 }
 
-export function l1String(str: string): string {
-  return hre.ethers.utils.formatBytes32String(str);
+export function l1String(str: string): Address {
+  return hre.ethers.utils.formatBytes32String(str) as Address;
 }
 
 export async function reset() {
@@ -43,6 +45,15 @@ export async function reset() {
   });
 }
 
+export async function getAddressOfNextDeployedContract(): Promise<string> {
+  const signer = (await hre.ethers.getSigners())[0];
+  return getContractAddress({
+    from: await signer.getAddress(),
+    nonce: await signer.getTransactionCount(),
+  });
+}
+
 export const WAD = 10n ** 18n;
 export const _8_DAYS = 8n * 24n * 60n * 60n;
 export const _1_HOUR = 3600n;
+export const _6_HOURS = 6n * _1_HOUR;

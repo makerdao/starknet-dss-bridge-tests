@@ -19,45 +19,45 @@ import {
 } from "./abi";
 import { breakIntoDai } from "./breakIntoDai";
 
-export type SNVat = WrappedStarknetContract<typeof vatAbi>;
-export type SNDai = WrappedStarknetContract<typeof daiAbi>;
-export type SNCure = WrappedStarknetContract<typeof cureAbi>;
-export type SNEnd = WrappedStarknetContract<typeof endAbi>;
-export type SNDaiJoin = WrappedStarknetContract<typeof daiJoinAbi>;
-export type SNJug = WrappedStarknetContract<typeof jugAbi>;
-export type SNSpotter = WrappedStarknetContract<typeof spotterAbi>;
-export type SNPot = WrappedStarknetContract<typeof potAbi>;
-export type SNToken = WrappedStarknetContract<typeof tokenAbi>;
+export type SnVat = WrappedStarknetContract<typeof vatAbi>;
+export type SnDai = WrappedStarknetContract<typeof daiAbi>;
+export type SnCure = WrappedStarknetContract<typeof cureAbi>;
+export type SnEnd = WrappedStarknetContract<typeof endAbi>;
+export type SnDaiJoin = WrappedStarknetContract<typeof daiJoinAbi>;
+export type SnJug = WrappedStarknetContract<typeof jugAbi>;
+export type SnSpotter = WrappedStarknetContract<typeof spotterAbi>;
+export type SnPot = WrappedStarknetContract<typeof potAbi>;
+export type SnToken = WrappedStarknetContract<typeof tokenAbi>;
 
-async function deploySNVat(ward: Felt): Promise<SNVat> {
+async function deploySnVat(ward: Felt): Promise<SnVat> {
   const factory = await hre.starknet.getContractFactory("vat");
   await currentSnAccount().declare(factory);
   const vat = await currentSnAccount().deploy(factory, { ward });
   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
 }
 
-export async function deploySNToken(ward: Felt): Promise<SNToken> {
+export async function deploySnToken(ward: Felt): Promise<SnToken> {
   const factory = await hre.starknet.getContractFactory("tests/mock_token");
   await currentSnAccount().declare(factory);
   const token = await currentSnAccount().deploy(factory, { ward });
   return starknetPrank<typeof tokenAbi>(wrapTyped(hre, token));
 }
 
-async function deploySNDaiJoin(vat: Felt, dai: Felt): Promise<SNDaiJoin> {
+async function deploySnDaiJoin(vat: Felt, dai: Felt): Promise<SnDaiJoin> {
   const factory = await hre.starknet.getContractFactory("dai_join");
   await currentSnAccount().declare(factory);
   const daiJoin = await currentSnAccount().deploy(factory, { vat, dai });
   return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
 }
 
-async function deploySNSpotter(vat: Felt, ward: Felt): Promise<SNSpotter> {
+async function deploySnSpotter(vat: Felt, ward: Felt): Promise<SnSpotter> {
   const factory = await hre.starknet.getContractFactory("spotter");
   await currentSnAccount().declare(factory);
   const spotter = await currentSnAccount().deploy(factory, { vat, ward });
   return starknetPrank<typeof spotterAbi>(wrapTyped(hre, spotter));
 }
 
-async function deploySNJug(vat: Felt, ward: Felt): Promise<SNJug> {
+async function deploySnJug(vat: Felt, ward: Felt): Promise<SnJug> {
   const factory = await hre.starknet.getContractFactory("jug");
   await currentSnAccount().declare(factory);
   const jug = await currentSnAccount().deploy(factory, {
@@ -67,21 +67,21 @@ async function deploySNJug(vat: Felt, ward: Felt): Promise<SNJug> {
   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }
 
-async function deploySNPot(vat: Felt, ward: Felt): Promise<SNPot> {
+async function deploySnPot(vat: Felt, ward: Felt): Promise<SnPot> {
   const factory = await hre.starknet.getContractFactory("pot");
   await currentSnAccount().declare(factory);
   const pot = await currentSnAccount().deploy(factory, { vat, ward });
   return starknetPrank<typeof potAbi>(wrapTyped(hre, pot));
 }
 
-async function deploySNCure(ward: Felt): Promise<SNCure> {
+async function deploySnCure(ward: Felt): Promise<SnCure> {
   const factory = await hre.starknet.getContractFactory("cure");
   await currentSnAccount().declare(factory);
   const cure = await currentSnAccount().deploy(factory, { ward });
   return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
 }
 
-async function deploySNEnd(vat: string, ward: Felt): Promise<SNEnd> {
+async function deploySnEnd(vat: string, ward: Felt): Promise<SnEnd> {
   const factory = await hre.starknet.getContractFactory("end");
   await currentSnAccount().declare(factory);
   const end = await currentSnAccount().deploy(factory, { ward, vat });
@@ -89,29 +89,29 @@ async function deploySNEnd(vat: string, ward: Felt): Promise<SNEnd> {
 }
 
 export interface SNDssInstance {
-  vat: SNVat;
-  jug: SNJug;
-  cure: SNCure;
-  dai: SNDai;
-  daiJoin: SNDaiJoin;
-  end: SNEnd;
-  spotter: SNSpotter;
-  pot: SNPot;
+  vat: SnVat;
+  jug: SnJug;
+  cure: SnCure;
+  dai: SnDai;
+  daiJoin: SnDaiJoin;
+  end: SnEnd;
+  spotter: SnSpotter;
+  pot: SnPot;
 }
 
-export async function deploy(
+export async function deploySnDss(
   owner: Account,
   dai: string
 ): Promise<SNDssInstance> {
-  const vat = await deploySNVat(owner.address);
+  const vat = await deploySnVat(owner.address);
   const dai_ = await getSNDai(dai);
-  const daiJoin = await deploySNDaiJoin(vat.address, dai_.address);
+  const daiJoin = await deploySnDaiJoin(vat.address, dai_.address);
   // //dss.dog = DaiAbstract(address(new Dog()));  // Needs merge in xdomain-dss
-  const spotter = await deploySNSpotter(vat.address, owner.address);
-  const pot = await deploySNPot(vat.address, owner.address);
-  const jug = await deploySNJug(vat.address, owner.address);
-  const cure = await deploySNCure(owner.address);
-  const end = await deploySNEnd(vat.address, owner.address);
+  const spotter = await deploySnSpotter(vat.address, owner.address);
+  const pot = await deploySnPot(vat.address, owner.address);
+  const jug = await deploySnJug(vat.address, owner.address);
+  const cure = await deploySnCure(owner.address);
+  const end = await deploySnEnd(vat.address, owner.address);
 
   return {
     vat,
@@ -126,7 +126,7 @@ export async function deploy(
 }
 
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
-export async function getSNDaiJoin(address: string): Promise<SNDaiJoin> {
+export async function getSNDaiJoin(address: string): Promise<SnDaiJoin> {
   const daiJoin = await getL2ContractAt(
     hre,
     "dai_join.cairo/dai_join_abi.json",
@@ -135,22 +135,22 @@ export async function getSNDaiJoin(address: string): Promise<SNDaiJoin> {
   return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
 }
 
-export async function getSNDai(address: string): Promise<SNDai> {
+export async function getSNDai(address: string): Promise<SnDai> {
   const dai = await getL2ContractAt(hre, "dai.cairo/dai_abi.json", address);
   return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
 }
 
-export async function getSNVat(address: string): Promise<SNVat> {
+export async function getSNVat(address: string): Promise<SnVat> {
   const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
 }
 
-export async function getSNJug(address: string): Promise<SNJug> {
+export async function getSNJug(address: string): Promise<SnJug> {
   const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }
 
-export async function getSNCure(address: string): Promise<SNCure> {
+export async function getSNCure(address: string): Promise<SnCure> {
   const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
   return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
 }
@@ -160,7 +160,7 @@ export interface SNDssConfig {
   endWait: bigint;
 }
 
-export async function init(
+export async function initSnDss(
   dss: SNDssInstance,
   cfg: SNDssConfig,
   l1GovRelayAddress: Address,

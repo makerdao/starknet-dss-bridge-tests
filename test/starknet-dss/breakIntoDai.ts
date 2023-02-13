@@ -5,7 +5,7 @@ import fs from "fs";
 import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-import { SNDai } from "./starknetDss";
+import { SnDai } from "./starknetDss";
 
 interface SendMessageToL2Params {
   l2_contract_address: string;
@@ -35,7 +35,7 @@ async function sendMessageToL2(
 
 export async function breakIntoDai(
   breaker: Account,
-  dai: SNDai,
+  dai: SnDai,
   l1GovRelayAddress: Address,
   l2GovRelayAddress: string
 ) {

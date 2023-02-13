@@ -1,10 +1,12 @@
 import { Address, GetContractResult } from "@wagmi/core";
 import { expect } from "earljs";
+import { Signer } from "ethers";
 import { formatBytes32String } from "ethers/lib/utils.js";
 import hre from "hardhat";
 
 import { DaiJoin, DssInstance } from "../dss/dss";
 import { prank } from "../helpers/prank";
+import { l1String } from "../helpers/utils";
 import teleportFeesAbi from "./abi/teleportFeesAbi";
 import teleportJoinAbi from "./abi/teleportJoinAbi";
 import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
@@ -84,8 +86,8 @@ interface TeleportInstance {
 }
 
 export async function deploy(
-  deployer: Address,
-  owner: Address,
+  deployerSigner: Signer,
+  ownerSigner: Signer,
   ilk: string,
   domain: string,
   parentDomain: string,
@@ -96,15 +98,19 @@ export async function deploy(
       await daiJoin.vat(),
       daiJoin.address,
       ilk,
-      domain
+      l1String(domain)
     ),
     router: await deployTeleportRouter(
       await daiJoin.dai(),
-      domain,
-      parentDomain
+      l1String(domain),
+      l1String(parentDomain)
     ),
     oracleAuth: await deployTeleportOracleAuth(daiJoin.address),
   };
+
+  const deployer = await deployerSigner.getAddress();
+  const owner = await ownerSigner.getAddress();
+
   expect(await teleport.join.wards(deployer)).toBeTruthy();
   await teleport.join.rely(owner);
   await teleport.join.deny(deployer);
@@ -146,7 +152,7 @@ const GATEWAY = formatBytes32String("gateway") as Address;
 
 // TODO: how to use bitints?
 
-export async function init(
+export async function initTeleport(
   dss: DssInstance,
   teleport: TeleportInstance,
   cfg: DssTeleportConfig
@@ -176,8 +182,8 @@ export async function init(
   );
 }
 
-interface DssTeleportDomainConfig {
-  domain: Address; // which type should be here? bytes32
+export interface DssTeleportDomainConfig {
+  domain: string; // which type should be here? bytes32
   fees: Address;
   gateway: Address;
   debtCeiling: bigint;
@@ -186,24 +192,24 @@ interface DssTeleportDomainConfig {
 const FEES = formatBytes32String("fees") as Address;
 const LINE = formatBytes32String("line") as Address;
 
-export async function initDomain(
+export async function initTeleportDomain(
   teleport: TeleportInstance,
   cfg: DssTeleportDomainConfig
 ) {
   await teleport.join["file(bytes32,bytes32,address)"](
     FEES,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.fees
   );
   await teleport.join["file(bytes32,bytes32,uint256)"](
     LINE,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.debtCeiling
   );
 
   await teleport.router["file(bytes32,bytes32,address)"](
     GATEWAY,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.gateway
   );
 }

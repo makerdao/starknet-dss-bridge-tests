@@ -3,25 +3,29 @@ import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import hre from "hardhat";
 
+import { currentSnAccount } from "../helpers/starknet/prank";
 import { Felt, Uint256 } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
-import { SNDaiJoin } from "../starknet-dss/starknetDss";
+import { l2String } from "../helpers/utils";
+import { SnDaiJoin, SNDssInstance } from "../starknet-dss/starknetDss";
 import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
 import teleportOracleAuthAbi from "./abi/starknetTeleportOracleAuthAbi";
 import teleportRouterAbi from "./abi/starknetTeleportRouterAbi";
 
-type SNTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
-type SNTeleportOracleAuth = WrappedStarknetContract<
+export type SNTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
+export type SNTeleportOracleAuth = WrappedStarknetContract<
   typeof teleportOracleAuthAbi
 >;
-type SNTeleportRouter = WrappedStarknetContract<typeof teleportRouterAbi>;
-type SNTeleportConstantFee = WrappedStarknetContract<
+export type SNTeleportRouter = WrappedStarknetContract<
+  typeof teleportRouterAbi
+>;
+export type SNTeleportConstantFee = WrappedStarknetContract<
   typeof teleportConstantFeeAbi
 >;
 
 // TODO: there should be global "active account" ala prank somewhere
-async function deploySNTeleportJoin(
+async function deploySnTeleportJoin(
   deployer: Account,
   vat: Felt,
   daiJoin: Felt,
@@ -40,7 +44,7 @@ async function deploySNTeleportJoin(
   return wrapTyped(hre, contract);
 }
 
-async function deploySNTeleportOracleAuth(
+async function deploySnTeleportOracleAuth(
   deployer: Account,
   teleport_join: Felt
 ): Promise<SNTeleportOracleAuth> {
@@ -53,7 +57,7 @@ async function deploySNTeleportOracleAuth(
   return wrapTyped(hre, contract);
 }
 
-async function deploySNTeleportRouter(
+async function deploySnTeleportRouter(
   deployer: Account,
   dai: Felt,
   domain: Felt,
@@ -70,14 +74,14 @@ async function deploySNTeleportRouter(
   return wrapTyped(hre, contract);
 }
 
-export async function deploySNTeleportConstantFee(
-  deployer: Account,
+export async function deploySnTeleportConstantFee(
   fee: Uint256,
   ttl: Felt
 ): Promise<SNTeleportConstantFee> {
   const factory = await hre.starknet.getContractFactory(
     "teleport_constant_fee"
   );
+  const deployer = currentSnAccount();
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, { fee, ttl });
   return wrapTyped(hre, contract);
@@ -89,108 +93,116 @@ interface SNTeleportInstance {
   oracleAuth: SNTeleportOracleAuth;
 }
 
-export async function deploy(
-  deployer: Account,
-  owner: Address,
+export async function deploySnTeleport(
+  owner: Account,
   ilk: string,
   domain: string,
   parentDomain: string,
-  daiJoin: SNDaiJoin
+  daiJoin: SnDaiJoin
 ): Promise<SNTeleportInstance> {
   const teleport: SNTeleportInstance = {
-    join: await deploySNTeleportJoin(
-      deployer,
+    join: await deploySnTeleportJoin(
+      currentSnAccount(),
       await daiJoin.vat(),
       daiJoin.address,
       ilk,
       domain
     ),
-    router: await deploySNTeleportRouter(
-      deployer,
+    router: await deploySnTeleportRouter(
+      currentSnAccount(),
       await daiJoin.dai(),
       domain,
       parentDomain
     ),
-    oracleAuth: await deploySNTeleportOracleAuth(deployer, daiJoin.address),
+    oracleAuth: await deploySnTeleportOracleAuth(
+      currentSnAccount(),
+      daiJoin.address
+    ),
   };
-  expect(await teleport.join.wards(deployer.address)).toBeTruthy();
-  await teleport.join.rely(owner);
-  await teleport.join.deny(deployer.address);
+  expect(await teleport.join.wards(currentSnAccount().address)).toBeTruthy();
+  await teleport.join.rely(owner.address);
+  await teleport.join.deny(currentSnAccount().address);
 
-  expect(await teleport.router.wards(deployer.address)).toBeTruthy();
-  await teleport.router.rely(owner);
-  await teleport.router.deny(deployer.address);
+  expect(await teleport.router.wards(currentSnAccount().address)).toBeTruthy();
+  await teleport.router.rely(owner.address);
+  await teleport.router.deny(currentSnAccount().address);
 
-  expect(await teleport.oracleAuth.wards(deployer.address)).toBeTruthy();
-  await teleport.oracleAuth.rely(owner);
-  await teleport.oracleAuth.deny(deployer.address);
+  expect(
+    await teleport.oracleAuth.wards(currentSnAccount().address)
+  ).toBeTruthy();
+  await teleport.oracleAuth.rely(owner.address);
+  await teleport.oracleAuth.deny(currentSnAccount().address);
 
   return teleport;
 }
 
-// function deploy(
-//   address deployer,
-//   address owner,
-//   bytes32 ilk,
-//   bytes32 domain,
-//   bytes32 parentDomain,
-//   address daiJoin
-// ) internal returns (TeleportInstance memory teleport) {
-//   teleport.join = new TeleportJoin(
-//     DaiJoinAbstract(daiJoin).vat(),
-//     daiJoin,
-//     ilk,
-//     domain
-//   );
-//   teleport.router = new TeleportRouter(
-//     DaiJoinAbstract(daiJoin).dai(),
-//     domain,
-//     parentDomain
-//   );
-//   teleport.oracleAuth = new TeleportOracleAuth(address(teleport.join));
-//
-//   switchOwner(address(teleport.join), deployer, owner);
-//   switchOwner(address(teleport.router), deployer, owner);
-//   switchOwner(address(teleport.oracleAuth), deployer, owner);
-// }
+export interface SnTeleportConfig {
+  debtCeiling: bigint;
+  oracleThreshold: bigint;
+  oracleSigners: Address[]; //TODO: different configuration...
+}
 
-//
-// function deployLinearFee(
-//   uint256 fee,
-//   uint256 ttl
-// ) internal returns (TeleportFees) {
-//   return new TeleportLinearFee(fee, ttl);
-// }
-//
-// function init(
-//   DssInstance memory dss,
-//   TeleportInstance memory teleport,
-//   DssTeleportConfig memory cfg
-// ) internal {
-//   bytes32 ilk = teleport.join.ilk();
-//   dss.vat.init(ilk);
-//   dss.jug.init(ilk);
-//   dss.vat.file(ilk, "line", cfg.debtCeiling);
-//   //dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
-//   dss.vat.file(ilk, "spot", 10 ** 27);
-//   dss.cure.lift(address(teleport.join));
-//   dss.vat.rely(address(teleport.join));
-//   teleport.join.rely(address(teleport.oracleAuth));
-//   teleport.join.rely(address(teleport.router));
-//   //teleport.join.rely(esm);
-//   teleport.join.file("vow", address(dss.vow));
-//   //teleport.oracleAuth.rely(esm);
-//   teleport.oracleAuth.file("threshold", cfg.oracleThreshold);
-//   teleport.oracleAuth.addSigners(cfg.oracleSigners);
-//   //teleport.router.rely(esm);
-//   teleport.router.file("gateway", teleport.join.domain(), address(teleport.join));
-// }
-//
-// function initDomain(
-//   TeleportInstance memory teleport,
-//   DssTeleportDomainConfig memory cfg
-// ) internal {
-//   teleport.join.file("fees", cfg.domain, cfg.fees);
-//   teleport.join.file("line", cfg.domain, cfg.debtCeiling);
-//   teleport.router.file("gateway", cfg.domain, cfg.gateway);
-// }
+export async function initSnTeleport(
+  dss: SNDssInstance,
+  teleport: SNTeleportInstance,
+  cfg: SnTeleportConfig
+) {
+  const ilk = await teleport.join.ilk();
+  await dss.vat.init(ilk);
+  await dss.jug.init(ilk);
+  await dss.vat.file_ilk(ilk, l2String("line"), cfg.debtCeiling);
+
+  // dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
+  await dss.vat.file_ilk(ilk, l2String("spot"), 10n ** 27n);
+  await dss.cure.lift(teleport.join.address);
+  await dss.vat.rely(teleport.join.address);
+  await teleport.join.rely(teleport.oracleAuth.address);
+  await teleport.join.rely(teleport.router.address);
+  // teleport.join.rely(esm);
+
+  // TODO: no vow yet on l2
+  //await teleport.join.file_vow(l2String('vow'), dss.vow.address);
+
+  // teleport.oracleAuth.rely(esm);
+
+  await teleport.oracleAuth.file(l2String("threshold"), cfg.oracleThreshold);
+
+  // TODO: signers configuration
+  // await teleport.oracleAuth.add_signers(cfg.oracleSigners);
+
+  // teleport.router.rely(esm);
+  await teleport.router.file(
+    l2String("gateway"),
+    await teleport.join.domain(),
+    teleport.join.address
+  );
+}
+
+export interface SnTeleportDomainConfig {
+  domain: string;
+  fees: Address;
+  gateway: Address;
+  debtCeiling: bigint;
+}
+
+export async function initSnTeleportDomain(
+  teleport: SNTeleportInstance,
+  cfg: SnTeleportDomainConfig
+) {
+  await teleport.join.file_fees(
+    l2String("fees"),
+    l2String(cfg.domain),
+    cfg.fees
+  );
+  await teleport.join.file_line(
+    l2String("line"),
+    l2String(cfg.domain),
+    cfg.debtCeiling
+  );
+
+  await teleport.router.file(
+    l2String("gateway"),
+    l2String(cfg.domain),
+    cfg.gateway
+  );
+}
