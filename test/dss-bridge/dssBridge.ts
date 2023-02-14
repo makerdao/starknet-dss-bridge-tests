@@ -10,10 +10,10 @@ import { l2String } from "../helpers/utils";
 import { SnDai } from "../starknet-dss/starknetDss";
 import {
   DssBridgeHostConfig,
-  SNDomainGuest,
+  SnDomainGuest,
 } from "../starknet-dss-bridge/starknetDssBridge";
-import escrowLikeAbi from "./escrowLikeAbi";
-import starknetDomainHostAbi from "./starknetDomainHostAbi";
+import escrowLikeAbi from "./abi/escrowLikeAbi";
+import starknetDomainHostAbi from "./abi/starknetDomainHostAbi";
 
 export type SnDomainHost = GetContractResult<typeof starknetDomainHostAbi>;
 export type Escrow = GetContractResult<typeof escrowLikeAbi>;
@@ -24,7 +24,7 @@ export async function deploySnDomainHost(
   escrow: Address,
   router: TeleportRouter,
   starknet: Address,
-  guest: SNDomainGuest,
+  guest: SnDomainGuest,
   l2dai: SnDai
 ): Promise<SnDomainHost> {
   const contractFactory = await hre.ethers.getContractFactory(

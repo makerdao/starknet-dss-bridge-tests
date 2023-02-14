@@ -88,7 +88,7 @@ async function deploySnEnd(vat: string, ward: Felt): Promise<SnEnd> {
   return starknetPrank<typeof endAbi>(wrapTyped(hre, end));
 }
 
-export interface SNDssInstance {
+export interface SnDssInstance {
   vat: SnVat;
   jug: SnJug;
   cure: SnCure;
@@ -102,9 +102,9 @@ export interface SNDssInstance {
 export async function deploySnDss(
   owner: Account,
   dai: string
-): Promise<SNDssInstance> {
+): Promise<SnDssInstance> {
   const vat = await deploySnVat(owner.address);
-  const dai_ = await getSNDai(dai);
+  const dai_ = await getSnDai(dai);
   const daiJoin = await deploySnDaiJoin(vat.address, dai_.address);
   // //dss.dog = DaiAbstract(address(new Dog()));  // Needs merge in xdomain-dss
   const spotter = await deploySnSpotter(vat.address, owner.address);
@@ -126,7 +126,7 @@ export async function deploySnDss(
 }
 
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
-export async function getSNDaiJoin(address: string): Promise<SnDaiJoin> {
+export async function getSnDaiJoin(address: string): Promise<SnDaiJoin> {
   const daiJoin = await getL2ContractAt(
     hre,
     "dai_join.cairo/dai_join_abi.json",
@@ -135,34 +135,34 @@ export async function getSNDaiJoin(address: string): Promise<SnDaiJoin> {
   return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
 }
 
-export async function getSNDai(address: string): Promise<SnDai> {
+export async function getSnDai(address: string): Promise<SnDai> {
   const dai = await getL2ContractAt(hre, "dai.cairo/dai_abi.json", address);
   return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
 }
 
-export async function getSNVat(address: string): Promise<SnVat> {
+export async function getSnVat(address: string): Promise<SnVat> {
   const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
 }
 
-export async function getSNJug(address: string): Promise<SnJug> {
+export async function getSnJug(address: string): Promise<SnJug> {
   const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }
 
-export async function getSNCure(address: string): Promise<SnCure> {
+export async function getSnCure(address: string): Promise<SnCure> {
   const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
   return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
 }
 
-export interface SNDssConfig {
-  claimToken: string;
+export interface SnDssConfig {
+  claimToken: string; // TODO: replace when claim token is available
   endWait: bigint;
 }
 
 export async function initSnDss(
-  dss: SNDssInstance,
-  cfg: SNDssConfig,
+  dss: SnDssInstance,
+  cfg: SnDssConfig,
   l1GovRelayAddress: Address,
   l2GovRelayAddress: string
 ) {
@@ -197,10 +197,10 @@ export async function initSnDss(
 
   await dss.cure.rely(dss.end.address);
 
+  // TODO: uncomment when claim token is available
   // WardsAbstract(cfg.claimToken).rely(address(dss.end));
 
   // daiJoin needs a vat.dai balance to match the existing dai supply
   const totalSupply = await dss.dai.totalSupply();
-  // Vat(address(dss.vat)).swell(address(dss.daiJoin), int256(totalSupply) * 10 ** 27);
   await dss.vat.swell(dss.daiJoin.address, totalSupply * 10n ** 27n);
 }

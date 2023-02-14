@@ -85,7 +85,7 @@ interface TeleportInstance {
   oracleAuth: TeleportOracleAuth;
 }
 
-export async function deploy(
+export async function deployTeleport(
   deployerSigner: Signer,
   ownerSigner: Signer,
   ilk: string,
@@ -108,8 +108,8 @@ export async function deploy(
     oracleAuth: await deployTeleportOracleAuth(daiJoin.address),
   };
 
-  const deployer = await deployerSigner.getAddress();
-  const owner = await ownerSigner.getAddress();
+  const deployer = (await deployerSigner.getAddress()) as Address;
+  const owner = (await ownerSigner.getAddress()) as Address;
 
   expect(await teleport.join.wards(deployer)).toBeTruthy();
   await teleport.join.rely(owner);
@@ -150,8 +150,6 @@ const VOW = formatBytes32String("vow") as Address;
 const THRESHOLD = formatBytes32String("threshold") as Address;
 const GATEWAY = formatBytes32String("gateway") as Address;
 
-// TODO: how to use bitints?
-
 export async function initTeleport(
   dss: DssInstance,
   teleport: TeleportInstance,
@@ -161,8 +159,6 @@ export async function initTeleport(
   await dss.vat.init(ilk);
   await dss.jug.init(ilk);
   await dss.vat["file(bytes32,bytes32,uint256)"](ilk, LINE, cfg.debtCeiling);
-
-  // dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
   await dss.vat["file(bytes32,bytes32,uint256)"](ilk, SPOT, 10n ** 27n);
   await dss.cure.lift(teleport.join.address);
   await dss.vat.rely(teleport.join.address);
@@ -170,7 +166,6 @@ export async function initTeleport(
   await teleport.join.rely(teleport.router.address);
   // teleport.join.rely(esm);
   await teleport.join["file(bytes32,address)"](VOW, dss.vow.address);
-
   // teleport.oracleAuth.rely(esm);
   await teleport.oracleAuth.file(THRESHOLD, cfg.oracleThreshold);
   await teleport.oracleAuth.addSigners(cfg.oracleSigners);

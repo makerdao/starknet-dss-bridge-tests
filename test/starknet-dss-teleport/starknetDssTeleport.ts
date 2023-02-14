@@ -7,20 +7,20 @@ import { currentSnAccount } from "../helpers/starknet/prank";
 import { Felt, Uint256 } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { l2String } from "../helpers/utils";
-import { SnDaiJoin, SNDssInstance } from "../starknet-dss/starknetDss";
+import { SnDaiJoin, SnDssInstance } from "../starknet-dss/starknetDss";
 import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
 import teleportOracleAuthAbi from "./abi/starknetTeleportOracleAuthAbi";
 import teleportRouterAbi from "./abi/starknetTeleportRouterAbi";
 
-export type SNTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
-export type SNTeleportOracleAuth = WrappedStarknetContract<
+export type SnTeleportJoin = WrappedStarknetContract<typeof teleportJoinAbi>;
+export type SnTeleportOracleAuth = WrappedStarknetContract<
   typeof teleportOracleAuthAbi
 >;
-export type SNTeleportRouter = WrappedStarknetContract<
+export type SnTeleportRouter = WrappedStarknetContract<
   typeof teleportRouterAbi
 >;
-export type SNTeleportConstantFee = WrappedStarknetContract<
+export type SnTeleportConstantFee = WrappedStarknetContract<
   typeof teleportConstantFeeAbi
 >;
 
@@ -31,7 +31,7 @@ async function deploySnTeleportJoin(
   daiJoin: Felt,
   ilk: Felt,
   domain: Felt
-): Promise<SNTeleportJoin> {
+): Promise<SnTeleportJoin> {
   const factory = await hre.starknet.getContractFactory("teleport_join");
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, {
@@ -47,7 +47,7 @@ async function deploySnTeleportJoin(
 async function deploySnTeleportOracleAuth(
   deployer: Account,
   teleport_join: Felt
-): Promise<SNTeleportOracleAuth> {
+): Promise<SnTeleportOracleAuth> {
   const factory = await hre.starknet.getContractFactory("teleport_oracle_auth");
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, {
@@ -62,7 +62,7 @@ async function deploySnTeleportRouter(
   dai: Felt,
   domain: Felt,
   parent_domain: Felt
-): Promise<SNTeleportRouter> {
+): Promise<SnTeleportRouter> {
   const factory = await hre.starknet.getContractFactory("teleport_router");
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, {
@@ -77,7 +77,7 @@ async function deploySnTeleportRouter(
 export async function deploySnTeleportConstantFee(
   fee: Uint256,
   ttl: Felt
-): Promise<SNTeleportConstantFee> {
+): Promise<SnTeleportConstantFee> {
   const factory = await hre.starknet.getContractFactory(
     "teleport_constant_fee"
   );
@@ -87,10 +87,10 @@ export async function deploySnTeleportConstantFee(
   return wrapTyped(hre, contract);
 }
 
-interface SNTeleportInstance {
-  join: SNTeleportJoin;
-  router: SNTeleportRouter;
-  oracleAuth: SNTeleportOracleAuth;
+interface SnTeleportInstance {
+  join: SnTeleportJoin;
+  router: SnTeleportRouter;
+  oracleAuth: SnTeleportOracleAuth;
 }
 
 export async function deploySnTeleport(
@@ -99,8 +99,8 @@ export async function deploySnTeleport(
   domain: string,
   parentDomain: string,
   daiJoin: SnDaiJoin
-): Promise<SNTeleportInstance> {
-  const teleport: SNTeleportInstance = {
+): Promise<SnTeleportInstance> {
+  const teleport: SnTeleportInstance = {
     join: await deploySnTeleportJoin(
       currentSnAccount(),
       await daiJoin.vat(),
@@ -143,8 +143,8 @@ export interface SnTeleportConfig {
 }
 
 export async function initSnTeleport(
-  dss: SNDssInstance,
-  teleport: SNTeleportInstance,
+  dss: SnDssInstance,
+  teleport: SnTeleportInstance,
   cfg: SnTeleportConfig
 ) {
   const ilk = await teleport.join.ilk();
@@ -186,7 +186,7 @@ export interface SnTeleportDomainConfig {
 }
 
 export async function initSnTeleportDomain(
-  teleport: SNTeleportInstance,
+  teleport: SnTeleportInstance,
   cfg: SnTeleportDomainConfig
 ) {
   await teleport.join.file_fees(

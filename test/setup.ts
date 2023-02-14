@@ -7,8 +7,9 @@ import { RAD } from "../lib/starknet-dss/test/utils";
 import config from "./config";
 import { getDss } from "./dss/dss";
 import { deploySnDomainHost, initHost } from "./dss-bridge/dssBridge";
-import * as dssTeleport from "./dss-teleport/dssTeleport";
 import {
+  deployLinearFee,
+  deployTeleport,
   initTeleport,
   initTeleportDomain,
 } from "./dss-teleport/dssTeleport";
@@ -52,13 +53,12 @@ export async function getAdmin(address: Address) {
 export async function setup() {
   // based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/tests/domains/IntegrationBase.t.sol#L94
 
+  // preparation
   await reset();
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
   ).address as Address;
-
-  console.log(mockStarknetMessaging);
 
   await initSnPredeployedAccounts(2);
 
@@ -74,9 +74,10 @@ export async function setup() {
   // fund admin account
   await setBalance(admin.address, 10n ** 18n);
 
+  // deploy on l1
   const dss = await getDss(rootCfg);
 
-  const teleport = await dssTeleport.deploy(
+  const teleport = await deployTeleport(
     deployer,
     admin,
     rootCfg.teleportIlk,
@@ -85,16 +86,17 @@ export async function setup() {
     dss.daiJoin
   );
 
-  const fees = await dssTeleport.deployLinearFee(WAD / 10000n, _6_HOURS);
+  const fees = await deployLinearFee(WAD / 10000n, _6_HOURS);
 
   const hostAddress = (await getAddressOfNextDeployedContract()) as Address;
 
-  startL1Prank(admin);
-
+  // deploy on Starknet
   const snDss = await deploySnDss(snOwner, snCfg.dai);
 
   const snClaimToken = await deploySnToken(snOwner.address);
   // TODO: snClaimToken rely, deny
+  // claimToken.rely(radmin);
+  // claimToken.deny(address(this));
 
   const snTeleport = await deploySnTeleport(
     snOwner,
@@ -111,6 +113,9 @@ export async function setup() {
     hostAddress
   );
 
+  const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
+
+  // deploy host on l1
   const host = await deploySnDomainHost(
     rootCfg.teleportIlk,
     dss.daiJoin,
@@ -123,6 +128,9 @@ export async function setup() {
 
   expect(host.address).toEqual(hostAddress);
 
+  // init on l1
+
+  startL1Prank(admin);
   await initTeleport(dss, teleport, {
     debtCeiling: 10n ** 18n,
     oracleThreshold: 5n,
@@ -142,8 +150,7 @@ export async function setup() {
   });
   // TODO: any special initialization?
 
-  // sn init
-
+  // init on Starknet
   startSnPrank(snOwner);
 
   await initSnDss(
@@ -162,8 +169,6 @@ export async function setup() {
     oracleSigners: [],
   });
 
-  const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
-
   await initSnTeleportDomain(snTeleport, {
     domain: rootCfg.domain,
     fees: snFee.address as Address,
@@ -174,18 +179,13 @@ export async function setup() {
   await initGuest(snDss, guest);
 
   return {
+    dss,
     teleport,
     fees,
-    snVat: snDss.vat,
+    host,
+    snDss,
+    snTeleport,
+    snFee,
+    guest,
   };
-
-  // const snClaimToken = await starknetDss.deploySNToken(snOwner.address);
-  // const snDssCfg: SNDssConfig = {
-  //   claimToken: snClaimToken.address,
-  //   endWait: _1_HOUR,
-  // };
-  //
-  // const snDss = await starknetDss.deploy(snOwner, snCfg.dai);
-  // startSnPrank(snOwner);
-  // await starknetDss.init(snDss, snDssCfg, rootCfg.govRelay, snCfg.govRelay);
 }

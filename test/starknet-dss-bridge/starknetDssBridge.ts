@@ -6,18 +6,18 @@ import { currentSnAccount } from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { l2String } from "../helpers/utils";
-import { SnDaiJoin, SNDssInstance, SnToken } from "../starknet-dss/starknetDss";
-import { SNTeleportRouter } from "../starknet-dss-teleport/starknetDssTeleport";
+import { SnDaiJoin, SnDssInstance, SnToken } from "../starknet-dss/starknetDss";
+import { SnTeleportRouter } from "../starknet-dss-teleport/starknetDssTeleport";
 import domainGuestAbi from "./abi/domainGuestAbi";
 
-export type SNDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
+export type SnDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
 
 export async function deploySnDomainGuest(
   daiJoin: SnDaiJoin,
   claimToken: SnToken,
-  router: SNTeleportRouter,
+  router: SnTeleportRouter,
   host: Felt
-): Promise<SNDomainGuest> {
+): Promise<SnDomainGuest> {
   const factory = await hre.starknet.getContractFactory("domain_guest");
   await currentSnAccount().declare(factory);
   const contract = await currentSnAccount().deploy(factory, {
@@ -31,7 +31,7 @@ export async function deploySnDomainGuest(
 }
 
 export interface BridgeInstance {
-  guest: SNDomainGuest;
+  guest: SnDomainGuest;
   host: SnDomainHost;
 }
 
@@ -41,8 +41,8 @@ export interface DssBridgeHostConfig {
 }
 
 export async function initGuest(
-  { vat, end }: SNDssInstance,
-  guest: SNDomainGuest
+  { vat, end }: SnDssInstance,
+  guest: SnDomainGuest
 ) {
   await end.file(l2String("vow"), guest.address);
   await guest.file(l2String("end"), end.address);
