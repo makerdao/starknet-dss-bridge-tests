@@ -1,7 +1,7 @@
 import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
 import { Address } from "@wagmi/core";
 import { getContractAddress } from "ethers/lib/utils";
-import hre from "hardhat";
+import hre, { starknet } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
 
@@ -50,6 +50,23 @@ export async function reset() {
       },
     ],
   });
+  // await starknet.devnet.flush();
+}
+
+export async function saveSnapshot() {
+  // await hre.network.provider.request({
+  //  method: "evm_snapshot",
+  //  params: [],
+  // });
+  await starknet.devnet.dump("starknet_state.dmp");
+}
+
+export async function loadSnapshot() {
+  // await hre.network.provider.request({
+  //  method: "evm_revert",
+  //  params: ["0x1"],
+  // });
+  await starknet.devnet.load("starknet_state.dmp");
 }
 
 export async function getAddressOfNextDeployedContract(): Promise<string> {
@@ -59,5 +76,3 @@ export async function getAddressOfNextDeployedContract(): Promise<string> {
     nonce: await signer.getTransactionCount(),
   });
 }
-
-

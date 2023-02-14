@@ -22,9 +22,11 @@ import {
   _1_HOUR,
   _6_HOURS,
   getAddressOfNextDeployedContract,
-  reset,
-  WAD,
+  loadSnapshot,
   RAD,
+  reset,
+  saveSnapshot,
+  WAD,
 } from "./helpers/utils";
 import {
   deploySnDss,
@@ -55,6 +57,7 @@ export async function setup() {
 
   // preparation
   await reset();
+  await loadSnapshot();
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
@@ -75,10 +78,10 @@ export async function setup() {
   await setBalance(admin.address, 10n ** 18n);
 
   // deploy on l1
-  console.log('getDss')
+  console.log("getDss");
   const dss = await getDss(rootCfg);
 
-  console.log('deployTeleport')
+  console.log("deployTeleport");
   const teleport = await deployTeleport(
     deployer,
     admin,
@@ -88,22 +91,22 @@ export async function setup() {
     dss.daiJoin
   );
 
-  console.log('deployLinearFee')
+  console.log("deployLinearFee");
   const fees = await deployLinearFee(WAD / 10000n, _6_HOURS);
 
   const hostAddress = (await getAddressOfNextDeployedContract()) as Address;
 
   // deploy on Starknet
-  console.log('deploySnDss')
+  console.log("deploySnDss");
   const snDss = await deploySnDss(snOwner, snCfg.dai);
 
-  console.log('deploySnToken')
+  console.log("deploySnToken");
   const snClaimToken = await deploySnToken(snOwner.address);
   // TODO: snClaimToken rely, deny
   // claimToken.rely(radmin);
   // claimToken.deny(address(this));
 
-  console.log('deploySnTeleport')
+  console.log("deploySnTeleport");
   const snTeleport = await deploySnTeleport(
     snOwner,
     snCfg.ilk,
@@ -112,7 +115,7 @@ export async function setup() {
     snDss.daiJoin
   );
 
-  console.log('deploySnDomainGuest')
+  console.log("deploySnDomainGuest");
   const guest = await deploySnDomainGuest(
     snDss.daiJoin,
     snClaimToken,
@@ -120,7 +123,7 @@ export async function setup() {
     hostAddress
   );
 
-  console.log('deploySnTeleportConstantFee')
+  console.log("deploySnTeleportConstantFee");
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
   // deploy host on l1
@@ -160,7 +163,7 @@ export async function setup() {
 
   // init on Starknet
 
-  console.log('init on Starknet')
+  console.log("init on Starknet");
   startSnPrank(snOwner);
 
   await initSnDss(
@@ -187,6 +190,8 @@ export async function setup() {
   });
 
   await initGuest(snDss, guest);
+
+  await saveSnapshot();
 
   return {
     dss,
