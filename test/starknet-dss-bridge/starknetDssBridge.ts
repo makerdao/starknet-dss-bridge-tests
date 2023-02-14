@@ -20,6 +20,7 @@ export async function deploySnDomainGuest(
 ): Promise<SnDomainGuest> {
   const factory = await hre.starknet.getContractFactory("domain_guest");
   await currentSnAccount().declare(factory);
+  // TODO: why camelCase in constructor args in domain_guest?
   const contract = await currentSnAccount().deploy(factory, {
     ward: currentSnAccount().address,
     daiJoin: daiJoin.address,

@@ -60,9 +60,10 @@ async function deploySnSpotter(vat: Felt, ward: Felt): Promise<SnSpotter> {
 async function deploySnJug(vat: Felt, ward: Felt): Promise<SnJug> {
   const factory = await hre.starknet.getContractFactory("jug");
   await currentSnAccount().declare(factory);
+  // TODO: rename jug.cairo constructor arguments to just vat, ward
   const jug = await currentSnAccount().deploy(factory, {
-    vat: vat,
-    ward: ward,
+    vat_: vat,
+    ward_: ward,
   });
   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
 }

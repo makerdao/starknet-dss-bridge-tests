@@ -24,7 +24,6 @@ export type SnTeleportConstantFee = WrappedStarknetContract<
   typeof teleportConstantFeeAbi
 >;
 
-// TODO: there should be global "active account" ala prank somewhere
 async function deploySnTeleportJoin(
   deployer: Account,
   vat: Felt,
@@ -34,12 +33,13 @@ async function deploySnTeleportJoin(
 ): Promise<SnTeleportJoin> {
   const factory = await hre.starknet.getContractFactory("teleport_join");
   await deployer.declare(factory);
+  // TODO: camelCase in teleport_join constructor args
   const contract = await deployer.deploy(factory, {
     ward: deployer.address,
-    vat,
-    daiJoin,
-    ilk,
-    domain,
+    vat_: vat,
+    daiJoin_: daiJoin,
+    ilk_: ilk,
+    domain_: domain,
   });
   return wrapTyped(hre, contract);
 }
@@ -52,7 +52,7 @@ async function deploySnTeleportOracleAuth(
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, {
     ward: deployer.address,
-    teleport_join,
+    teleport_join_: teleport_join,
   });
   return wrapTyped(hre, contract);
 }
@@ -105,14 +105,14 @@ export async function deploySnTeleport(
       currentSnAccount(),
       await daiJoin.vat(),
       daiJoin.address,
-      ilk,
+      l2String(ilk),
       domain
     ),
     router: await deploySnTeleportRouter(
       currentSnAccount(),
       await daiJoin.dai(),
-      domain,
-      parentDomain
+      l2String(domain),
+      l2String(parentDomain)
     ),
     oracleAuth: await deploySnTeleportOracleAuth(
       currentSnAccount(),

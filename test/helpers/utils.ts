@@ -5,6 +5,13 @@ import hre from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
 
+export const WAD = 10n ** 18n;
+export const RAY = 10n ** 27n;
+export const RAD = 10n ** 45n;
+
+export const _1_HOUR = 3600n;
+export const _6_HOURS = 6n * _1_HOUR;
+
 export async function getL2ContractAt(
   hre: HardhatRuntimeEnvironment,
   abiPath: string, // folder.cairo/contract_abi.cairo
@@ -53,7 +60,4 @@ export async function getAddressOfNextDeployedContract(): Promise<string> {
   });
 }
 
-export const WAD = 10n ** 18n;
-export const _8_DAYS = 8n * 24n * 60n * 60n;
-export const _1_HOUR = 3600n;
-export const _6_HOURS = 6n * _1_HOUR;
+

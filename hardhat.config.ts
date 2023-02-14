@@ -35,7 +35,8 @@ const config = {
     starknetArtifacts: "./starknet-artifacts",
     cairoPaths: [
       `${process.env.PWD}/contracts/starknet/starknet-dss`,
-      `${process.env.PWD}/contracts/starknet/starknet-dss-teleport`
+      `${process.env.PWD}/contracts/starknet/starknet-dss-teleport`,
+      `${process.env.PWD}/contracts/starknet/starknet-dss-bridge`
     ]
   },
   solidity: {

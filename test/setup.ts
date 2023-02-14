@@ -3,7 +3,6 @@ import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import hre from "hardhat";
 
-import { RAD } from "../lib/starknet-dss/test/utils";
 import config from "./config";
 import { getDss } from "./dss/dss";
 import { deploySnDomainHost, initHost } from "./dss-bridge/dssBridge";
@@ -25,6 +24,7 @@ import {
   getAddressOfNextDeployedContract,
   reset,
   WAD,
+  RAD,
 } from "./helpers/utils";
 import {
   deploySnDss,
@@ -75,8 +75,10 @@ export async function setup() {
   await setBalance(admin.address, 10n ** 18n);
 
   // deploy on l1
+  console.log('getDss')
   const dss = await getDss(rootCfg);
 
+  console.log('deployTeleport')
   const teleport = await deployTeleport(
     deployer,
     admin,
@@ -86,18 +88,22 @@ export async function setup() {
     dss.daiJoin
   );
 
+  console.log('deployLinearFee')
   const fees = await deployLinearFee(WAD / 10000n, _6_HOURS);
 
   const hostAddress = (await getAddressOfNextDeployedContract()) as Address;
 
   // deploy on Starknet
+  console.log('deploySnDss')
   const snDss = await deploySnDss(snOwner, snCfg.dai);
 
+  console.log('deploySnToken')
   const snClaimToken = await deploySnToken(snOwner.address);
   // TODO: snClaimToken rely, deny
   // claimToken.rely(radmin);
   // claimToken.deny(address(this));
 
+  console.log('deploySnTeleport')
   const snTeleport = await deploySnTeleport(
     snOwner,
     snCfg.ilk,
@@ -106,6 +112,7 @@ export async function setup() {
     snDss.daiJoin
   );
 
+  console.log('deploySnDomainGuest')
   const guest = await deploySnDomainGuest(
     snDss.daiJoin,
     snClaimToken,
@@ -113,6 +120,7 @@ export async function setup() {
     hostAddress
   );
 
+  console.log('deploySnTeleportConstantFee')
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
   // deploy host on l1
@@ -151,6 +159,8 @@ export async function setup() {
   // TODO: any special initialization?
 
   // init on Starknet
+
+  console.log('init on Starknet')
   startSnPrank(snOwner);
 
   await initSnDss(

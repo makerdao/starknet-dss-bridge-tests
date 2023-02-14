@@ -97,7 +97,7 @@ export async function deployTeleport(
     join: await deployTeleportJoin(
       await daiJoin.vat(),
       daiJoin.address,
-      ilk,
+      l1String(ilk),
       l1String(domain)
     ),
     router: await deployTeleportRouter(
