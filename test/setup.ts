@@ -22,10 +22,8 @@ import {
   _1_HOUR,
   _6_HOURS,
   getAddressOfNextDeployedContract,
-  loadSnapshot,
   RAD,
   reset,
-  saveSnapshot,
   WAD,
 } from "./helpers/utils";
 import {
@@ -57,7 +55,7 @@ export async function setup() {
 
   // preparation
   await reset();
-  await loadSnapshot();
+  // await loadSnapshot();
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
@@ -191,7 +189,7 @@ export async function setup() {
 
   await initGuest(snDss, guest);
 
-  await saveSnapshot();
+  // await saveSnapshot();
 
   return {
     dss,

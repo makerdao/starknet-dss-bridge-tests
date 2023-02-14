@@ -2,7 +2,7 @@ import { Address } from "@wagmi/core";
 import hre from "hardhat";
 
 import { SnDomainHost } from "../dss-bridge/dssBridge";
-import {currentSnAcc, starknetPrankTyped} from "../helpers/starknet/prank";
+import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { l2String } from "../helpers/utils";

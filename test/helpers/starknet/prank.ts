@@ -2,8 +2,7 @@ import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import hre from "hardhat";
 
 import type { Abi } from "./abi";
-import {wrap, WrappedStarknetContract} from "./wrap";
-import {StarknetContract} from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
+import { WrappedStarknetContract } from "./wrap";
 
 let prankster: Account | undefined;
 

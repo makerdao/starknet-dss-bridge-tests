@@ -3,10 +3,14 @@ import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import hre from "hardhat";
 
-import {currentSnAcc, starknetPrankTyped} from "../helpers/starknet/prank";
+import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
 import { Felt, Uint256 } from "../helpers/starknet/types";
-import {toUint256, WrappedStarknetContract, wrapTyped} from "../helpers/starknet/wrap";
-import {l2String, l2StringAsUint256} from "../helpers/utils";
+import {
+  toUint256,
+  WrappedStarknetContract,
+  wrapTyped,
+} from "../helpers/starknet/wrap";
+import { l2String, l2StringAsUint256 } from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance } from "../starknet-dss/starknetDss";
 import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
@@ -127,9 +131,7 @@ export async function deploySnTeleport(
   await teleport.router.rely(owner.address);
   await teleport.router.deny(currentSnAcc().address);
 
-  expect(
-    await teleport.oracleAuth.wards(currentSnAcc().address)
-  ).toBeTruthy();
+  expect(await teleport.oracleAuth.wards(currentSnAcc().address)).toBeTruthy();
   await teleport.oracleAuth.rely(owner.address);
   await teleport.oracleAuth.deny(currentSnAcc().address);
 

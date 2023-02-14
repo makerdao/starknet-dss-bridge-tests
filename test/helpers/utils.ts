@@ -4,7 +4,7 @@ import { getContractAddress } from "ethers/lib/utils";
 import hre, { starknet } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
-import {Uint256} from "./starknet/types";
+
 
 export const WAD = 10n ** 18n;
 export const RAY = 10n ** 27n;
@@ -39,7 +39,7 @@ export function l1String(str: string): Address {
 }
 
 export function l2StringAsUint256(str: string): bigint {
-    return BigInt(hre.ethers.utils.formatBytes32String(str))
+  return BigInt(hre.ethers.utils.formatBytes32String(str));
 }
 
 export async function reset() {
