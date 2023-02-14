@@ -1,6 +1,6 @@
 [submodule "lib/starknet-dss"]
 	path = lib/starknet-dss
-	url = https://github.com/makerdao/starknet-dss.git
+	url = git@github.com:makerdao/starknet-dss.git
 	branch = domain
 [submodule "lib/dss-teleport"]
 	path = lib/dss-teleport

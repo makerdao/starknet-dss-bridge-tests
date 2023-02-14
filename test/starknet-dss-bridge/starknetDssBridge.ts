@@ -2,7 +2,7 @@ import { Address } from "@wagmi/core";
 import hre from "hardhat";
 
 import { SnDomainHost } from "../dss-bridge/dssBridge";
-import { currentSnAccount } from "../helpers/starknet/prank";
+import {currentSnAcc, starknetPrankTyped} from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { l2String } from "../helpers/utils";
@@ -19,16 +19,16 @@ export async function deploySnDomainGuest(
   host: Felt
 ): Promise<SnDomainGuest> {
   const factory = await hre.starknet.getContractFactory("domain_guest");
-  await currentSnAccount().declare(factory);
+  await currentSnAcc().declare(factory);
   // TODO: why camelCase in constructor args in domain_guest?
-  const contract = await currentSnAccount().deploy(factory, {
-    ward: currentSnAccount().address,
+  const contract = await currentSnAcc().deploy(factory, {
+    ward: currentSnAcc().address,
     daiJoin: daiJoin.address,
     claimToken: claimToken.address,
     router: router.address,
     host,
   });
-  return wrapTyped(hre, contract);
+  return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
 export interface BridgeInstance {

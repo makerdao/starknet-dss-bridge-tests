@@ -3,10 +3,10 @@ import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import hre from "hardhat";
 
-import { currentSnAccount } from "../helpers/starknet/prank";
+import {currentSnAcc, starknetPrankTyped} from "../helpers/starknet/prank";
 import { Felt, Uint256 } from "../helpers/starknet/types";
-import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
-import { l2String } from "../helpers/utils";
+import {toUint256, WrappedStarknetContract, wrapTyped} from "../helpers/starknet/wrap";
+import {l2String, l2StringAsUint256} from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance } from "../starknet-dss/starknetDss";
 import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
@@ -28,8 +28,8 @@ async function deploySnTeleportJoin(
   deployer: Account,
   vat: Felt,
   daiJoin: Felt,
-  ilk: Felt,
-  domain: Felt
+  ilk: string,
+  domain: string
 ): Promise<SnTeleportJoin> {
   const factory = await hre.starknet.getContractFactory("teleport_join");
   await deployer.declare(factory);
@@ -38,10 +38,10 @@ async function deploySnTeleportJoin(
     ward: deployer.address,
     vat_: vat,
     daiJoin_: daiJoin,
-    ilk_: ilk,
-    domain_: domain,
+    ilk_: l2String(ilk),
+    domain_: toUint256(l2StringAsUint256(domain)),
   });
-  return wrapTyped(hre, contract);
+  return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
 async function deploySnTeleportOracleAuth(
@@ -54,24 +54,24 @@ async function deploySnTeleportOracleAuth(
     ward: deployer.address,
     teleport_join_: teleport_join,
   });
-  return wrapTyped(hre, contract);
+  return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
 async function deploySnTeleportRouter(
   deployer: Account,
   dai: Felt,
-  domain: Felt,
-  parent_domain: Felt
+  domain: string,
+  parent_domain: string
 ): Promise<SnTeleportRouter> {
   const factory = await hre.starknet.getContractFactory("teleport_router");
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, {
     ward: deployer.address,
     dai,
-    domain,
-    parent_domain,
+    domain: toUint256(l2StringAsUint256(domain)),
+    parent_domain: toUint256(l2StringAsUint256(parent_domain)),
   });
-  return wrapTyped(hre, contract);
+  return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
 export async function deploySnTeleportConstantFee(
@@ -81,10 +81,10 @@ export async function deploySnTeleportConstantFee(
   const factory = await hre.starknet.getContractFactory(
     "teleport_constant_fee"
   );
-  const deployer = currentSnAccount();
+  const deployer = currentSnAcc();
   await deployer.declare(factory);
   const contract = await deployer.deploy(factory, { fee, ttl });
-  return wrapTyped(hre, contract);
+  return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
 interface SnTeleportInstance {
@@ -102,36 +102,36 @@ export async function deploySnTeleport(
 ): Promise<SnTeleportInstance> {
   const teleport: SnTeleportInstance = {
     join: await deploySnTeleportJoin(
-      currentSnAccount(),
+      currentSnAcc(),
       await daiJoin.vat(),
       daiJoin.address,
-      l2String(ilk),
+      ilk,
       domain
     ),
     router: await deploySnTeleportRouter(
-      currentSnAccount(),
+      currentSnAcc(),
       await daiJoin.dai(),
-      l2String(domain),
-      l2String(parentDomain)
+      domain,
+      parentDomain
     ),
     oracleAuth: await deploySnTeleportOracleAuth(
-      currentSnAccount(),
+      currentSnAcc(),
       daiJoin.address
     ),
   };
-  expect(await teleport.join.wards(currentSnAccount().address)).toBeTruthy();
+  expect(await teleport.join.wards(currentSnAcc().address)).toBeTruthy();
   await teleport.join.rely(owner.address);
-  await teleport.join.deny(currentSnAccount().address);
+  await teleport.join.deny(currentSnAcc().address);
 
-  expect(await teleport.router.wards(currentSnAccount().address)).toBeTruthy();
+  expect(await teleport.router.wards(currentSnAcc().address)).toBeTruthy();
   await teleport.router.rely(owner.address);
-  await teleport.router.deny(currentSnAccount().address);
+  await teleport.router.deny(currentSnAcc().address);
 
   expect(
-    await teleport.oracleAuth.wards(currentSnAccount().address)
+    await teleport.oracleAuth.wards(currentSnAcc().address)
   ).toBeTruthy();
   await teleport.oracleAuth.rely(owner.address);
-  await teleport.oracleAuth.deny(currentSnAccount().address);
+  await teleport.oracleAuth.deny(currentSnAcc().address);
 
   return teleport;
 }
@@ -191,18 +191,18 @@ export async function initSnTeleportDomain(
 ) {
   await teleport.join.file_fees(
     l2String("fees"),
-    l2String(cfg.domain),
+    l2StringAsUint256(cfg.domain),
     cfg.fees
   );
   await teleport.join.file_line(
     l2String("line"),
-    l2String(cfg.domain),
+    l2StringAsUint256(cfg.domain),
     cfg.debtCeiling
   );
 
   await teleport.router.file(
     l2String("gateway"),
-    l2String(cfg.domain),
+    l2StringAsUint256(cfg.domain),
     cfg.gateway
   );
 }

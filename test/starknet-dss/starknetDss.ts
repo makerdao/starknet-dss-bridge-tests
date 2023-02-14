@@ -2,7 +2,7 @@ import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import { Address } from "@wagmi/core";
 import hre from "hardhat";
 
-import { currentSnAccount, starknetPrank } from "../helpers/starknet/prank";
+import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
 import { getL2ContractAt, l2String } from "../helpers/utils";
@@ -31,62 +31,61 @@ export type SnToken = WrappedStarknetContract<typeof tokenAbi>;
 
 async function deploySnVat(ward: Felt): Promise<SnVat> {
   const factory = await hre.starknet.getContractFactory("vat");
-  await currentSnAccount().declare(factory);
-  const vat = await currentSnAccount().deploy(factory, { ward });
-  return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
+  await currentSnAcc().declare(factory);
+  const vat = await currentSnAcc().deploy(factory, { ward });
+  return starknetPrankTyped(wrapTyped(hre, vat));
 }
 
 export async function deploySnToken(ward: Felt): Promise<SnToken> {
   const factory = await hre.starknet.getContractFactory("tests/mock_token");
-  await currentSnAccount().declare(factory);
-  const token = await currentSnAccount().deploy(factory, { ward });
-  return starknetPrank<typeof tokenAbi>(wrapTyped(hre, token));
+  await currentSnAcc().declare(factory);
+  const token = await currentSnAcc().deploy(factory, { ward });
+  return starknetPrankTyped(wrapTyped(hre, token));
 }
 
 async function deploySnDaiJoin(vat: Felt, dai: Felt): Promise<SnDaiJoin> {
   const factory = await hre.starknet.getContractFactory("dai_join");
-  await currentSnAccount().declare(factory);
-  const daiJoin = await currentSnAccount().deploy(factory, { vat, dai });
-  return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
+  await currentSnAcc().declare(factory);
+  const daiJoin = await currentSnAcc().deploy(factory, { vat, dai });
+  return starknetPrankTyped(wrapTyped(hre, daiJoin));
 }
 
 async function deploySnSpotter(vat: Felt, ward: Felt): Promise<SnSpotter> {
   const factory = await hre.starknet.getContractFactory("spotter");
-  await currentSnAccount().declare(factory);
-  const spotter = await currentSnAccount().deploy(factory, { vat, ward });
-  return starknetPrank<typeof spotterAbi>(wrapTyped(hre, spotter));
+  await currentSnAcc().declare(factory);
+  const spotter = await currentSnAcc().deploy(factory, { vat, ward });
+  return starknetPrankTyped(wrapTyped(hre, spotter));
 }
 
 async function deploySnJug(vat: Felt, ward: Felt): Promise<SnJug> {
   const factory = await hre.starknet.getContractFactory("jug");
-  await currentSnAccount().declare(factory);
-  // TODO: rename jug.cairo constructor arguments to just vat, ward
-  const jug = await currentSnAccount().deploy(factory, {
-    vat_: vat,
-    ward_: ward,
+  await currentSnAcc().declare(factory);
+  const jug = await currentSnAcc().deploy(factory, {
+    vat,
+    ward,
   });
-  return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
+  return starknetPrankTyped(wrapTyped(hre, jug));
 }
 
 async function deploySnPot(vat: Felt, ward: Felt): Promise<SnPot> {
   const factory = await hre.starknet.getContractFactory("pot");
-  await currentSnAccount().declare(factory);
-  const pot = await currentSnAccount().deploy(factory, { vat, ward });
-  return starknetPrank<typeof potAbi>(wrapTyped(hre, pot));
+  await currentSnAcc().declare(factory);
+  const pot = await currentSnAcc().deploy(factory, { vat, ward });
+  return starknetPrankTyped(wrapTyped(hre, pot));
 }
 
 async function deploySnCure(ward: Felt): Promise<SnCure> {
   const factory = await hre.starknet.getContractFactory("cure");
-  await currentSnAccount().declare(factory);
-  const cure = await currentSnAccount().deploy(factory, { ward });
-  return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
+  await currentSnAcc().declare(factory);
+  const cure = await currentSnAcc().deploy(factory, { ward });
+  return starknetPrankTyped(wrapTyped(hre, cure));
 }
 
 async function deploySnEnd(vat: string, ward: Felt): Promise<SnEnd> {
   const factory = await hre.starknet.getContractFactory("end");
-  await currentSnAccount().declare(factory);
-  const end = await currentSnAccount().deploy(factory, { ward, vat });
-  return starknetPrank<typeof endAbi>(wrapTyped(hre, end));
+  await currentSnAcc().declare(factory);
+  const end = await currentSnAcc().deploy(factory, { ward, vat });
+  return starknetPrankTyped(wrapTyped(hre, end));
 }
 
 export interface SnDssInstance {
@@ -127,34 +126,34 @@ export async function deploySnDss(
 }
 
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
-export async function getSnDaiJoin(address: string): Promise<SnDaiJoin> {
-  const daiJoin = await getL2ContractAt(
-    hre,
-    "dai_join.cairo/dai_join_abi.json",
-    address
-  );
-  return starknetPrank<typeof daiJoinAbi>(wrapTyped(hre, daiJoin));
-}
+// export async function getSnDaiJoin(address: string): Promise<SnDaiJoin> {
+//   const daiJoin = await getL2ContractAt(
+//     hre,
+//     "dai_join.cairo/dai_join_abi.json",
+//     address
+//   );
+//   return starknetPrankTyped(wrapTyped(hre, daiJoin));
+// }
 
 export async function getSnDai(address: string): Promise<SnDai> {
   const dai = await getL2ContractAt(hre, "dai.cairo/dai_abi.json", address);
-  return starknetPrank<typeof daiAbi>(wrapTyped(hre, dai));
+  return starknetPrankTyped(wrapTyped(hre, dai));
 }
 
-export async function getSnVat(address: string): Promise<SnVat> {
-  const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
-  return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
-}
-
-export async function getSnJug(address: string): Promise<SnJug> {
-  const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
-  return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
-}
-
-export async function getSnCure(address: string): Promise<SnCure> {
-  const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
-  return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
-}
+// export async function getSnVat(address: string): Promise<SnVat> {
+//   const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
+//   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
+// }
+//
+// export async function getSnJug(address: string): Promise<SnJug> {
+//   const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
+//   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
+// }
+//
+// export async function getSnCure(address: string): Promise<SnCure> {
+//   const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
+//   return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
+// }
 
 export interface SnDssConfig {
   claimToken: string; // TODO: replace when claim token is available
@@ -175,7 +174,7 @@ export async function initSnDss(
   await dss.vat.rely(dss.end.address);
 
   await breakIntoDai(
-    currentSnAccount(),
+    currentSnAcc(),
     dss.dai,
     l1GovRelayAddress,
     l2GovRelayAddress

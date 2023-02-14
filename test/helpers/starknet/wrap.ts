@@ -17,7 +17,7 @@ function toBigInt({ low, high }: { low: bigint; high: bigint }): bigint {
   return low + 2n ** 128n * high;
 }
 
-function toUint256(v: bigint): { low: bigint; high: bigint } {
+export function toUint256(v: bigint): { low: bigint; high: bigint } {
   const bits = v.toString(16).padStart(64, "0");
   return {
     low: BigInt(`0x${bits.slice(32)}`),

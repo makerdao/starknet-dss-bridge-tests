@@ -2,7 +2,8 @@ import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import hre from "hardhat";
 
 import type { Abi } from "./abi";
-import { WrappedStarknetContract } from "./wrap";
+import {wrap, WrappedStarknetContract} from "./wrap";
+import {StarknetContract} from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
 
 let prankster: Account | undefined;
 
@@ -25,7 +26,7 @@ export async function initSnPredeployedAccounts(n: number) {
   }
 }
 
-export function currentSnAccount(): Account {
+export function currentSnAcc(): Account {
   return prankster || predeployedAccounts[0];
 }
 
@@ -37,7 +38,7 @@ export function stopSnPrank() {
   prankster = undefined;
 }
 
-export function starknetPrank<TAbi extends Abi>(
+function starknetPrank<TAbi extends Abi>(
   contract: WrappedStarknetContract<TAbi>
 ): WrappedStarknetContract<TAbi> {
   return new Proxy(
@@ -47,7 +48,7 @@ export function starknetPrank<TAbi extends Abi>(
         const callName = _callName.toString();
         if (typeof (contract as any)[callName] === "function") {
           return (...args: any[]) => {
-            contract.connect(currentSnAccount());
+            contract.connect(currentSnAcc());
             return (contract as any)[callName](...args);
           };
         }
@@ -56,4 +57,8 @@ export function starknetPrank<TAbi extends Abi>(
       },
     }
   ) as WrappedStarknetContract<TAbi>;
+}
+
+export function starknetPrankTyped<C>(contract: C): C {
+  return starknetPrank(contract as any) as C;
 }
