@@ -5,7 +5,7 @@ import hre from "hardhat";
 
 import config from "./config";
 import { getDss } from "./dss/dss";
-import { deploySnDomainHost, initHost } from "./dss-bridge/dssBridge";
+import { deployDomainHost, initHost } from "./dss-bridge/dssBridge";
 import {
   deployLinearFee,
   deployTeleport,
@@ -124,8 +124,9 @@ export async function setup() {
   console.log("deploySnTeleportConstantFee");
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
+  console.log("deploySnDomainHost")
   // deploy host on l1
-  const host = await deploySnDomainHost(
+  const host = await deployDomainHost(
     rootCfg.teleportIlk,
     dss.daiJoin,
     snCfg.escrow,
@@ -140,12 +141,14 @@ export async function setup() {
   // init on l1
 
   startL1Prank(admin);
+  console.log("initTeleport")
   await initTeleport(dss, teleport, {
     debtCeiling: 10n ** 18n,
     oracleThreshold: 5n,
     oracleSigners: [], //TODO: ???
   });
 
+  console.log("initTeleportDomain")
   await initTeleportDomain(teleport, {
     domain: snCfg.domain,
     fees: fees.address,
@@ -153,6 +156,7 @@ export async function setup() {
     debtCeiling: 1000000n * WAD,
   });
 
+  console.log("initHost")
   await initHost(dss, host, {
     escrow: snCfg.escrow,
     debtCeiling: 1000000n * RAD,
@@ -164,6 +168,7 @@ export async function setup() {
   console.log("init on Starknet");
   startSnPrank(snOwner);
 
+  console.log("initSnDss")
   await initSnDss(
     snDss,
     {
@@ -174,12 +179,14 @@ export async function setup() {
     snCfg.govRelay
   );
 
+  console.log("initSnTeleport")
   await initSnTeleport(snDss, snTeleport, {
     debtCeiling: 2000000n * RAD,
     oracleThreshold: 13n,
     oracleSigners: [],
   });
 
+  console.log("initSnTeleportDomain")
   await initSnTeleportDomain(snTeleport, {
     domain: rootCfg.domain,
     fees: snFee.address as Address,
@@ -187,6 +194,7 @@ export async function setup() {
     debtCeiling: 1000000n * WAD,
   });
 
+  console.log("initGuest")
   await initGuest(snDss, guest);
 
   // await saveSnapshot();

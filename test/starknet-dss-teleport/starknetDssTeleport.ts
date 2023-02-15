@@ -79,15 +79,15 @@ async function deploySnTeleportRouter(
 }
 
 export async function deploySnTeleportConstantFee(
-  fee: Uint256,
-  ttl: Felt
+  fee: bigint,
+  ttl_: Felt
 ): Promise<SnTeleportConstantFee> {
   const factory = await hre.starknet.getContractFactory(
     "teleport_constant_fee"
   );
   const deployer = currentSnAcc();
   await deployer.declare(factory);
-  const contract = await deployer.deploy(factory, { fee, ttl });
+  const contract = await deployer.deploy(factory, { fee_: toUint256(fee), ttl_ });
   return starknetPrankTyped(wrapTyped(hre, contract));
 }
 

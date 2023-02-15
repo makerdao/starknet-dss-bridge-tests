@@ -6,7 +6,7 @@ import hre from "hardhat";
 import { DaiJoin, DssInstance } from "../dss/dss";
 import { TeleportRouter } from "../dss-teleport/dssTeleport";
 import { prank } from "../helpers/prank";
-import { l2String } from "../helpers/utils";
+import {l1String, l2String} from "../helpers/utils";
 import { SnDai } from "../starknet-dss/starknetDss";
 import {
   DssBridgeHostConfig,
@@ -18,7 +18,7 @@ import starknetDomainHostAbi from "./abi/starknetDomainHostAbi";
 export type SnDomainHost = GetContractResult<typeof starknetDomainHostAbi>;
 export type Escrow = GetContractResult<typeof escrowLikeAbi>;
 
-export async function deploySnDomainHost(
+export async function deployDomainHost(
   ilk: string,
   daiJoin: DaiJoin,
   escrow: Address,
@@ -31,7 +31,7 @@ export async function deploySnDomainHost(
     "StarknetDomainHost"
   );
   const contract = (await contractFactory.deploy(
-    l2String(ilk),
+    l1String(ilk),
     daiJoin.address,
     escrow,
     router.address,
