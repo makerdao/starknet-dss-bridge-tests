@@ -2,6 +2,7 @@ import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist
 import { Address } from "@wagmi/core";
 import { utils } from "ethers";
 import { getContractAddress } from "ethers/lib/utils";
+import fs from "fs";
 import hre, { starknet } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
@@ -78,6 +79,10 @@ export async function saveSnapshot() {
 }
 
 export async function loadSnapshot() {
+  if (!fs.existsSync("starknet_state.dmp")) {
+    return;
+  }
+
   await starknet.devnet.load("starknet_state.dmp");
 }
 
