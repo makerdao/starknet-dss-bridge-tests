@@ -4,7 +4,11 @@ import hre from "hardhat";
 
 import config from "./config";
 import { getDss } from "./dss/dss";
-import { deployDomainHost, initHost } from "./dss-bridge/dssBridge";
+import {
+  deployConstantDSValue,
+  deployDomainHost,
+  initHost,
+} from "./dss-bridge/dssBridge";
 import {
   deployLinearFee,
   deployTeleport,
@@ -127,7 +131,7 @@ export async function setup() {
   console.log("deploySnTeleportConstantFee");
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
-  console.log("deployDomainHost")
+  console.log("deployDomainHost");
   // deploy host on l1
   const host = await deployDomainHost(
     deployer,
@@ -140,6 +144,8 @@ export async function setup() {
     guest,
     snDss.dai
   );
+
+  const bridgeOracle = await deployConstantDSValue();
 
   expect(host.address).toEqual(hostAddress);
 
@@ -164,7 +170,7 @@ export async function setup() {
   });
 
   console.log("initHost");
-  await initHost(dss, host, {
+  await initHost(dss, host, bridgeOracle, {
     escrow: snCfg.escrow,
     debtCeiling: 1000000n * RAD,
   });

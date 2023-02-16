@@ -1,7 +1,8 @@
+import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import { Address } from "@wagmi/core";
 import hre from "hardhat";
 
-import { SnDomainHost } from "../dss-bridge/dssBridge";
+import { DomainHost } from "../dss-bridge/dssBridge";
 import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
@@ -9,7 +10,6 @@ import { l2String } from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance, SnToken } from "../starknet-dss/starknetDss";
 import { SnTeleportRouter } from "../starknet-dss-teleport/starknetDssTeleport";
 import domainGuestAbi from "./abi/domainGuestAbi";
-import {Account} from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 
 export type SnDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
 
@@ -35,7 +35,7 @@ export async function deploySnDomainGuest(
 
 export interface BridgeInstance {
   guest: SnDomainGuest;
-  host: SnDomainHost;
+  host: DomainHost;
 }
 
 export interface DssBridgeHostConfig {

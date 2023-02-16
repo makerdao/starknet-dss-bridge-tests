@@ -1,5 +1,6 @@
 import { Address, GetContractResult } from "@wagmi/core";
-import {ethers, Signer} from "ethers";
+import { expect } from "earljs";
+import { ethers, Signer } from "ethers";
 import { formatBytes32String } from "ethers/lib/utils";
 import hre from "hardhat";
 
@@ -12,11 +13,12 @@ import {
   DssBridgeHostConfig,
   SnDomainGuest,
 } from "../starknet-dss-bridge/starknetDssBridge";
+import dsValueAbi from "./abi/dsValueAbi";
 import escrowLikeAbi from "./abi/escrowLikeAbi";
 import starknetDomainHostAbi from "./abi/starknetDomainHostAbi";
-import {expect} from "earljs";
 
-export type SnDomainHost = GetContractResult<typeof starknetDomainHostAbi>;
+export type DomainHost = GetContractResult<typeof starknetDomainHostAbi>;
+export type DSValue = GetContractResult<typeof dsValueAbi>;
 export type Escrow = GetContractResult<typeof escrowLikeAbi>;
 
 export async function deployDomainHost(
@@ -29,7 +31,7 @@ export async function deployDomainHost(
   starknet: Address,
   guest: SnDomainGuest,
   l2dai: SnDai
-): Promise<SnDomainHost> {
+): Promise<DomainHost> {
   const contractFactory = await hre.ethers.getContractFactory(
     "StarknetDomainHost"
   );
@@ -41,7 +43,7 @@ export async function deployDomainHost(
     starknet,
     guest.address,
     l2dai.address
-  )) as SnDomainHost;
+  )) as DomainHost;
   await contract.deployed();
   const bridge = prank(contract);
 
@@ -53,6 +55,13 @@ export async function deployDomainHost(
   await bridge.deny(deployer);
 
   return bridge;
+}
+
+export async function deployConstantDSValue(): Promise<DSValue> {
+  const contractFactory = await hre.ethers.getContractFactory("DSValue");
+  const contract = (await contractFactory.deploy()) as DSValue;
+  await contract.deployed();
+  return prank(contract);
 }
 
 export async function getEscrow(address: Address): Promise<Escrow> {
@@ -67,10 +76,10 @@ const VOW = formatBytes32String("vow") as Address;
 const PIP = formatBytes32String("pip") as Address;
 const MAT = formatBytes32String("mat") as Address;
 const LINE = formatBytes32String("line") as Address;
-const SPOT = formatBytes32String("spot") as Address;
 export async function initHost(
   { cure, dai, jug, spotter, vat, vow }: DssInstance,
-  host: SnDomainHost,
+  host: DomainHost,
+  oracle: DSValue,
   { escrow: escrowAddress, debtCeiling }: DssBridgeHostConfig
 ) {
   const ilk = await host.ilk();
@@ -86,13 +95,11 @@ export async function initHost(
   await jug.init(ilk);
   await vat.rely(host.address);
 
-  // TODO: commenting spotter out, filing SPOT on vat should be equivalent
-  // await spotter['file(bytes32,bytes32,address)'](ilk, PIP, host.address);
-  // await spotter['file(bytes32,bytes32,uint256)'](ilk, MAT, 10n ** 27n);
-  // console.log('poking', spotter.address, ilk)
-  // await spotter.poke(ilk);
+  await spotter["file(bytes32,bytes32,address)"](ilk, PIP, oracle.address);
+  await spotter["file(bytes32,bytes32,uint256)"](ilk, MAT, 10n ** 27n);
+  console.log("poking", spotter.address, ilk);
+  await spotter.poke(ilk);
 
-  await vat["file(bytes32,bytes32,uint256)"](ilk, SPOT, 10n ** 27n);
   await vat["file(bytes32,bytes32,uint256)"](ilk, LINE, debtCeiling);
   // //dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
   await cure.lift(host.address);
