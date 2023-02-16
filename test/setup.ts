@@ -25,7 +25,6 @@ import {
   _1_HOUR,
   _6_HOURS,
   getAddressOfNextDeployedContract,
-  loadSnapshot,
   RAD,
   reset,
   saveSnapshot,
