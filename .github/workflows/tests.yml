@@ -27,6 +27,11 @@ jobs:
           key: yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             yarn-
+      
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
 
       - run: yarn --no-progress --non-interactive --frozen-lockfile
 

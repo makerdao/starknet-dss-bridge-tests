@@ -4,7 +4,7 @@ import { expect } from "earljs";
 import hre from "hardhat";
 
 import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
-import { Felt, Uint256 } from "../helpers/starknet/types";
+import { Felt } from "../helpers/starknet/types";
 import {
   toUint256,
   WrappedStarknetContract,
@@ -87,7 +87,10 @@ export async function deploySnTeleportConstantFee(
   );
   const deployer = currentSnAcc();
   await deployer.declare(factory);
-  const contract = await deployer.deploy(factory, { fee_: toUint256(fee), ttl_ });
+  const contract = await deployer.deploy(factory, {
+    fee_: toUint256(fee),
+    ttl_,
+  });
   return starknetPrankTyped(wrapTyped(hre, contract));
 }
 

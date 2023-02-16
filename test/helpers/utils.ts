@@ -1,10 +1,10 @@
 import { StarknetContractFactory } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
 import { Address } from "@wagmi/core";
+import { utils } from "ethers";
 import { getContractAddress } from "ethers/lib/utils";
 import hre, { starknet } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
-
 
 export const WAD = 10n ** 18n;
 export const RAY = 10n ** 27n;
@@ -45,7 +45,7 @@ export function l2StringAsUint256(str: string): bigint {
 export async function reset() {
   // TODO: how to reset properly? jsonRpcUrl should be outside ts code
   await hre.network.provider.request({
-    method: "hardhat_reset",
+    method: "anvil_reset",
     params: [
       {
         forking: {
@@ -58,19 +58,26 @@ export async function reset() {
   // await starknet.devnet.flush();
 }
 
+export async function setBalance(
+  address: string,
+  balance: string
+): Promise<void> {
+  const balanceHex = utils
+    .parseEther(balance)
+    .toHexString()
+    .replace("0x0", "0x");
+
+  await hre.network.provider.request({
+    method: "anvil_setBalance",
+    params: [address, balanceHex],
+  });
+}
+
 export async function saveSnapshot() {
-  // await hre.network.provider.request({
-  //  method: "evm_snapshot",
-  //  params: [],
-  // });
   await starknet.devnet.dump("starknet_state.dmp");
 }
 
 export async function loadSnapshot() {
-  // await hre.network.provider.request({
-  //  method: "evm_revert",
-  //  params: ["0x1"],
-  // });
   await starknet.devnet.load("starknet_state.dmp");
 }
 

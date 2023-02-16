@@ -1,4 +1,3 @@
-import { setBalance } from "@nomicfoundation/hardhat-network-helpers";
 import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import hre from "hardhat";
@@ -22,8 +21,11 @@ import {
   _1_HOUR,
   _6_HOURS,
   getAddressOfNextDeployedContract,
+  loadSnapshot,
   RAD,
   reset,
+  saveSnapshot,
+  setBalance,
   WAD,
 } from "./helpers/utils";
 import {
@@ -44,7 +46,7 @@ import {
 
 export async function getAdmin(address: Address) {
   await hre.network.provider.request({
-    method: "hardhat_impersonateAccount",
+    method: "anvil_impersonateAccount",
     params: [address],
   });
   return await hre.ethers.getSigner(address);
@@ -55,7 +57,7 @@ export async function setup() {
 
   // preparation
   await reset();
-  // await loadSnapshot();
+  await loadSnapshot();
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
@@ -73,7 +75,7 @@ export async function setup() {
   const admin = await hre.ethers.getImpersonatedSigner(rootCfg.admin);
 
   // fund admin account
-  await setBalance(admin.address, 10n ** 18n);
+  await setBalance(admin.address, "10");
 
   // deploy on l1
   console.log("getDss");
@@ -124,7 +126,7 @@ export async function setup() {
   console.log("deploySnTeleportConstantFee");
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
-  console.log("deploySnDomainHost")
+  console.log("deploySnDomainHost");
   // deploy host on l1
   const host = await deployDomainHost(
     rootCfg.teleportIlk,
@@ -141,14 +143,14 @@ export async function setup() {
   // init on l1
 
   startL1Prank(admin);
-  console.log("initTeleport")
+  console.log("initTeleport");
   await initTeleport(dss, teleport, {
     debtCeiling: 10n ** 18n,
     oracleThreshold: 5n,
     oracleSigners: [], //TODO: ???
   });
 
-  console.log("initTeleportDomain")
+  console.log("initTeleportDomain");
   await initTeleportDomain(teleport, {
     domain: snCfg.domain,
     fees: fees.address,
@@ -156,7 +158,7 @@ export async function setup() {
     debtCeiling: 1000000n * WAD,
   });
 
-  console.log("initHost")
+  console.log("initHost");
   await initHost(dss, host, {
     escrow: snCfg.escrow,
     debtCeiling: 1000000n * RAD,
@@ -168,7 +170,7 @@ export async function setup() {
   console.log("init on Starknet");
   startSnPrank(snOwner);
 
-  console.log("initSnDss")
+  console.log("initSnDss");
   await initSnDss(
     snDss,
     {
@@ -179,14 +181,14 @@ export async function setup() {
     snCfg.govRelay
   );
 
-  console.log("initSnTeleport")
+  console.log("initSnTeleport");
   await initSnTeleport(snDss, snTeleport, {
     debtCeiling: 2000000n * RAD,
     oracleThreshold: 13n,
     oracleSigners: [],
   });
 
-  console.log("initSnTeleportDomain")
+  console.log("initSnTeleportDomain");
   await initSnTeleportDomain(snTeleport, {
     domain: rootCfg.domain,
     fees: snFee.address as Address,
@@ -194,10 +196,10 @@ export async function setup() {
     debtCeiling: 1000000n * WAD,
   });
 
-  console.log("initGuest")
+  console.log("initGuest");
   await initGuest(snDss, guest);
 
-  // await saveSnapshot();
+  await saveSnapshot();
 
   return {
     dss,

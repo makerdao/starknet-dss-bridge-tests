@@ -6,7 +6,7 @@ import hre from "hardhat";
 import { DaiJoin, DssInstance } from "../dss/dss";
 import { TeleportRouter } from "../dss-teleport/dssTeleport";
 import { prank } from "../helpers/prank";
-import {l1String, l2String} from "../helpers/utils";
+import { l1String } from "../helpers/utils";
 import { SnDai } from "../starknet-dss/starknetDss";
 import {
   DssBridgeHostConfig,
