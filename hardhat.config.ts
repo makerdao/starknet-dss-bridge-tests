@@ -16,6 +16,7 @@ const config = {
     forkedEtherum: {
       // hardhat forked node
       url: "http://127.0.0.1:8545",
+      allowUnlimitedContractSize: true,
     },
     forkedStarknet: {
       //starknet forked devnet endpoint
@@ -43,6 +44,12 @@ const config = {
     compilers: [
       {
         version: "0.8.15",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          }
+        },
       }
     ],
     overrides: {
@@ -66,6 +73,9 @@ const config = {
       },
       "contracts/dss/cure.sol": {
         version: "0.6.12"
+      },
+      "contracts/dss/spot.sol": {
+        version: "0.5.12"
       },
     }
   },

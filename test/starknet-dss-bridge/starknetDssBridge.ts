@@ -9,10 +9,12 @@ import { l2String } from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance, SnToken } from "../starknet-dss/starknetDss";
 import { SnTeleportRouter } from "../starknet-dss-teleport/starknetDssTeleport";
 import domainGuestAbi from "./abi/domainGuestAbi";
+import {Account} from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 
 export type SnDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
 
 export async function deploySnDomainGuest(
+  owner: Account,
   daiJoin: SnDaiJoin,
   claimToken: SnToken,
   router: SnTeleportRouter,
@@ -22,7 +24,7 @@ export async function deploySnDomainGuest(
   await currentSnAcc().declare(factory);
   // TODO: why camelCase in constructor args in domain_guest?
   const contract = await currentSnAcc().deploy(factory, {
-    ward: currentSnAcc().address,
+    ward: owner.address,
     daiJoin: daiJoin.address,
     claimToken: claimToken.address,
     router: router.address,

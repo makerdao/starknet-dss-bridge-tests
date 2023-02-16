@@ -57,7 +57,7 @@ export async function setup() {
 
   // preparation
   await reset();
-  await loadSnapshot();
+  // await loadSnapshot();
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
@@ -109,7 +109,7 @@ export async function setup() {
   console.log("deploySnTeleport");
   const snTeleport = await deploySnTeleport(
     snOwner,
-    snCfg.ilk,
+    snCfg.teleportIlk,
     snCfg.domain,
     rootCfg.domain,
     snDss.daiJoin
@@ -117,6 +117,7 @@ export async function setup() {
 
   console.log("deploySnDomainGuest");
   const guest = await deploySnDomainGuest(
+    snOwner,
     snDss.daiJoin,
     snClaimToken,
     snTeleport.router,
@@ -126,10 +127,12 @@ export async function setup() {
   console.log("deploySnTeleportConstantFee");
   const snFee = await deploySnTeleportConstantFee(WAD / 10000n, _6_HOURS);
 
-  console.log("deploySnDomainHost");
+  console.log("deployDomainHost")
   // deploy host on l1
   const host = await deployDomainHost(
-    rootCfg.teleportIlk,
+    deployer,
+    admin,
+    snCfg.ilk,
     dss.daiJoin,
     snCfg.escrow,
     teleport.router,
@@ -201,7 +204,7 @@ export async function setup() {
   console.log("initGuest");
   await initGuest(snDss, guest);
 
-  await saveSnapshot();
+  // await saveSnapshot();
 
   return {
     dss,

@@ -586,22 +586,22 @@ tests = ["pytest", "pytz", "simplejson"]
 
 [[package]]
 name = "marshmallow-dataclass"
-version = "8.5.11"
+version = "8.4.2"
 description = "Python library to convert dataclasses into marshmallow schemas."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-marshmallow = ">=3.13.0,<4.0"
-typing-inspect = ">=0.8.0"
+marshmallow = ">=3.0.0,<4.0"
+typing-inspect = ">=0.7.1"
 
 [package.extras]
-dev = ["typeguard", "pre-commit (>=2.17,<3.0)", "sphinx", "pytest (>=5.4)", "pytest-mypy-plugins (>=1.2.0)", "marshmallow-enum", "typing-extensions (>=3.7.2)", "marshmallow (>=3.18.0,<4.0)"]
+dev = ["marshmallow-enum", "typeguard", "pre-commit (>=1.18,<2.0)", "sphinx", "pytest (>=5.4)", "pytest-mypy-plugins (>=1.2.0)", "typing-extensions (>=3.7.2,<3.8.0)"]
 docs = ["sphinx"]
-enum = ["marshmallow-enum", "marshmallow (>=3.18.0,<4.0)"]
-lint = ["pre-commit (>=2.17,<3.0)"]
-tests = ["pytest (>=5.4)", "pytest-mypy-plugins (>=1.2.0)", "typing-extensions (>=3.7.2)"]
+enum = ["marshmallow-enum"]
+lint = ["pre-commit (>=1.18,<2.0)"]
+tests = ["pytest (>=5.4)", "pytest-mypy-plugins (>=1.2.0)", "typing-extensions (>=3.7.2,<3.8.0)"]
 union = ["typeguard"]
 
 [[package]]
@@ -872,7 +872,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "starknet-devnet"
-version = "0.4.3"
+version = "0.4.5"
 description = "A local testnet for Starknet"
 category = "main"
 optional = false
@@ -885,7 +885,9 @@ crypto-cpp-py = ">=1.0.4,<1.1.0"
 Flask = {version = ">=2.0.3,<2.1.0", extras = ["async"]}
 flask-cors = ">=3.0.10,<3.1.0"
 gunicorn = ">=20.1.0,<20.2.0"
+jsonschema = ">=4.17.0,<4.18.0"
 marshmallow = ">=3.17.0,<3.18.0"
+marshmallow-dataclass = ">=8.4,<8.5"
 typing-extensions = ">=4.3.0,<4.4.0"
 Werkzeug = ">=2.0.3,<2.1.0"
 
@@ -1046,7 +1048,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "ed957f8c69b77234377edd0666c493189877db0ec821dea0341e35f684d4fa28"
+content-hash = "1ed1a1fd43b1e2407d20d58f0596dce5891ca9a84023c600463005e0b254c87f"
 
 [metadata.files]
 aiohttp = [
@@ -1820,8 +1822,8 @@ marshmallow = [
     {file = "marshmallow-3.17.1.tar.gz", hash = "sha256:48e2d88d4ab431ad5a17c25556d9da529ea6e966876f2a38d274082e270287f0"},
 ]
 marshmallow-dataclass = [
-    {file = "marshmallow_dataclass-8.5.11-py3-none-any.whl", hash = "sha256:d9dbce8d356a8dad2b80fecf15cac97f42a48397eefa594693874a2a6539ea84"},
-    {file = "marshmallow_dataclass-8.5.11.tar.gz", hash = "sha256:b7b0ee28fa9e88edd00db324762848d3182fe5dba82c3b897cb525c402ffd143"},
+    {file = "marshmallow_dataclass-8.4.2-py3-none-any.whl", hash = "sha256:f3b39bfb9da25f46f12f118b067f9eebc754472d76259b525e561e429337530f"},
+    {file = "marshmallow_dataclass-8.4.2.tar.gz", hash = "sha256:2948a0e1ffbec5ecc41242ec194216be99264cbb23ee117c90b97bfbbe7d0566"},
 ]
 marshmallow-enum = [
     {file = "marshmallow-enum-1.5.1.tar.gz", hash = "sha256:38e697e11f45a8e64b4a1e664000897c659b60aa57bfa18d44e226a9920b6e58"},
@@ -2139,8 +2141,8 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 starknet-devnet = [
-    {file = "starknet_devnet-0.4.3-py3-none-any.whl", hash = "sha256:d297f4313dca25141ad95b8a4c13d66b5a59ef63519924a637f23cbe1b7919db"},
-    {file = "starknet_devnet-0.4.3.tar.gz", hash = "sha256:0ddfb30fe3130ef68cd593f2097c6ff013ac0a65a0fc4c6310bb424bead0aa93"},
+    {file = "starknet_devnet-0.4.5-py3-none-any.whl", hash = "sha256:9f25dcd7e151e97740b05c33f83b3a50c6007bbca6219c373c7d290900bd48f2"},
+    {file = "starknet_devnet-0.4.5.tar.gz", hash = "sha256:a35b46dc29bb67c2efd023f74a5d9db0f25a24ba9a32d70da8b795aa9e8e7277"},
 ]
 sympy = [
     {file = "sympy-1.11.1-py3-none-any.whl", hash = "sha256:938f984ee2b1e8eae8a07b884c8b7a1146010040fccddc6539c54f401c8f6fcf"},
