@@ -56,7 +56,6 @@ export async function reset() {
       },
     ],
   });
-  // await starknet.devnet.flush();
 }
 
 export async function setBalance(

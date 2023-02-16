@@ -140,6 +140,8 @@ export async function setup() {
 
   expect(host.address).toEqual(hostAddress);
 
+  await saveSnapshot();
+
   // init on l1
 
   startL1Prank(admin);

@@ -7,3 +7,4 @@ description = "Starknet Dss Bridge Tests"
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
 starknet-devnet = "0.4.3"
+cairo-rs-py = "^0.1.2"
