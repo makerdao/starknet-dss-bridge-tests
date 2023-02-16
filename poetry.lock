@@ -123,6 +123,14 @@ typeguard = "*"
 Web3 = "*"
 
 [[package]]
+name = "cairo-rs-py"
+version = "0.1.2"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -1048,7 +1056,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "1ed1a1fd43b1e2407d20d58f0596dce5891ca9a84023c600463005e0b254c87f"
+content-hash = "24f04b8b5e9fce5437b2629e0f1b809d25f0234e4667ead6e3b5abed76bc1daa"
 
 [metadata.files]
 aiohttp = [
@@ -1255,6 +1263,10 @@ cachetools = [
 ]
 cairo-lang = [
     {file = "cairo-lang-0.10.3.zip", hash = "sha256:3093946334590f199d99471912049c182cec1f90d4ad02029f460a0de3a27502"},
+]
+cairo-rs-py = [
+    {file = "cairo_rs_py-0.1.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:04384fcbf52ca9a078c974dcdbd4fdae30953ae2cd835656e014d0a7d627076f"},
+    {file = "cairo_rs_py-0.1.2.tar.gz", hash = "sha256:0febf3554b01a80c42871e3beb4738b35d251e125fb285857951efa55cb13cc8"},
 ]
 certifi = [
     {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},

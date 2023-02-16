@@ -5,3 +5,5 @@ cache
 starknet-artifacts
 artifacts
 bin
+starknet_state.dmp
+state.json

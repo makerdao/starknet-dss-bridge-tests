@@ -27,7 +27,6 @@ import {
   getAddressOfNextDeployedContract,
   RAD,
   reset,
-  saveSnapshot,
   setBalance,
   WAD,
 } from "./helpers/utils";
@@ -148,7 +147,7 @@ export async function setup() {
 
   expect(host.address).toEqual(hostAddress);
 
-  await saveSnapshot();
+  // await saveSnapshot();
 
   // init on l1
 
