@@ -37,11 +37,10 @@ async function deploySnTeleportJoin(
 ): Promise<SnTeleportJoin> {
   const factory = await hre.starknet.getContractFactory("teleport_join");
   await deployer.declare(factory);
-  // TODO: camelCase in teleport_join constructor args
   const contract = await deployer.deploy(factory, {
     ward: deployer.address,
     vat_: vat,
-    daiJoin_: daiJoin,
+    dai_join_: daiJoin,
     ilk_: l2String(ilk),
     domain_: toUint256(l2StringAsUint256(domain)),
   });

@@ -25,8 +25,9 @@ import {
   _1_HOUR,
   _6_HOURS,
   getAddressOfNextDeployedContract,
+  loadSnapshot,
   RAD,
-  reset,
+  saveSnapshot,
   setBalance,
   WAD,
 } from "./helpers/utils";
@@ -58,8 +59,8 @@ export async function setup() {
   // based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/tests/domains/IntegrationBase.t.sol#L94
 
   // preparation
-  await reset();
-  // await loadSnapshot();
+  const setupConfig = loadSnapshot();
+  console.log(setupConfig)
 
   const mockStarknetMessaging = (
     await hre.starknet.devnet.loadL1MessagingContract(hre.network.config.url!)
@@ -208,7 +209,17 @@ export async function setup() {
   console.log("initGuest");
   await initGuest(snDss, guest);
 
-  // await saveSnapshot();
+  await saveSnapshot(
+    teleport,
+    snTeleport,
+    snDss,
+    snClaimToken,
+    fees,
+    snFee,
+    host,
+    guest,
+    bridgeOracle
+  );
 
   return {
     dss,
