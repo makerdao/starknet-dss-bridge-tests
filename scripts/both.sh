@@ -1,6 +1,6 @@
 #!/bin/bash
 
-(trap 'kill 0' SIGINT; yarn chain:l1 $1 & yarn chain:l2 $1 & wait)
+(trap 'kill 0' SIGINT; yarn chain:l1 $1 & yarn chain:l2 $1 $2 & wait)
 
 #if [ $? -eq 0 ]
 #then
