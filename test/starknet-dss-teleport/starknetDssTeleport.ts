@@ -10,7 +10,7 @@ import {
   WrappedStarknetContract,
   wrapTyped,
 } from "../helpers/starknet/wrap";
-import { l2String, l2StringAsUint256 } from "../helpers/utils";
+import { getL2ContractAt, l2String, l2StringAsUint256 } from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance } from "../starknet-dss/starknetDss";
 import teleportConstantFeeAbi from "./abi/starknetTeleportConstantFeeAbi";
 import teleportJoinAbi from "./abi/starknetTeleportJoinAbi";
@@ -27,6 +27,15 @@ export type SnTeleportRouter = WrappedStarknetContract<
 export type SnTeleportConstantFee = WrappedStarknetContract<
   typeof teleportConstantFeeAbi
 >;
+
+async function getSnTeleportJoin(address: string): Promise<SnTeleportJoin> {
+  const snTeleportJoin = await getL2ContractAt(
+    hre,
+    "starknet-dss-teleport/teleport_join.cairo/teleport_join_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, snTeleportJoin));
+}
 
 async function deploySnTeleportJoin(
   deployer: Account,
@@ -47,6 +56,17 @@ async function deploySnTeleportJoin(
   return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
+async function getSnTeleportOracleAuth(
+  address: string
+): Promise<SnTeleportOracleAuth> {
+  const snTeleportOracleAuth = await getL2ContractAt(
+    hre,
+    "starknet-dss-teleport/teleport_oracle_auth.cairo/teleport_oracle_auth_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, snTeleportOracleAuth));
+}
+
 async function deploySnTeleportOracleAuth(
   deployer: Account,
   teleport_join: Felt
@@ -58,6 +78,15 @@ async function deploySnTeleportOracleAuth(
     teleport_join_: teleport_join,
   });
   return starknetPrankTyped(wrapTyped(hre, contract));
+}
+
+async function getSnTeleportRouter(address: string): Promise<SnTeleportRouter> {
+  const snTeleportRouter = await getL2ContractAt(
+    hre,
+    "starknet-dss-teleport/teleport_router.cairo/teleport_router_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, snTeleportRouter));
 }
 
 async function deploySnTeleportRouter(
@@ -77,6 +106,17 @@ async function deploySnTeleportRouter(
   return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
+export async function getSnTeleportConstantFee(
+  address: string
+): Promise<SnTeleportConstantFee> {
+  const snTeleportConstantFee = await getL2ContractAt(
+    hre,
+    "starknet-dss-teleport/teleport_constant_fee.cairo/teleport_constant_fee_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, snTeleportConstantFee));
+}
+
 export async function deploySnTeleportConstantFee(
   fee: bigint,
   ttl_: Felt
@@ -93,10 +133,22 @@ export async function deploySnTeleportConstantFee(
   return starknetPrankTyped(wrapTyped(hre, contract));
 }
 
-interface SnTeleportInstance {
+export interface SnTeleportInstance {
   join: SnTeleportJoin;
   router: SnTeleportRouter;
   oracleAuth: SnTeleportOracleAuth;
+}
+
+export async function getSnTeleport(
+  join: string,
+  router: string,
+  oracleAuth: string
+): Promise<SnTeleportInstance> {
+  return {
+    join: await getSnTeleportJoin(join),
+    router: await getSnTeleportRouter(router),
+    oracleAuth: await getSnTeleportOracleAuth(oracleAuth),
+  };
 }
 
 export async function deploySnTeleport(

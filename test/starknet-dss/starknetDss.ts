@@ -99,6 +99,27 @@ export interface SnDssInstance {
   pot: SnPot;
 }
 
+export async function getSnDss(
+  vat: string,
+  jug: string,
+  cure: string,
+  dai: string,
+  daiJoin: string,
+  end: string,
+  spotter: string,
+  pot: string
+): Promise<SnDssInstance> {
+  return {
+    vat: await getSnVat(vat),
+    jug: await getSnJug(jug),
+    cure: await getSnCure(cure),
+    dai: await getSnDai(dai),
+    daiJoin: await getSnDaiJoin(daiJoin),
+    end: await getSnEnd(end),
+    spotter: await getSnSpotter(spotter),
+    pot: await getSnPot(pot),
+  };
+}
 export async function deploySnDss(
   owner: Account,
   dai: string
@@ -126,34 +147,82 @@ export async function deploySnDss(
 }
 
 // Based on: https://github.com/makerdao/dss-bridge/blob/4cfc84761b4bfeae747af14d3a2545377dd3304a/src/deploy/XDomainDss.sol
-// export async function getSnDaiJoin(address: string): Promise<SnDaiJoin> {
-//   const daiJoin = await getL2ContractAt(
-//     hre,
-//     "dai_join.cairo/dai_join_abi.json",
-//     address
-//   );
-//   return starknetPrankTyped(wrapTyped(hre, daiJoin));
-// }
+export async function getSnDaiJoin(address: string): Promise<SnDaiJoin> {
+  const daiJoin = await getL2ContractAt(
+    hre,
+    "starknet-dss/dai_join.cairo/dai_join_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, daiJoin));
+}
 
 export async function getSnDai(address: string): Promise<SnDai> {
-  const dai = await getL2ContractAt(hre, "dai.cairo/dai_abi.json", address);
+  const dai = await getL2ContractAt(
+    hre,
+    "starknet-dss/dai.cairo/dai_abi.json",
+    address
+  );
   return starknetPrankTyped(wrapTyped(hre, dai));
 }
 
-// export async function getSnVat(address: string): Promise<SnVat> {
-//   const vat = await getL2ContractAt(hre, "vat.cairo/vat_abi.json", address);
-//   return starknetPrank<typeof vatAbi>(wrapTyped(hre, vat));
-// }
-//
-// export async function getSnJug(address: string): Promise<SnJug> {
-//   const jug = await getL2ContractAt(hre, "jug.cairo/jug_abi.json", address);
-//   return starknetPrank<typeof jugAbi>(wrapTyped(hre, jug));
-// }
-//
-// export async function getSnCure(address: string): Promise<SnCure> {
-//   const cure = await getL2ContractAt(hre, "cure.cairo/cure_abi.json", address);
-//   return starknetPrank<typeof cureAbi>(wrapTyped(hre, cure));
-// }
+export async function getSnVat(address: string): Promise<SnVat> {
+  const vat = await getL2ContractAt(
+    hre,
+    "starknet-dss/vat.cairo/vat_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, vat));
+}
+
+export async function getSnJug(address: string): Promise<SnJug> {
+  const jug = await getL2ContractAt(
+    hre,
+    "starknet-dss/jug.cairo/jug_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, jug));
+}
+
+export async function getSnCure(address: string): Promise<SnCure> {
+  const cure = await getL2ContractAt(
+    hre,
+    "starknet-dss/cure.cairo/cure_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, cure));
+}
+
+export async function getSnEnd(address: string): Promise<SnEnd> {
+  const end = await getL2ContractAt(
+    hre,
+    "starknet-dss/end.cairo/end_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, end));
+}
+
+export async function getSnSpotter(address: string): Promise<SnSpotter> {
+  const spotter = await getL2ContractAt(
+    hre,
+    "starknet-dss/spotter.cairo/spotter_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, spotter));
+}
+
+export async function getSnPot(address: string): Promise<SnPot> {
+  const pot = await getL2ContractAt(hre, "starknet-dss/pot.cairo/pot_abi.json", address);
+  return starknetPrankTyped(wrapTyped(hre, pot));
+}
+
+export async function getSnToken(address: string): Promise<SnToken> {
+  const token = await getL2ContractAt(
+    hre,
+    "starknet-dss/tests/mock_token.cairo/mock_token_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, token));
+}
 
 export interface SnDssConfig {
   claimToken: string; // TODO: replace when claim token is available

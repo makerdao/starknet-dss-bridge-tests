@@ -26,6 +26,35 @@ export type TeleportLinearFeeAbi = GetContractResult<
 // Based on:
 // https://github.com/makerdao/dss-bridge/blob/v1/src/deploy/DssTeleport.sol
 
+async function getTeleportJoin(address: Address): Promise<TeleportJoin> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportJoinAbi as any,
+      address
+    )) as TeleportJoin
+  );
+}
+
+async function getTeleportRouter(address: Address): Promise<TeleportRouter> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportRouterAbi as any,
+      address
+    )) as TeleportRouter
+  );
+}
+
+async function getTeleportOracleAuth(
+  address: Address
+): Promise<TeleportOracleAuth> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportOracleAuthAbi as any,
+      address
+    )) as TeleportOracleAuth
+  );
+}
+
 async function deployTeleportJoin(
   vat: Address,
   daiJoin: Address,
@@ -79,10 +108,22 @@ async function deployTeleportOracleAuth(
   return prank(contract);
 }
 
-interface TeleportInstance {
+export interface TeleportInstance {
   join: TeleportJoin;
   router: TeleportRouter;
   oracleAuth: TeleportOracleAuth;
+}
+
+export async function getTeleport(
+  joinAddress: Address,
+  routerAddress: Address,
+  oracleAuthAddress: Address
+): Promise<TeleportInstance> {
+  return {
+    join: await getTeleportJoin(joinAddress),
+    router: await getTeleportRouter(routerAddress),
+    oracleAuth: await getTeleportOracleAuth(oracleAuthAddress),
+  };
 }
 
 export async function deployTeleport(
@@ -124,6 +165,15 @@ export async function deployTeleport(
   await teleport.oracleAuth.deny(deployer);
 
   return teleport;
+}
+
+export async function getLinearFee(address: Address): Promise<TeleportFees> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportLinearFeeAbi as any,
+      address
+    )) as TeleportLinearFeeAbi
+  );
 }
 
 export async function deployLinearFee(

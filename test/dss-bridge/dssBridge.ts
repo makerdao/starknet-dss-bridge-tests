@@ -21,6 +21,15 @@ export type DomainHost = GetContractResult<typeof starknetDomainHostAbi>;
 export type DSValue = GetContractResult<typeof dsValueAbi>;
 export type Escrow = GetContractResult<typeof escrowLikeAbi>;
 
+export async function getDomainHost(address: Address): Promise<DomainHost> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      starknetDomainHostAbi as any,
+      address
+    )) as DomainHost
+  );
+}
+
 export async function deployDomainHost(
   deployerSigner: Signer,
   ownerSigner: Signer,
@@ -55,6 +64,12 @@ export async function deployDomainHost(
   await bridge.deny(deployer);
 
   return bridge;
+}
+
+export async function getBridgeOracle(address: Address): Promise<DSValue> {
+  return prank(
+    (await hre.ethers.getContractAt(dsValueAbi as any, address)) as DSValue
+  );
 }
 
 export async function deployConstantDSValue(): Promise<DSValue> {

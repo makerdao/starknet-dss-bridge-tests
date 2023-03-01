@@ -24,6 +24,7 @@ export interface SetupConfig {
   l2daiJoin: string;
   l2vat: string;
   l2pot: string;
+  l2spotter: string;
   l2join: string;
   l2router: string;
   l2oracleauth: string;
@@ -31,7 +32,7 @@ export interface SetupConfig {
   l2jug: string;
   domainGuest: string;
   l2end: string;
-  bridgeOracle: string;
+  bridgeOracle: Address;
   claimToken: string;
 }
 
@@ -44,7 +45,7 @@ export async function getL2ContractAt(
     hre,
     abiPath: path.join(
       process.env.PWD!,
-      "/starknet-artifacts/contracts/starknet/starknet-dss/",
+      "/starknet-artifacts/contracts/starknet/",
       abiPath
     ),
     metadataPath: "", //ignored
@@ -116,6 +117,7 @@ export async function saveSnapshot(
     l2daiJoin: snDss.daiJoin.address,
     l2vat: snDss.vat.address,
     l2pot: snDss.pot.address,
+    l2spotter: snDss.spotter.address,
     l2jug: snDss.jug.address,
     l2end: snDss.end.address,
     claimToken: snClaimToken.address,
@@ -139,10 +141,12 @@ export function loadSnapshot(): SetupConfig {
   }
 
   const addresses = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "../starknet_addresses.json")).toString()
+    fs
+      .readFileSync(path.join(__dirname, "../starknet_addresses.json"))
+      .toString()
   );
 
-  return addresses
+  return addresses;
 }
 
 export async function getAddressOfNextDeployedContract(): Promise<string> {

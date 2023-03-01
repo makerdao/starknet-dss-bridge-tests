@@ -6,12 +6,23 @@ import { DomainHost } from "../dss-bridge/dssBridge";
 import { currentSnAcc, starknetPrankTyped } from "../helpers/starknet/prank";
 import { Felt } from "../helpers/starknet/types";
 import { WrappedStarknetContract, wrapTyped } from "../helpers/starknet/wrap";
-import { l2String } from "../helpers/utils";
+import { getL2ContractAt, l2String } from "../helpers/utils";
 import { SnDaiJoin, SnDssInstance, SnToken } from "../starknet-dss/starknetDss";
 import { SnTeleportRouter } from "../starknet-dss-teleport/starknetDssTeleport";
 import domainGuestAbi from "./abi/domainGuestAbi";
 
 export type SnDomainGuest = WrappedStarknetContract<typeof domainGuestAbi>;
+
+export async function getSnDomainGuest(
+  address: string
+): Promise<SnDomainGuest> {
+  const snDomainGuest = await getL2ContractAt(
+    hre,
+    "starknet-dss-bridge/domain_guest.cairo/domain_guest_abi.json",
+    address
+  );
+  return starknetPrankTyped(wrapTyped(hre, snDomainGuest));
+}
 
 export async function deploySnDomainGuest(
   owner: Account,
