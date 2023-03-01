@@ -285,7 +285,7 @@ export async function setup() {
     await initGuest(snDss, guest);
 
     expect(host.address).toEqual(hostAddress);
-    
+
     await saveSnapshot(
       teleport,
       snTeleport,
@@ -298,7 +298,6 @@ export async function setup() {
       bridgeOracle
     );
   }
-
 
   // await saveSnapshot();
 

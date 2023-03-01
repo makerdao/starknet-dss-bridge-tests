@@ -211,7 +211,11 @@ export async function getSnSpotter(address: string): Promise<SnSpotter> {
 }
 
 export async function getSnPot(address: string): Promise<SnPot> {
-  const pot = await getL2ContractAt(hre, "starknet-dss/pot.cairo/pot_abi.json", address);
+  const pot = await getL2ContractAt(
+    hre,
+    "starknet-dss/pot.cairo/pot_abi.json",
+    address
+  );
   return starknetPrankTyped(wrapTyped(hre, pot));
 }
 
