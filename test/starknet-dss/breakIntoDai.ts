@@ -41,20 +41,9 @@ func execute{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() 
       l2GovRelayAddress,
       "relay",
       l1GovRelayAddress,
-      // @ts-ignore
-      [classHash],
-      "0x0"
+      [BigInt(classHash)],
+      0n
     );
-
-    // @ts-ignore
-    // const { transaction_hash } = await sendMessageToL2(hre, {
-    //   l2_contract_address: l2GovRelayAddress,
-    //   entry_point_selector:
-    //     "0xa9ebda8d3a6595cf15b1d46ea0e440a9810c2b99a3e889c6b3b46f7ff0e5e1",
-    //   l1_contract_address: l1GovRelayAddress,
-    //   payload: [classHash],
-    //   nonce: "0x0",
-    // });
 
     const receipt = await hre.starknet.getTransactionReceipt(transaction_hash);
     expect(receipt.status).toEqual("ACCEPTED_ON_L2");
