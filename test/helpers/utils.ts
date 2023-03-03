@@ -34,6 +34,7 @@ export interface SetupConfig {
   l2end: string;
   bridgeOracle: Address;
   claimToken: string;
+  messagingContract: Address;
 }
 
 export async function getL2ContractAt(
@@ -105,7 +106,8 @@ export async function saveSnapshot(
   snFee: any,
   host: any,
   guest: any,
-  bridgeOracle: any
+  bridgeOracle: any,
+  messagingContractAddress: Address
 ) {
   const addresses: SetupConfig = {
     l1join: teleport.join.address,
@@ -127,6 +129,7 @@ export async function saveSnapshot(
     domainGuest: guest.address,
     l2fees: snFee.address,
     bridgeOracle: bridgeOracle.address,
+    messagingContract: messagingContractAddress,
   };
 
   const addressesFile = path.join(__dirname, "../starknet_addresses.json");
