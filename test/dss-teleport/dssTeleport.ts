@@ -1,14 +1,17 @@
 import { Address, GetContractResult } from "@wagmi/core";
-import teleportJoinAbi from "./abi/teleportJoinAbi";
-import teleportRouterAbi from "./abi/teleportRouterAbi";
-import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
-import teleportFeesAbi from "./abi/teleportFeesAbi";
-import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
-import hre from "hardhat";
-import { Dai, Vat, DaiJoin, Jug, Cure, Vow } from "../dss/dss";
 import { expect } from "earljs";
+import { Signer } from "ethers";
 import { formatBytes32String } from "ethers/lib/utils.js";
+import hre from "hardhat";
+
+import { DaiJoin, DssInstance } from "../dss/dss";
 import { prank } from "../helpers/prank";
+import { l1String } from "../helpers/utils";
+import teleportFeesAbi from "./abi/teleportFeesAbi";
+import teleportJoinAbi from "./abi/teleportJoinAbi";
+import teleportLinearFeeAbi from "./abi/teleportLinearFeeAbi";
+import teleportOracleAuthAbi from "./abi/teleportOracleAuthAbi";
+import teleportRouterAbi from "./abi/teleportRouterAbi";
 
 export type TeleportJoin = GetContractResult<typeof teleportJoinAbi>;
 export type TeleportRouter = GetContractResult<typeof teleportRouterAbi>;
@@ -22,6 +25,35 @@ export type TeleportLinearFeeAbi = GetContractResult<
 
 // Based on:
 // https://github.com/makerdao/dss-bridge/blob/v1/src/deploy/DssTeleport.sol
+
+async function getTeleportJoin(address: Address): Promise<TeleportJoin> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportJoinAbi as any,
+      address
+    )) as TeleportJoin
+  );
+}
+
+async function getTeleportRouter(address: Address): Promise<TeleportRouter> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportRouterAbi as any,
+      address
+    )) as TeleportRouter
+  );
+}
+
+async function getTeleportOracleAuth(
+  address: Address
+): Promise<TeleportOracleAuth> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportOracleAuthAbi as any,
+      address
+    )) as TeleportOracleAuth
+  );
+}
 
 async function deployTeleportJoin(
   vat: Address,
@@ -76,15 +108,27 @@ async function deployTeleportOracleAuth(
   return prank(contract);
 }
 
-interface TeleportInstance {
+export interface TeleportInstance {
   join: TeleportJoin;
   router: TeleportRouter;
   oracleAuth: TeleportOracleAuth;
 }
 
-export async function deploy(
-  deployer: Address,
-  owner: Address,
+export async function getTeleport(
+  joinAddress: Address,
+  routerAddress: Address,
+  oracleAuthAddress: Address
+): Promise<TeleportInstance> {
+  return {
+    join: await getTeleportJoin(joinAddress),
+    router: await getTeleportRouter(routerAddress),
+    oracleAuth: await getTeleportOracleAuth(oracleAuthAddress),
+  };
+}
+
+export async function deployTeleport(
+  deployerSigner: Signer,
+  ownerSigner: Signer,
   ilk: string,
   domain: string,
   parentDomain: string,
@@ -94,16 +138,20 @@ export async function deploy(
     join: await deployTeleportJoin(
       await daiJoin.vat(),
       daiJoin.address,
-      ilk,
-      domain
+      l1String(ilk),
+      l1String(domain)
     ),
     router: await deployTeleportRouter(
       await daiJoin.dai(),
-      domain,
-      parentDomain
+      l1String(domain),
+      l1String(parentDomain)
     ),
     oracleAuth: await deployTeleportOracleAuth(daiJoin.address),
   };
+
+  const deployer = (await deployerSigner.getAddress()) as Address;
+  const owner = (await ownerSigner.getAddress()) as Address;
+
   expect(await teleport.join.wards(deployer)).toBeTruthy();
   await teleport.join.rely(owner);
   await teleport.join.deny(deployer);
@@ -117,6 +165,15 @@ export async function deploy(
   await teleport.oracleAuth.deny(deployer);
 
   return teleport;
+}
+
+export async function getLinearFee(address: Address): Promise<TeleportFees> {
+  return prank(
+    (await hre.ethers.getContractAt(
+      teleportLinearFeeAbi as any,
+      address
+    )) as TeleportLinearFeeAbi
+  );
 }
 
 export async function deployLinearFee(
@@ -137,22 +194,13 @@ export interface DssTeleportConfig {
   oracleSigners: Address[];
 }
 
-export interface DssInstance {
-  vat: Vat;
-  jug: Jug;
-  cure: Cure;
-  vow: Vow;
-}
-
 // TODO which wagmi type should be used here?
 const SPOT = formatBytes32String("spot") as Address;
 const VOW = formatBytes32String("vow") as Address;
 const THRESHOLD = formatBytes32String("threshold") as Address;
 const GATEWAY = formatBytes32String("gateway") as Address;
 
-// TODO: how to use bitints?
-
-export async function init(
+export async function initTeleport(
   dss: DssInstance,
   teleport: TeleportInstance,
   cfg: DssTeleportConfig
@@ -161,8 +209,6 @@ export async function init(
   await dss.vat.init(ilk);
   await dss.jug.init(ilk);
   await dss.vat["file(bytes32,bytes32,uint256)"](ilk, LINE, cfg.debtCeiling);
-
-  // dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
   await dss.vat["file(bytes32,bytes32,uint256)"](ilk, SPOT, 10n ** 27n);
   await dss.cure.lift(teleport.join.address);
   await dss.vat.rely(teleport.join.address);
@@ -170,7 +216,6 @@ export async function init(
   await teleport.join.rely(teleport.router.address);
   // teleport.join.rely(esm);
   await teleport.join["file(bytes32,address)"](VOW, dss.vow.address);
-
   // teleport.oracleAuth.rely(esm);
   await teleport.oracleAuth.file(THRESHOLD, cfg.oracleThreshold);
   await teleport.oracleAuth.addSigners(cfg.oracleSigners);
@@ -182,8 +227,8 @@ export async function init(
   );
 }
 
-interface DssTeleportDomainConfig {
-  domain: Address; // which type should be here? bytes32
+export interface DssTeleportDomainConfig {
+  domain: string; // which type should be here? bytes32
   fees: Address;
   gateway: Address;
   debtCeiling: bigint;
@@ -192,24 +237,24 @@ interface DssTeleportDomainConfig {
 const FEES = formatBytes32String("fees") as Address;
 const LINE = formatBytes32String("line") as Address;
 
-export async function initDomain(
+export async function initTeleportDomain(
   teleport: TeleportInstance,
   cfg: DssTeleportDomainConfig
 ) {
   await teleport.join["file(bytes32,bytes32,address)"](
     FEES,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.fees
   );
   await teleport.join["file(bytes32,bytes32,uint256)"](
     LINE,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.debtCeiling
   );
 
   await teleport.router["file(bytes32,bytes32,address)"](
     GATEWAY,
-    cfg.domain,
+    l1String(cfg.domain),
     cfg.gateway
   );
 }

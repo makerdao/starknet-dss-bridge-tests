@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-set -e
-cd "$(dirname "$0")"
-
-image=shardlabs/starknet-devnet:0.4.3
-
-if [ "$(uname)" == "Darwin" ]; then
-    image="${image}-arm"
-fi
-
-docker rm -f devnet
-exec docker run --name devnet -p 127.0.0.1:5050:5050 ${image} --seed 0 --fork-network alpha-$1
+export STARKNET_DEVNET_CAIRO_VM=rust
+if [[ $2 == "load" ]]; then  
+  exec poetry run starknet-devnet --seed 0 --fork-network alpha-$1 --load-path starknet_state.dmp
+else
+  exec poetry run starknet-devnet --seed 0 --fork-network alpha-$1 --dump-on exit --dump-path starknet_state.dmp
+fi 

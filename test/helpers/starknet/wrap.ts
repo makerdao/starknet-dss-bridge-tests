@@ -1,3 +1,4 @@
+import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
 import {
   AbiEntry,
   Argument,
@@ -8,7 +9,7 @@ import {
   StarknetContract,
 } from "@shardlabs/starknet-hardhat-plugin/dist/src/types";
 import { zip } from "lodash";
-import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
+
 import { Abi } from "./abi";
 import { Contract } from "./contractTypes";
 
@@ -16,7 +17,7 @@ function toBigInt({ low, high }: { low: bigint; high: bigint }): bigint {
   return low + 2n ** 128n * high;
 }
 
-function toUint256(v: bigint): { low: bigint; high: bigint } {
+export function toUint256(v: bigint): { low: bigint; high: bigint } {
   const bits = v.toString(16).padStart(64, "0");
   return {
     low: BigInt(`0x${bits.slice(32)}`),
@@ -60,8 +61,8 @@ export function wrap(hre: any, contract: StarknetContract) {
       get(_, _callName) {
         const callName = _callName.toString();
 
-        if (callName === 'then') {
-          return undefined
+        if (callName === "then") {
+          return undefined;
         }
 
         if (callName === "address") {
@@ -81,7 +82,7 @@ export function wrap(hre: any, contract: StarknetContract) {
             `Can't evaluate: ${callName} in contract ${contract.address}`
           );
         }
-        if (abiEntry.type != "function") {
+        if (abiEntry.type !== "function") {
           throw new Error(
             `Can't evaluate a non function: ${callName} in contract ${contract.address}`
           );

@@ -16,6 +16,7 @@ const config = {
     forkedEtherum: {
       // hardhat forked node
       url: "http://127.0.0.1:8545",
+      allowUnlimitedContractSize: true,
     },
     forkedStarknet: {
       //starknet forked devnet endpoint
@@ -31,13 +32,24 @@ const config = {
     cache: "./cache",
     sources: "./contracts",
     tests: "./test",
-    starknetSources: "./contracts/starknet/starknet-dss",
+    starknetSources: "contracts/starknet",
     starknetArtifacts: "./starknet-artifacts",
+    cairoPaths: [
+      `${process.env.PWD}/contracts/starknet/starknet-dss`,
+      `${process.env.PWD}/contracts/starknet/starknet-dss-teleport`,
+      `${process.env.PWD}/contracts/starknet/starknet-dss-bridge`
+    ]
   },
   solidity: {
     compilers: [
       {
         version: "0.8.15",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          }
+        },
       }
     ],
     overrides: {
@@ -61,6 +73,9 @@ const config = {
       },
       "contracts/dss/cure.sol": {
         version: "0.6.12"
+      },
+      "contracts/dss/spot.sol": {
+        version: "0.5.12"
       },
     }
   },

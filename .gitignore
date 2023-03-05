@@ -4,3 +4,7 @@ devnet.log
 cache
 starknet-artifacts
 artifacts
+bin
+starknet_state.dmp
+starknet_addresses.json
+state.json
