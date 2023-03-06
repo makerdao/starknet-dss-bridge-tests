@@ -12,6 +12,7 @@ import {
   deployDomainHost,
   getBridgeOracle,
   getDomainHost,
+  getEscrow,
   initHost,
 } from "../dss-bridge/dssBridge";
 import {
@@ -96,6 +97,9 @@ export async function loadSetup(
       setupConfig.messagingContract
     )
   ).address as Address;
+
+  const escrow = await getEscrow(snCfg.escrow);
+
   // Get teleport contracts
   console.log("getTeleport");
   const teleport = await getTeleport(
@@ -146,6 +150,7 @@ export async function loadSetup(
   startSnPrank(snOwner);
 
   return {
+    escrow,
     teleport,
     snTeleport,
     snDss,
@@ -252,7 +257,7 @@ export async function doSetup(
   });
 
   console.log("initHost");
-  await initHost(dss, host, bridgeOracle, {
+  const escrow = await initHost(dss, host, bridgeOracle, {
     escrow: snCfg.escrow,
     debtCeiling: 1000000n * RAD,
   });
@@ -308,6 +313,7 @@ export async function doSetup(
   );
 
   return {
+    escrow,
     teleport,
     snTeleport,
     snDss,
