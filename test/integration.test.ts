@@ -2,7 +2,12 @@ import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import { starknet } from "hardhat";
 
-import { _100_ETH,l2StringAsUint256, RAD, starknetInt256 } from "./helpers/utils";
+import {
+  _100_ETH,
+  l2StringAsUint256,
+  RAD,
+  starknetInt256,
+} from "./helpers/utils";
 
 describe("integration", () => {
   it("test", async function () {
