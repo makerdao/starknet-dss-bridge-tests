@@ -20,6 +20,7 @@ export const RAD = 10n ** 45n;
 
 export const _1_HOUR = 3600n;
 export const _6_HOURS = 6n * _1_HOUR;
+export const _100_ETH = utils.parseEther("100").toBigInt();
 
 export async function getL2ContractAt(
   hre: HardhatRuntimeEnvironment,
