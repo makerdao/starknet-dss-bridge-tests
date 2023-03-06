@@ -37,9 +37,11 @@ describe("integration", () => {
     // hostDeposit(address(123), 100 ether);
     await this.integrationSetup.host.deposit(100000000000000000000n, 123n);
     // assertEq(dss.dai.balanceOf(escrow), escrowDai + 100 ether);
-    expect(await this.integrationSetup.dss.dai.balanceOf(this.integrationSetup.escrow.address)).toEqual(
-      escrowDai + utils.parseEther("100").toBigInt()
-    );
+    expect(
+      await this.integrationSetup.dss.dai.balanceOf(
+        this.integrationSetup.escrow.address
+      )
+    ).toEqual(escrowDai + utils.parseEther("100").toBigInt());
     // guestDomain.relayFromHost(true);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
     expect(await this.integrationSetup.snDss.vat.surf()).toEqual(
