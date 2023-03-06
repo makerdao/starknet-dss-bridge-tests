@@ -1,13 +1,19 @@
 import { Address } from "@wagmi/core";
 import { expect } from "earljs";
-import { starknet } from "hardhat";
+import hre, { starknet } from "hardhat";
 
+import config from "./config";
 import {
   _100_ETH,
+  l1String,
   l2StringAsUint256,
   RAD,
   starknetInt256,
 } from "./helpers/utils";
+
+const {
+  domains: { root: rootCfg, starknet: snCfg },
+} = config;
 
 describe("integration", () => {
   it("test", async function () {
@@ -136,5 +142,60 @@ describe("integration", () => {
     expect(await this.integrationSetup.dss.dai.balanceOf("0x123")).toEqual(
       _100_ETH
     );
+  });
+
+  it("test register mint", async function () {
+    // TeleportGUID memory teleportToGuest = TeleportGUID({
+    //         sourceDomain: domain,
+    //         targetDomain: rdomain,
+    //         receiver: bytes32(0),
+    //         operator: bytes32(0),
+    //         amount: 100 ether,
+    //         nonce: 0,
+    //         timestamp: uint48(block.timestamp)
+    //     });
+    const teleportToGuest = {
+      sourceDomain: l1String(rootCfg.domain),
+      targetDomain: l1String(snCfg.domain),
+      receiver: l1String("0x0"),
+      operator: l1String("0x0"),
+      amount: _100_ETH,
+      nonce: 0n,
+      timestamp: (await hre.ethers.provider.getBlock("latest")).timestamp,
+    };
+    // TeleportGUID memory teleportToHost = TeleportGUID({
+    //     sourceDomain: rdomain,
+    //     targetDomain: domain,
+    //     receiver: bytes32(0),
+    //     operator: bytes32(0),
+    //     amount: 100 ether,
+    //     nonce: 0,
+    //     timestamp: uint48(block.timestamp)
+    // });
+
+    // Host -> Guest
+    // host.registerMint(teleportToGuest);
+    await this.integrationSetup.host.registerMint(teleportToGuest);
+    // hostInitializeRegisterMint(teleportToGuest);
+    await this.integrationSetup.host.initializeRegisterMint(teleportToGuest);
+    // vm.expectEmit(true, true, true, true);
+    // TODO: check for emitted events
+    // const receipt = await tx.wait();
+    // const events = receipt.events;
+    // expect(events).toBeAContainerWith(...);
+    // emit FinalizeRegisterMint(teleportToGuest);
+    // guestDomain.relayFromHost(true);
+    await starknet.devnet.flush();
+
+    // Guest -> Host
+    // guest.registerMint(teleportToHost);
+    // await this.integrationSetup.guest.registerMint(teleportToHost);
+    // guestInitializeRegisterMint(teleportToHost);
+    // await this.integrationSetup.guest.initializeRegisterMint(teleportToHost);
+    // TODO: check for emitted events
+    // vm.expectEmit(true, true, true, true);
+    // emit FinalizeRegisterMint(teleportToHost);
+    // guestDomain.relayToHost(true);
+    await starknet.devnet.flush();
   });
 });
