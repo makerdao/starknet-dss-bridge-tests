@@ -59,7 +59,7 @@ export function toUint256(v: bigint): { low: bigint; high: bigint } {
   };
 }
 
-export const starknetInt256 = (amount: bigint): bigint => {
+export const negative = (amount: bigint): bigint => {
   const value = ~((amount - 1n) | ~((1n << 256n) - 1n));
   return value;
 };
