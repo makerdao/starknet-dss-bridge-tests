@@ -23,9 +23,9 @@ describe("integration", () => {
   let escrow: Escrow;
 
   before(function () {
-    ({dss, snDss, deployer, host, guest, escrow} = this.integrationSetup);
-  })
-  
+    ({ dss, snDss, deployer, host, guest, escrow } = this.integrationSetup);
+  });
+
   it("test", async function () {
     // @ts-ignore
     // expect(teleport.join.address).toBeDefined();
@@ -37,19 +37,11 @@ describe("integration", () => {
 
   it("test deposit", async function () {
     // dss.dai.mint(address(this), 100 ether);
-    await dss.dai.mint(
-      deployer.address as Address,
-      _100_ETH
-    );
+    await dss.dai.mint(deployer.address as Address, _100_ETH);
     // dss.dai.approve(address(host), 100 ether);
-    await dss.dai.approve(
-      host.address,
-      _100_ETH
-    );
+    await dss.dai.approve(host.address, _100_ETH);
     // uint256 escrowDai = dss.dai.balanceOf(escrow);
-    const escrowDai = await dss.dai.balanceOf(
-      escrow.address
-    );
+    const escrowDai = await dss.dai.balanceOf(escrow.address);
     // guestDomain.selectFork();
     // int256 existingSurf = Vat(address(rdss.vat)).surf();
     const existingSurf = await snDss.vat.surf();
@@ -58,100 +50,60 @@ describe("integration", () => {
     // hostDeposit(address(123), 100 ether);
     await host.deposit(_100_ETH, 123n);
     // assertEq(dss.dai.balanceOf(escrow), escrowDai + 100 ether);
-    expect(
-      await dss.dai.balanceOf(
-        escrow.address
-      )
-    ).toEqual(escrowDai + _100_ETH);
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(
+      escrowDai + _100_ETH
+    );
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
-    expect(await snDss.vat.surf()).toEqual(
-      existingSurf - 100n * RAD
-    );
+    expect(await snDss.vat.surf()).toEqual(existingSurf - 100n * RAD);
     // assertEq(rdss.dai.balanceOf(address(123)), 100 ether);
-    expect(await snDss.dai.balanceOf(123n)).toEqual(
-      _100_ETH
-    );
+    expect(await snDss.dai.balanceOf(123n)).toEqual(_100_ETH);
   });
 
   it("test withdraw", async function () {
     // uint256 escrowDai = dss.dai.balanceOf(escrow);
-    const escrowDai = await dss.dai.balanceOf(
-      escrow.address
-    );
+    const escrowDai = await dss.dai.balanceOf(escrow.address);
     // guestDomain.selectFork();
     // int256 existingSurf = Vat(address(rdss.vat)).surf();
     const existingSurf = await snDss.vat.surf();
     // hostDomain.selectFork();
     // dss.dai.mint(address(this), 100 ether);
-    await dss.dai.mint(
-      deployer.address as Address,
-      _100_ETH
-    );
+    await dss.dai.mint(deployer.address as Address, _100_ETH);
     // dss.dai.approve(address(host), 100 ether);
-    await dss.dai.approve(
-      host.address,
-      _100_ETH
-    );
+    await dss.dai.approve(host.address, _100_ETH);
     // hostDeposit(address(this), 100 ether);
-    await host.deposit(
-      _100_ETH,
-      l2StringAsUint256(deployer.address)
-    );
+    await host.deposit(_100_ETH, l2StringAsUint256(deployer.address));
     // assertEq(dss.dai.balanceOf(escrow), escrowDai + 100 ether);
-    expect(
-      await dss.dai.balanceOf(
-        escrow.address
-      )
-    ).toEqual(escrowDai + _100_ETH);
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(
+      escrowDai + _100_ETH
+    );
     // assertEq(dss.dai.balanceOf(address(123)), 0);
     expect(await dss.dai.balanceOf("0x123")).toEqual(0n);
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
 
     // rdss.vat.hope(address(rdss.daiJoin));
-    await snDss.vat.hope(
-      snDss.daiJoin.address
-    );
+    await snDss.vat.hope(snDss.daiJoin.address);
     // rdss.dai.approve(address(guest), 100 ether);
-    await snDss.dai.approve(
-      guest.address,
-      _100_ETH
-    );
+    await snDss.dai.approve(guest.address, _100_ETH);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
-    expect(await snDss.vat.surf()).toEqual(
-      existingSurf - 100n * RAD
-    );
+    expect(await snDss.vat.surf()).toEqual(existingSurf - 100n * RAD);
     // assertEq(rdss.dai.balanceOf(address(this)), 100 ether);
     // TODO: What should address(this) be? in the context of the guest?
-    expect(
-      await snDss.dai.balanceOf(
-        deployer.address
-      )
-    ).toEqual(_100_ETH);
+    expect(await snDss.dai.balanceOf(deployer.address)).toEqual(_100_ETH);
     // guestWithdraw(address(123), 100 ether);
     await guest.withdraw("0x123", _100_ETH);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf);
     expect(await snDss.vat.surf()).toEqual(existingSurf);
     // assertEq(rdss.dai.balanceOf(address(this)), 0);
-    expect(
-      await snDss.dai.balanceOf(
-        deployer.address
-      )
-    ).toEqual(0n);
+    expect(await snDss.dai.balanceOf(deployer.address)).toEqual(0n);
     // guestDomain.relayToHost(true);
     await starknet.devnet.flush();
     // assertEq(dss.dai.balanceOf(escrow), escrowDai);
-    expect(
-      await dss.dai.balanceOf(
-        escrow.address
-      )
-    ).toEqual(escrowDai);
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(escrowDai);
     // assertEq(dss.dai.balanceOf(address(123)), 100 ether);
-    expect(await dss.dai.balanceOf("0x123")).toEqual(
-      _100_ETH
-    );
+    expect(await dss.dai.balanceOf("0x123")).toEqual(_100_ETH);
   });
 
   it("test register mint", async function () {
