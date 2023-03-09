@@ -5,21 +5,27 @@ import { Abi } from "./abi";
 
 type Functions<C extends Abi> = Extract<C[number], { type: "function" }>;
 
-type Param<N extends string, T extends "felt" | "Uint256"> = {
+type Structs<C extends Abi> = Extract<C[number], { type: "struct" }>;
+
+type Param<N extends string, T> = {
   name: N;
   type: T;
 };
 
-type MapInputType<T extends "felt" | "Uint256"> = T extends "felt"
+type MapInputType<C extends Abi, T> = T extends "felt"
   ? bigint | string
   : T extends "Uint256"
   ? bigint | string
-  : never;
+  : T extends Structs<C>["name"]
+  ? Struct<C, T>
+  : never
 
-type MapOutputType<T extends "felt" | "Uint256"> = T extends "felt"
+type MapOutputType<C extends Abi, T> = T extends "felt"
   ? bigint
   : T extends "Uint256"
   ? bigint
+  : T extends Structs<C>["name"]
+  ? Struct<C, T>
   : never;
 
 // type MapInputParams<T> = T extends [infer P, ...infer R]
@@ -31,15 +37,15 @@ type MapOutputType<T extends "felt" | "Uint256"> = T extends "felt"
 //   : [];
 
 // Another mapper idea(typing problems)
-type MapInputParams<T> = {
+type MapInputParams<C extends Abi, T> = {
   [K in keyof T]: T[K] extends Param<infer _, infer M>
-    ? MapInputType<M>
+    ? MapInputType<C, M>
     : never;
 };
 
-type MapOutputParams<T> = {
+type MapOutputParams<C extends Abi, T> = {
   [K in keyof T]: T[K] extends Param<infer _, infer M>
-    ? MapOutputType<M>
+    ? MapOutputType<C, M>
     : never;
 };
 
@@ -49,10 +55,15 @@ type FlattenIfSingle<T> = T extends readonly [infer A, ...infer R]
     : T
   : never;
 
+type Struct<C extends Abi, N> = {
+  [M in Extract<Structs<C>, {name: N}>["members"][number] as M["name"]]:
+  MapInputType<C, M["type"]>
+};
+
 export type Contract<C extends Abi> = {
   [F in Functions<C> as F["name"]]: F["stateMutability"] extends "view"
     ? (
-        ...args: MapInputParams<F["inputs"]>
-      ) => Promise<FlattenIfSingle<MapOutputParams<F["outputs"]>>>
-    : (...args: MapInputParams<F["inputs"]>) => Promise<TransactionReceipt>;
+        ...args: MapInputParams<C, F["inputs"]>
+      ) => Promise<FlattenIfSingle<MapOutputParams<C, F["outputs"]>>>
+    : (...args: MapInputParams<C, F["inputs"]>) => Promise<TransactionReceipt>;
 };
