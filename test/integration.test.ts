@@ -6,13 +6,26 @@ import hre, { starknet } from "hardhat";
 import config from "./config";
 import { DssInstance } from "./dss/dss";
 import { DomainHost, Escrow } from "./dss-bridge/dssBridge";
-import { _100_ETH, l1String, l2StringAsUint256, RAD } from "./helpers/utils";
+import { TeleportInstance } from "./dss-teleport/dssTeleport";
+import {
+  _100_ETH,
+  _100_RAD,
+  l1String,
+  l2Eth,
+  l2StringAsUint256,
+  RAD,
+  // toUint256,
+} from "./helpers/utils";
 import { SnDssInstance } from "./starknet-dss/starknetDss";
 import { SnDomainGuest } from "./starknet-dss-bridge/starknetDssBridge";
+import { SnTeleportInstance } from "./starknet-dss-teleport/starknetDssTeleport";
 
 const {
   domains: { root: rootCfg, starknet: snCfg },
 } = config;
+
+const domain = l1String(rootCfg.domain);
+const rdomain = l1String(snCfg.domain);
 
 describe("integration", () => {
   let dss: DssInstance;
@@ -21,11 +34,15 @@ describe("integration", () => {
   let host: DomainHost;
   let guest: SnDomainGuest;
   let escrow: Escrow;
+  let snTeleport: SnTeleportInstance;
+  let teleport: TeleportInstance;
 
   before(function () {
-    ({ dss, snDss, deployer, host, guest, escrow } = this.integrationSetup);
+    ({ dss, snDss, deployer, host, guest, escrow, snTeleport, teleport } =
+      this.integrationSetup);
   });
 
+  // eslint-disable-next-line no-only-tests/no-only-tests
   it("test", async function () {
     // @ts-ignore
     // expect(teleport.join.address).toBeDefined();
@@ -56,8 +73,10 @@ describe("integration", () => {
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
+    // TODO: Fix Uint256 return typing
     expect(await snDss.vat.surf()).toEqual(existingSurf - 100n * RAD);
     // assertEq(rdss.dai.balanceOf(address(123)), 100 ether);
+    // TODO: Fix Uint256 return typing
     expect(await snDss.dai.balanceOf(123n)).toEqual(_100_ETH);
   });
 
@@ -88,15 +107,18 @@ describe("integration", () => {
     // rdss.dai.approve(address(guest), 100 ether);
     await snDss.dai.approve(guest.address, _100_ETH);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
+    // TODO: Fix Uint256 return typing
     expect(await snDss.vat.surf()).toEqual(existingSurf - 100n * RAD);
     // assertEq(rdss.dai.balanceOf(address(this)), 100 ether);
     // TODO: What should address(this) be? in the context of the guest?
+    // TODO: Fix Uint256 return typing
     expect(await snDss.dai.balanceOf(deployer.address)).toEqual(_100_ETH);
     // guestWithdraw(address(123), 100 ether);
     await guest.withdraw("0x123", _100_ETH);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf);
     expect(await snDss.vat.surf()).toEqual(existingSurf);
     // assertEq(rdss.dai.balanceOf(address(this)), 0);
+    // TODO: Fix Uint256 return typing
     expect(await snDss.dai.balanceOf(deployer.address)).toEqual(0n);
     // guestDomain.relayToHost(true);
     await starknet.devnet.flush();
@@ -117,8 +139,8 @@ describe("integration", () => {
     //         timestamp: uint48(block.timestamp)
     //     });
     const teleportToGuest = {
-      sourceDomain: l1String(rootCfg.domain),
-      targetDomain: l1String(snCfg.domain),
+      sourceDomain: domain,
+      targetDomain: rdomain,
       receiver: l1String("0x0"),
       operator: l1String("0x0"),
       amount: _100_ETH,
@@ -134,6 +156,16 @@ describe("integration", () => {
     //     nonce: 0,
     //     timestamp: uint48(block.timestamp)
     // });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const teleportToHost = {
+      sourceDomain: rdomain,
+      targetDomain: domain,
+      receiver: l1String("0x0"),
+      operator: l1String("0x0"),
+      amount: _100_ETH,
+      nonce: 0n,
+      timestamp: (await starknet.getBlock()).timestamp,
+    };
 
     // Host -> Guest
     // host.registerMint(teleportToGuest);
@@ -151,6 +183,7 @@ describe("integration", () => {
 
     // Guest -> Host
     // guest.registerMint(teleportToHost);
+    // TODO: Fix ABI typing issue
     // await guest.registerMint(teleportToHost);
     // guestInitializeRegisterMint(teleportToHost);
     // await guest.initializeRegisterMint(teleportToHost);
@@ -159,5 +192,38 @@ describe("integration", () => {
     // emit FinalizeRegisterMint(teleportToHost);
     // guestDomain.relayToHost(true);
     await starknet.devnet.flush();
+  });
+
+  it("test settle", async function () {
+    // Host -> Guest
+    // dss.dai.mint(address(host), 100 ether);
+    await dss.dai.mint(host.address, _100_ETH);
+    // host.settle(domain, rdomain, 100 ether);
+    await host.settle(domain, rdomain, _100_ETH);
+    // hostInitializeSettle(domain, rdomain);
+    await host.initializeSettle(domain, rdomain);
+    // guestDomain.relayFromHost(true);
+    await starknet.devnet.flush();
+    // assertEq(rdss.vat.dai(address(rteleport.join)), 100 * RAD);
+    // TODO: Fix Uint256 return typing
+    expect(await snDss.dai.balanceOf(snTeleport.join.address)).toEqual(
+      _100_RAD
+    );
+
+    // Guest -> Host
+    // rdss.dai.setBalance(address(guest), 50 ether);
+    // TODO: Fix typing issues
+    await snDss.dai.mint(guest.address, l2Eth(50n).low);
+    // guest.settle(rdomain, domain, 50 ether);
+    // TODO: Fix typing issues
+    await guest.settle(rdomain, domain, l2Eth(50n).low);
+    // guestInitializeSettle(rdomain, domain);
+    await guest.initializeSettle(rdomain, domain);
+    // guestDomain.relayToHost(true);
+    await starknet.devnet.flush();
+    // assertEq(dss.vat.dai(address(teleport.join)), 50 * RAD);
+    expect(await dss.dai.balanceOf(teleport.join.address)).toEqual(
+      _100_RAD / 2n
+    );
   });
 });

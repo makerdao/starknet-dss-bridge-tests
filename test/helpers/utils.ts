@@ -21,6 +21,7 @@ export const RAD = 10n ** 45n;
 export const _1_HOUR = 3600n;
 export const _6_HOURS = 6n * _1_HOUR;
 export const _100_ETH = utils.parseEther("100").toBigInt();
+export const _100_RAD = 100n * RAD;
 
 export async function getL2ContractAt(
   hre: HardhatRuntimeEnvironment,
@@ -77,6 +78,14 @@ export async function reset() {
       },
     ],
   });
+}
+
+export function eth(amount: string): bigint {
+  return utils.parseEther(amount).toBigInt();
+}
+
+export function l2Eth(amount: bigint): { low: bigint; high: bigint } {
+  return toUint256(eth(amount.toString()));
 }
 
 export async function setBalance(
