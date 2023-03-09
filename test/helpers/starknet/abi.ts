@@ -1,11 +1,11 @@
 type StateMutability = "view" | "external";
 
-type AbiParameter = {
+export type AbiParameter = {
   type: string;
   name: string;
 };
 
-type AbiFunction = {
+export type AbiFunction = {
   name: string;
   inputs: readonly AbiParameter[];
   outputs: readonly AbiParameter[];
@@ -15,20 +15,20 @@ type AbiFunction = {
   | { type: "l1_handler" }
 );
 
-type AbiMember = {
+export type AbiMember = {
   name: string;
   offset: number;
   type: string;
 };
 
-type AbiStruct = {
+export type AbiStruct = {
   type: "struct";
   name: string;
   size: number;
   members: readonly AbiMember[];
 };
 
-type AbiEvent = {
+export type AbiEvent = {
   type: "event";
   name: string;
   keys: readonly [];
