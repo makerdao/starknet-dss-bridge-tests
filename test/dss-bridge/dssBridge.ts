@@ -118,4 +118,6 @@ export async function initHost(
   await vat["file(bytes32,bytes32,uint256)"](ilk, LINE, debtCeiling);
   // //dss.vat.file("Line", dss.vat.Line() + cfg.debtCeiling);
   await cure.lift(host.address);
+
+  return escrow;
 }
