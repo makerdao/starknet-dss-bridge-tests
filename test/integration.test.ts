@@ -52,6 +52,47 @@ describe("integration", () => {
     // expect(snVat.address).toBeDefined();
   });
 
+  it("test raise debt ceiling", async function () {
+    // uint256 escrowDai = dss.dai.balanceOf(escrow);
+    const escrowDai = await dss.dai.balanceOf(escrow.address);
+    // (uint256 ink, uint256 art) = dss.vat.urns(ilk, address(host));
+    let { ink, art } = await dss.vat.urns(await host.ilk(), host.address);
+    // assertEq(ink, 0);
+    expect(ink).toEqual(0n);
+    // assertEq(art, 0);
+    expect(art).toEqual(0n);
+    // assertEq(host.grain(), 0);
+    expect(await host.grain()).toEqual(0n);
+    // assertEq(host.line(), 0);
+    expect(await host.line()).toEqual(0n);
+
+    // hostLift(100 ether);
+    await host.lift(_100_ETH);
+
+    // (ink, art) = dss.vat.urns(ilk, address(host));
+    ({ ink, art } = await dss.vat.urns(await host.ilk(), host.address));
+    // assertEq(ink, 100 ether);
+    expect(ink).toEqual(_100_ETH);
+    // assertEq(art, 100 ether);
+    expect(art).toEqual(_100_ETH);
+    // assertEq(host.grain(), 100 ether);
+    expect(await host.grain()).toEqual(_100_ETH);
+    // assertEq(host.line(), 100 * RAD);
+    expect(await host.line()).toEqual(_100_RAD);
+    // assertEq(dss.dai.balanceOf(escrow), escrowDai + 100 ether);
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(
+      escrowDai + _100_ETH
+    );
+
+    // Play the message on L2
+    // guestDomain.relayFromHost(true);
+    await starknet.devnet.flush();
+
+    // assertEq(rdss.vat.Line(), 100 * RAD);
+    // TODO: fix typings
+    expect(await snDss.vat.Line()).toEqual(_100_RAD);
+  });
+
   it("test deposit", async function () {
     // dss.dai.mint(address(this), 100 ether);
     await dss.dai.mint(deployer.address as Address, _100_ETH);
