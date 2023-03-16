@@ -197,9 +197,8 @@ export async function doSetup(
 
   console.log("deploySnToken");
   const snClaimToken = await deploySnToken(snOwner.address);
-  // TODO: snClaimToken rely, deny
-  // claimToken.rely(radmin);
-  // claimToken.deny(address(this));
+  // await snClaimToken.rely(snOwner.address);
+  // await snClaimToken.deny(address(this));
 
   console.log("deploySnTeleport");
   const snTeleport = await deploySnTeleport(
