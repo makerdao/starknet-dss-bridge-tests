@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import fs, { writeFileSync } from "fs";
-import hre from "hardhat";
+import hre, { starknet } from "hardhat";
 import { Account } from "hardhat/types";
 import path from "path";
 
@@ -311,6 +311,8 @@ export async function doSetup(
     bridgeOracle,
     mockStarknetMessaging
   );
+
+  await starknet.devnet.dump("starknet_state.dmp");
 
   return {
     escrow,

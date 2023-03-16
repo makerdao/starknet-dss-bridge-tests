@@ -21,6 +21,9 @@ export const RAD = 10n ** 45n;
 export const _1_HOUR = 3600n;
 export const _6_HOURS = 6n * _1_HOUR;
 export const _100_ETH = utils.parseEther("100").toBigInt();
+export const _50_ETH = utils.parseEther("50").toBigInt();
+export const _30_ETH = utils.parseEther("30").toBigInt();
+export const _25_ETH = utils.parseEther("25").toBigInt();
 export const _100_RAD = 100n * RAD;
 
 export async function getL2ContractAt(
