@@ -100,7 +100,8 @@ describe("integration", () => {
     expect(await snDss.vat.Line()).toEqual(_100_RAD);
   });
 
-  it("test deposit", async function () {
+  // eslint-disable-next-line no-only-tests/no-only-tests
+  it.only("test deposit", async function () {
     // dss.dai.mint(address(this), 100 ether);
     await dss.dai.mint(deployer.address as Address, _100_ETH);
     // dss.dai.approve(address(host), 100 ether);
@@ -121,7 +122,6 @@ describe("integration", () => {
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(100 * RAD));
-    // TODO: Fix Uint256 return typing
     expect(await snDss.vat.surf()).toEqual(existingSurf - 100n * RAD);
     // assertEq(rdss.dai.balanceOf(address(123)), 100 ether);
     // TODO: Fix Uint256 return typing
@@ -281,7 +281,7 @@ describe("integration", () => {
     expect(await snDss.vat.debt()).toEqual(40n * RAD);
   });
 
-  it('test push surplus', async function () {
+  it("test push surplus", async function () {
     // uint256 vowDai = dss.vat.dai(address(dss.vow));
     const vowDai = await dss.vat.dai(dss.vow.address);
     // uint256 vowSin = dss.vat.sin(address(dss.vow));
@@ -352,10 +352,12 @@ describe("integration", () => {
     // assertEq(dss.vat.sin(address(dss.vow)), vowSin);
     expect(await dss.vat.sin(dss.vow.address)).toEqual(vowSin);
     // assertEq(dss.dai.balanceOf(escrow), escrowDai - 30 ether);
-    expect(await dss.dai.balanceOf(escrow.address)).toEqual(escrowDai - _30_ETH);
-  })
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(
+      escrowDai - _30_ETH
+    );
+  });
 
-  it('test push deficit', async function () {
+  it("test push deficit", async function () {
     // uint256 escrowDai = dss.dai.balanceOf(escrow);
     const escrowDai = await dss.dai.balanceOf(escrow.address);
     // uint256 vowDai = dss.vat.dai(address(dss.vow));
@@ -372,7 +374,7 @@ describe("integration", () => {
     await host.lift(_100_ETH);
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
-    
+
     // rdss.vat.suck(address(123), address(guest), 20 * RAD);
     await snDss.vat.suck(123n, guest.address, 20n * RAD);
     // rdss.vat.suck(address(guest), address(123), 50 * RAD);
@@ -412,7 +414,9 @@ describe("integration", () => {
     // assertEq(dss.vat.sin(address(dss.vow)), vowSin + 30 * RAD);
     expect(await dss.vat.sin(dss.vow.address)).toEqual(vowSin + 30n * RAD);
     // assertEq(dss.dai.balanceOf(escrow), escrowDai + 130 ether);
-    expect(await dss.dai.balanceOf(escrow.address)).toEqual(escrowDai + _100_ETH + _30_ETH);
+    expect(await dss.dai.balanceOf(escrow.address)).toEqual(
+      escrowDai + _100_ETH + _30_ETH
+    );
     // guestDomain.relayFromHost(true);
     await starknet.devnet.flush();
 
@@ -430,7 +434,7 @@ describe("integration", () => {
     expect(await snDss.vat.sin(guest.address)).toEqual(0n);
     // assertEq(Vat(address(rdss.vat)).surf(), existingSurf + int256(30 * RAD));
     expect(await snDss.vat.surf()).toEqual(existingSurf + 30n * RAD);
-  })
+  });
 
   it("test register mint", async function () {
     // TeleportGUID memory teleportToGuest = TeleportGUID({

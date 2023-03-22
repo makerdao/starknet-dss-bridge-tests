@@ -14,15 +14,21 @@ export function prank<TAbi extends Abi>(
   return new Proxy(
     {},
     {
-      get(_, _callName) {
+      get(_target, _callName) {
         const callName = _callName.toString();
+        // console.log(typeof contract[callName] === "function");
         if (typeof contract[callName] === "function") {
           return (...args: any[]) => {
             if (prankster !== undefined) {
-              // console.log(`calling ${contract.address} with prank`, _callName, args)
+              console.log(
+                `calling ${contract.address} with prank`,
+                (prankster as any).address,
+                _callName,
+                args
+              );
               return contract.connect(prankster)[callName](...args);
             } else {
-              // console.log(`calling ${contract.address}`, _callName, args)
+              console.log(`calling ${contract.address}`, _callName, args);
               return contract[callName](...args);
             }
           };
