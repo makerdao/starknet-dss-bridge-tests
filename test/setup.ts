@@ -32,9 +32,11 @@ export async function setup() {
 
   const deployer = (await hre.ethers.getSigners())[0];
   const admin = await hre.ethers.getImpersonatedSigner(rootCfg.admin);
+  const daiJoin = await hre.ethers.getImpersonatedSigner(rootCfg.daiJoin);
 
-  // fund admin account
+  // fund admin & daiJoin accounts
   await setBalance(admin.address, "10");
+  await setBalance(daiJoin.address, "10");
 
   // deploy on l1
   console.log("getDss");
@@ -58,5 +60,6 @@ export async function setup() {
     snTeleport,
     snFee,
     guest,
+    admin
   };
 }

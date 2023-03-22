@@ -7,6 +7,7 @@ import config from "./config";
 import { DssInstance } from "./dss/dss";
 import { DomainHost, Escrow } from "./dss-bridge/dssBridge";
 import { TeleportInstance } from "./dss-teleport/dssTeleport";
+import { startL1Prank } from "./helpers/prank";
 import {
   _25_ETH,
   _30_ETH,
@@ -35,6 +36,7 @@ describe("integration", () => {
   let dss: DssInstance;
   let snDss: SnDssInstance;
   let deployer: SignerWithAddress;
+  let admin: SignerWithAddress;
   let host: DomainHost;
   let guest: SnDomainGuest;
   let escrow: Escrow;
@@ -43,10 +45,15 @@ describe("integration", () => {
   let ilk: Address;
 
   before(async function () {
-    ({ dss, snDss, deployer, host, guest, escrow, snTeleport, teleport } =
+    ({ dss, snDss, deployer, host, guest, escrow, snTeleport, teleport, admin } =
       this.integrationSetup);
 
     ilk = await host.ilk();
+  });
+
+  beforeEach(async function () {
+    // Load starknet devnet state
+    await starknet.devnet.load("starknet_state.dmp");
   });
 
   // eslint-disable-next-line no-only-tests/no-only-tests
@@ -102,12 +109,15 @@ describe("integration", () => {
 
   // eslint-disable-next-line no-only-tests/no-only-tests
   it.only("test deposit", async function () {
+    const daiJoin = await hre.ethers.getImpersonatedSigner(rootCfg.daiJoin);
+    startL1Prank(daiJoin);
     // dss.dai.mint(address(this), 100 ether);
     await dss.dai.mint(deployer.address as Address, _100_ETH);
     // dss.dai.approve(address(host), 100 ether);
     await dss.dai.approve(host.address, _100_ETH);
     // uint256 escrowDai = dss.dai.balanceOf(escrow);
     const escrowDai = await dss.dai.balanceOf(escrow.address);
+    startL1Prank(admin);
     // guestDomain.selectFork();
     // int256 existingSurf = Vat(address(rdss.vat)).surf();
     const existingSurf = await snDss.vat.surf();
