@@ -32,9 +32,11 @@ export async function setup() {
 
   const deployer = (await hre.ethers.getSigners())[0];
   const admin = await hre.ethers.getImpersonatedSigner(rootCfg.admin);
+  const daiJoin = await hre.ethers.getImpersonatedSigner(rootCfg.daiJoin);
 
-  // fund admin account
+  // fund admin & daiJoin accounts
   await setBalance(admin.address, "10");
+  await setBalance(daiJoin.address, "10");
 
   // deploy on l1
   console.log("getDss");
@@ -42,11 +44,14 @@ export async function setup() {
 
   // load or deploy
   const snapshot = snapshotExists();
-  const { teleport, snTeleport, snDss, fees, snFee, host, guest } = snapshot
-    ? await loadSetup(snapshot, admin, snOwner, snCfg)
-    : await doSetup(dss, deployer, admin, snOwner, snCfg, rootCfg);
+  const { teleport, snTeleport, snDss, fees, snFee, host, guest, escrow } =
+    snapshot
+      ? await loadSetup(snapshot, admin, snOwner, snCfg)
+      : await doSetup(dss, deployer, admin, snOwner, snCfg, rootCfg);
 
   return {
+    escrow,
+    deployer,
     dss,
     teleport,
     fees,
@@ -55,5 +60,6 @@ export async function setup() {
     snTeleport,
     snFee,
     guest,
+    admin
   };
 }

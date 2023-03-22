@@ -27,10 +27,7 @@ export async function getDaiJoin(address: Address): Promise<DaiJoin> {
 }
 
 export async function getDai(address: Address): Promise<Dai> {
-  const dai = (await hre.ethers.getContractAt(
-    daiJoinAbi as any,
-    address
-  )) as Dai;
+  const dai = (await hre.ethers.getContractAt(daiAbi as any, address)) as Dai;
   return prank(dai);
 }
 

@@ -17,9 +17,86 @@ export const tokenAbi = [
     type: "struct",
   },
   {
-    data: [
+    inputs: [],
+    name: "totalSupply",
+    outputs: [
+      {
+        name: "res",
+        type: "Uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         name: "user",
+        type: "felt",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        name: "res",
+        type: "Uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        name: "res",
+        type: "felt",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        name: "res",
+        type: "felt",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        name: "res",
+        type: "felt",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "version",
+    outputs: [
+      {
+        name: "res",
+        type: "felt",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    data: [
+      {
+        name: "usr",
         type: "felt",
       },
     ],
@@ -30,7 +107,7 @@ export const tokenAbi = [
   {
     data: [
       {
-        name: "user",
+        name: "usr",
         type: "felt",
       },
     ],
@@ -77,109 +154,6 @@ export const tokenAbi = [
     type: "event",
   },
   {
-    inputs: [],
-    name: "decimals",
-    outputs: [
-      {
-        name: "res",
-        type: "felt",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        name: "res",
-        type: "felt",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "symbol",
-    outputs: [
-      {
-        name: "res",
-        type: "felt",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        name: "res",
-        type: "Uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        name: "user",
-        type: "felt",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        name: "res",
-        type: "Uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        name: "owner",
-        type: "felt",
-      },
-      {
-        name: "spender",
-        type: "felt",
-      },
-    ],
-    name: "allowance",
-    outputs: [
-      {
-        name: "res",
-        type: "Uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        name: "user",
-        type: "felt",
-      },
-    ],
-    name: "wards",
-    outputs: [
-      {
-        name: "res",
-        type: "felt",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         name: "ward",
@@ -193,41 +167,33 @@ export const tokenAbi = [
   {
     inputs: [
       {
-        name: "account",
+        name: "usr",
         type: "felt",
       },
-      {
-        name: "amount",
-        type: "Uint256",
-      },
     ],
-    name: "mint",
+    name: "rely",
     outputs: [],
     type: "function",
   },
   {
     inputs: [
       {
-        name: "account",
+        name: "usr",
         type: "felt",
       },
-      {
-        name: "amount",
-        type: "Uint256",
-      },
     ],
-    name: "burn",
+    name: "deny",
     outputs: [],
     type: "function",
   },
   {
     inputs: [
       {
-        name: "recipient",
+        name: "to",
         type: "felt",
       },
       {
-        name: "amount",
+        name: "value",
         type: "Uint256",
       },
     ],
@@ -251,7 +217,7 @@ export const tokenAbi = [
         type: "felt",
       },
       {
-        name: "amount",
+        name: "value",
         type: "Uint256",
       },
     ],
@@ -271,7 +237,7 @@ export const tokenAbi = [
         type: "felt",
       },
       {
-        name: "amount",
+        name: "value",
         type: "Uint256",
       },
     ],
@@ -291,7 +257,7 @@ export const tokenAbi = [
         type: "felt",
       },
       {
-        name: "amount",
+        name: "added_value",
         type: "Uint256",
       },
     ],
@@ -311,7 +277,7 @@ export const tokenAbi = [
         type: "felt",
       },
       {
-        name: "amount",
+        name: "subtracted_value",
         type: "Uint256",
       },
     ],
@@ -322,6 +288,36 @@ export const tokenAbi = [
         type: "felt",
       },
     ],
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        name: "to",
+        type: "felt",
+      },
+      {
+        name: "value",
+        type: "Uint256",
+      },
+    ],
+    name: "mint",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        name: "account",
+        type: "felt",
+      },
+      {
+        name: "value",
+        type: "Uint256",
+      },
+    ],
+    name: "burn",
+    outputs: [],
     type: "function",
   },
 ] as const;

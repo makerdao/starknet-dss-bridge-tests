@@ -21,41 +21,41 @@ export default [
       {
         name: "source_domain",
         offset: 0,
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "target_domain",
-        offset: 1,
-        type: "felt",
+        offset: 2,
+        type: "Uint256",
       },
       {
         name: "receiver",
-        offset: 2,
+        offset: 4,
         type: "felt",
       },
       {
         name: "operator",
-        offset: 3,
+        offset: 5,
         type: "felt",
       },
       {
         name: "amount",
-        offset: 4,
+        offset: 6,
         type: "Uint256",
       },
       {
         name: "nonce",
-        offset: 6,
+        offset: 8,
         type: "felt",
       },
       {
         name: "timestamp",
-        offset: 7,
+        offset: 9,
         type: "felt",
       },
     ],
     name: "TeleportGUID",
-    size: 8,
+    size: 10,
     type: "struct",
   },
   {
@@ -268,11 +268,11 @@ export default [
     data: [
       {
         name: "source_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "target_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "amount",
@@ -287,11 +287,11 @@ export default [
     data: [
       {
         name: "source_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "target_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "amount",
@@ -306,11 +306,11 @@ export default [
     data: [
       {
         name: "source_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "target_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "amount",
@@ -324,11 +324,11 @@ export default [
   {
     inputs: [
       {
-        name: "daiJoin",
+        name: "dai_join",
         type: "felt",
       },
       {
-        name: "claimToken",
+        name: "claim_token",
         type: "felt",
       },
       {
@@ -337,6 +337,10 @@ export default [
       },
       {
         name: "ward",
+        type: "felt",
+      },
+      {
+        name: "host",
         type: "felt",
       },
     ],
@@ -399,11 +403,39 @@ export default [
   {
     inputs: [
       {
+        name: "to",
+        type: "felt",
+      },
+      {
         name: "amount",
         type: "Uint256",
       },
     ],
-    name: "heal",
+    name: "withdraw",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "release",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "surplus",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "deficit",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tell",
     outputs: [],
     type: "function",
   },
@@ -414,6 +446,12 @@ export default [
         type: "Uint256",
       },
     ],
+    name: "heal",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "heal_",
     outputs: [],
     type: "function",
@@ -432,12 +470,23 @@ export default [
   {
     inputs: [
       {
+        name: "teleport",
+        type: "TeleportGUID",
+      },
+    ],
+    name: "initializeRegisterMint",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         name: "source_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "target_domain",
-        type: "felt",
+        type: "Uint256",
       },
       {
         name: "amount",
@@ -445,6 +494,21 @@ export default [
       },
     ],
     name: "settle",
+    outputs: [],
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        name: "source_domain",
+        type: "Uint256",
+      },
+      {
+        name: "target_domain",
+        type: "Uint256",
+      },
+    ],
+    name: "initializeSettle",
     outputs: [],
     type: "function",
   },
@@ -634,7 +698,7 @@ export default [
         type: "felt",
       },
     ],
-    name: "handle_initializeRegisterMint",
+    name: "handle_finalizeRegisterMint",
     outputs: [],
     type: "l1_handler",
   },
@@ -669,7 +733,7 @@ export default [
         type: "felt",
       },
     ],
-    name: "handle_initializeSettle",
+    name: "handle_finalizeSettle",
     outputs: [],
     type: "l1_handler",
   },

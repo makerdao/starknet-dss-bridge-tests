@@ -37,7 +37,7 @@ async function deploySnVat(ward: Felt): Promise<SnVat> {
 }
 
 export async function deploySnToken(ward: Felt): Promise<SnToken> {
-  const factory = await hre.starknet.getContractFactory("tests/mock_token");
+  const factory = await hre.starknet.getContractFactory("claim_token");
   await currentSnAcc().declare(factory);
   const token = await currentSnAcc().deploy(factory, { ward });
   return starknetPrankTyped(wrapTyped(hre, token));

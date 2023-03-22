@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Address } from "@wagmi/core";
 import { expect } from "earljs";
 import fs, { writeFileSync } from "fs";
-import hre from "hardhat";
+import hre, { starknet } from "hardhat";
 import { Account } from "hardhat/types";
 import path from "path";
 
@@ -12,6 +12,7 @@ import {
   deployDomainHost,
   getBridgeOracle,
   getDomainHost,
+  getEscrow,
   initHost,
 } from "../dss-bridge/dssBridge";
 import {
@@ -96,6 +97,9 @@ export async function loadSetup(
       setupConfig.messagingContract
     )
   ).address as Address;
+
+  const escrow = await getEscrow(snCfg.escrow);
+
   // Get teleport contracts
   console.log("getTeleport");
   const teleport = await getTeleport(
@@ -146,6 +150,7 @@ export async function loadSetup(
   startSnPrank(snOwner);
 
   return {
+    escrow,
     teleport,
     snTeleport,
     snDss,
@@ -192,9 +197,8 @@ export async function doSetup(
 
   console.log("deploySnToken");
   const snClaimToken = await deploySnToken(snOwner.address);
-  // TODO: snClaimToken rely, deny
-  // claimToken.rely(radmin);
-  // claimToken.deny(address(this));
+  // await snClaimToken.rely(snOwner.address);
+  // await snClaimToken.deny(address(this));
 
   console.log("deploySnTeleport");
   const snTeleport = await deploySnTeleport(
@@ -252,7 +256,7 @@ export async function doSetup(
   });
 
   console.log("initHost");
-  await initHost(dss, host, bridgeOracle, {
+  const escrow = await initHost(dss, host, bridgeOracle, {
     escrow: snCfg.escrow,
     debtCeiling: 1000000n * RAD,
   });
@@ -307,7 +311,10 @@ export async function doSetup(
     mockStarknetMessaging
   );
 
+  await starknet.devnet.dump("starknet_state.dmp");
+
   return {
+    escrow,
     teleport,
     snTeleport,
     snDss,
